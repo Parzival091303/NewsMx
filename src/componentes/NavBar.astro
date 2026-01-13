@@ -1,0 +1,108 @@
+---
+const enlaces = [
+    { nombre: "google", enlace: "https://www.google.com" },
+    { nombre: "google", enlace: "https://www.google.com" },
+    { nombre: "google", enlace: "https://www.google.com" },
+];
+
+const noticia = { title: "Ttrump secuestra a Maduro xd" };
+---
+
+<nav class="navbar">
+    <div class="logo">NDTV</div>
+    <div class="menu">
+        <a href="#">INICIO</a>
+        <a href="#">NOSOTROS</a>
+        <a href="#">NOTICIAS</a>
+        <a href="#">PODCAST</a>
+        <a href="#">ANUNCIATE</a>
+        <a href="#">PROGRAMACIÓN</a>
+        <a href="#">MÁS ▼</a>
+    </div>
+    <div class="hamburger">☰</div>
+    <div class="user-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
+            ></path>
+        </svg>
+    </div>
+</nav>
+
+<style>
+    /* NAVBAR */
+    .navbar {
+        background-color: #009999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3rem 2rem;
+        color: white;
+    }
+
+    .logo {
+        flex: 1;
+        font-size: 2.2rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    .menu {
+        flex: 2;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .menu a:hover {
+        color: #ffd700;
+    }
+
+    .user-icon svg {
+        width: 28px;
+        height: 28px;
+        fill: white;
+    }
+
+    .hamburger {
+        display: none;
+        font-size: 2rem;
+        cursor: pointer;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .menu {
+            display: none;
+            flex-direction: column;
+            background-color: #007777;
+            position: absolute;
+            top: 100px;
+            right: 0;
+            width: 220px;
+            padding: 1rem;
+        }
+        .menu.active {
+            display: flex;
+        }
+        .hamburger {
+            display: block;
+        }
+    }
+</style>
+
+<script>
+    const hamburger = document.querySelector(".hamburger");
+    const menu: HTMLElement = document.querySelector(".menu") as HTMLElement;
+    hamburger?.addEventListener("click", () => {
+        menu.classList.toggle("active");
+    });
+</script>
