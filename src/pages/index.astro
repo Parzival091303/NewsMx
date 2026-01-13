@@ -1,0 +1,418 @@
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NDTV</title>
+
+    <!-- Tipografías -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+        color: #333;
+        background: #f7f7f7;
+      }
+
+      h1, h2, h3, h4, h5, h6, .logo, .menu a {
+        font-family: 'Lato', sans-serif;
+      }
+
+      /* NAVBAR */
+      .navbar {
+        background-color: #009999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3rem 2rem;
+        color: white;
+      }
+
+      .logo {
+        flex: 1;
+        font-size: 2.2rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+
+      .menu {
+        flex: 2;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+      }
+
+      .menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem;
+        transition: color 0.3s ease;
+      }
+
+      .menu a:hover { color: #ffd700; }
+
+      .user-icon svg {
+        width: 28px;
+        height: 28px;
+        fill: white;
+      }
+
+      .hamburger {
+        display: none;
+        font-size: 2rem;
+        cursor: pointer;
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .menu {
+          display: none;
+          flex-direction: column;
+          background-color: #007777;
+          position: absolute;
+          top: 100px;
+          right: 0;
+          width: 220px;
+          padding: 1rem;
+        }
+        .menu.active { display: flex; }
+        .hamburger { display: block; }
+      }
+
+      /* HERO */
+      .hero {
+        height: 80vh;
+        background-image: url('/img/3.jpg'); /* tu imagen */
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        color: white;
+        padding: 2rem;
+      }
+
+      .hero-content {
+        width: 50%;
+        text-align: left;
+        background: rgba(0,0,0,0.4);
+        padding: 2rem;
+        border-radius: 8px;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .hero p {
+        font-size: 1.5rem;
+        line-height: 1.8;
+      }
+
+      /* GALERÍA 3 IMÁGENES */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .gallery img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        display: block;
+      }
+
+      @media (max-width: 768px) {
+        .gallery { grid-template-columns: 1fr; }
+        .gallery img { height: 300px; }
+      }
+
+      /* TÍTULO DE SECCIÓN */
+      .section-header {
+        width: 100%;
+        background: #fff;
+        text-align: center;
+        padding: 2rem 0;
+        border-top: 4px solid #009999;
+        border-bottom: 4px solid #009999;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #009999;
+        margin: 0;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      /* CARRUSEL */
+      .carousel {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        padding: 0 10%; /* bordes laterales del 10% */
+        box-sizing: border-box;
+        background: #fff;
+      }
+
+      .carousel-track {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 1rem 0;
+      }
+
+      .carousel-track::-webkit-scrollbar {
+        height: 8px;
+      }
+      .carousel-track::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+      }
+
+      .card {
+        flex: 0 0 300px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      }
+
+      .card img {
+        width: 100%;
+        height: 180px; /* todas iguales */
+        object-fit: cover;
+      }
+
+      .card-text {
+        padding: 1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .card-text h3 {
+        font-size: 1.1rem;
+        margin: 0;
+        line-height: 1.3;
+      }
+
+      .card-text p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        margin: 0;
+        color: #444;
+      }
+
+      .meta {
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      /* Flechas difuminadas superpuestas */
+      .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2.2rem;
+        color: #fff;
+        background: rgba(0,0,0,0.28);
+        backdrop-filter: blur(2px);
+        padding: 0.55rem 0.7rem;
+        border-radius: 50%;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.25s ease;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      }
+      .arrow:hover { background: rgba(0,0,0,0.48); }
+      .arrow.left { left: 3%; }
+      .arrow.right { right: 3%; }
+
+      /* Responsivo: tarjetas más grandes en pantallas amplias */
+      @media (min-width: 1024px) {
+        .card { flex: 0 0 360px; }
+        .card img { height: 210px; }
+      }
+
+      @media (max-width: 768px) {
+        .arrow { font-size: 2rem; }
+        .card { flex: 0 0 280px; }
+        .card img { height: 180px; }
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const hamburger = document.querySelector(".hamburger");
+        const menu = document.querySelector(".menu");
+        hamburger?.addEventListener("click", () => {
+          menu.classList.toggle("active");
+        });
+
+        // Flechas controlan el scroll del carrusel
+        const track = document.querySelector(".carousel-track");
+        const left = document.querySelector(".arrow.left");
+        const right = document.querySelector(".arrow.right");
+
+        const step = () => {
+          // desplazamiento igual al ancho de una card + gap
+          const card = track.querySelector(".card");
+          const gap = parseFloat(getComputedStyle(track).gap) || 0;
+          return (card?.offsetWidth || 320) + gap;
+        };
+
+        left.addEventListener("click", () => {
+          track.scrollBy({ left: -step(), behavior: 'smooth' });
+        });
+        right.addEventListener("click", () => {
+          track.scrollBy({ left: step(), behavior: 'smooth' });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="logo">NDTV</div>
+      <div class="menu">
+        <a href="#">INICIO</a>
+        <a href="#">NOSOTROS</a>
+        <a href="#">NOTICIAS</a>
+        <a href="#">PODCAST</a>
+        <a href="#">ANUNCIATE</a>
+        <a href="#">PROGRAMACIÓN</a>
+        <a href="#">MÁS ▼</a>
+      </div>
+      <div class="hamburger">☰</div>
+      <div class="user-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+        </svg>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>NewsMx Tv®</h1>
+        <p>Tu fuente de noticias y entretenimiento.<br>
+           Actualidad y análisis en medios digitales</p>
+      </div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section class="gallery">
+      <img src="/img/1.jpg" alt="Imagen 1">
+      <img src="/img/2.jpg" alt="Imagen 2">
+      <img src="/img/3.jpg" alt="Imagen 3">
+    </section>
+
+    <!-- HEADER DE SECCIÓN -->
+    <section class="section-header">
+      <h2>LO MÁS DESTACADO</h2>
+    </section>
+
+    <!-- CARRUSEL -->
+    <section class="carousel">
+      <div class="arrow left">‹</div>
+      <div class="carousel-track">
+        <!-- Tarjetas (puedes ajustar imágenes y textos) -->
+        <div class="card">
+          <img src="/img/4.jpg" alt="Nigeria">
+          <div class="card-text">
+            <h3>La noche del secuestro masivo en Nigeria</h3>
+            <p>La madrugada del 21 de noviembre, decenas de motocicletas irrumpieron en Papiri, estado de Níger...</p>
+            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="/img/5.jpg" alt="Ley esposa">
+          <div class="card-text">
+            <h3>“Ley esposa”: Nepotismo o miedo a las mujeres</h3>
+            <p>Ricardo Gallardo defendió la reforma electoral bautizada como “Ley Esposa” ante críticas de la oposición...</p>
+            <span class="meta">Por Padme Zamorano · 18 Dic 2025 · Política</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="/img/6.jpg" alt="Trump vs Venezuela">
+          <div class="card-text">
+            <h3>La narrativa de Trump contra Venezuela</h3>
+            <p>Reportes del IMCO y la OCDE evidencian rezago en paridad de género y tensiones geopolíticas...</p>
+            <span class="meta">Por Diana Zamorano · 19 Dic 2025 · Internacional</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="/img/7.jpg" alt="Radar EE.UU.">
+          <div class="card-text">
+            <h3>EE. UU. instala radar militar cerca de Venezuela</h3>
+            <p>Trinidad y Tobago permitió la instalación de un radar de largo alcance, generando polémica regional...</p>
+            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
+          </div>
+        </div>
+
+        <!-- Repetidas para llenar el carrusel -->
+        <div class="card">
+          <img src="/img/4.jpg" alt="Nigeria">
+          <div class="card-text">
+            <h3>La noche del secuestro masivo en Nigeria</h3>
+            <p>La madrugada del 21 de noviembre, decenas de motocicletas irrumpieron en Papiri, estado de Níger...</p>
+            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="/img/5.jpg" alt="Ley esposa">
+          <div class="card-text">
+            <h3>“Ley esposa”: Nepotismo o miedo a las mujeres</h3>
+            <p>Ricardo Gallardo defendió la reforma electoral bautizada como “Ley Esposa” ante críticas de la oposición...</p>
+            <span class="meta">Por Padme Zamorano · 18 Dic 2025 · Política</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="/img/6.jpg" alt="Trump vs Venezuela">
+          <div class="card-text">
+            <h3>La narrativa de Trump contra Venezuela</h3>
+            <p>Reportes del IMCO y la OCDE evidencian rezago en paridad de género y tensiones geopolíticas...</p>
+            <span class="meta">Por Diana Zamorano · 19 Dic 2025 · Internacional</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="/img/7.jpg" alt="Radar EE.UU.">
+          <div class="card-text">
+            <h3>EE. UU. instala radar militar cerca de Venezuela</h3>
+            <p>Trinidad y Tobago permitió la instalación de un radar de largo alcance, generando polémica regional...</p>
+            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
+          </div>
+        </div>
+      </div>
+      <div class="arrow right">›</div>
+    </section>
+  </body>
+</html>
+
+
+
+
+
+
