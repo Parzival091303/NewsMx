@@ -1,148 +1,175 @@
 ---
 import LayoutBase from "@/layouts/LayoutBase.astro";
-import "@/assets/css/styles.css"
+import "@/styles/styles.css";
 import Card from "@/componentes/Card.astro";
+import BannerInicio from "@/componentes/inicio/BannerInicio.astro";
+import CarruselDestacados from "@/componentes/reportajes/destacados/CarruselDestacados.astro";
 ---
 
-        <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Flechas controlan el scroll del carrusel
+    const track = document.querySelector(".carousel-track") as HTMLElement;
+    const left = document.querySelector(".arrow.left");
+    const right = document.querySelector(".arrow.right");
 
-        // Flechas controlan el scroll del carrusel
-        const track = document.querySelector(".carousel-track") as HTMLElement;
-        const left = document.querySelector(".arrow.left");
-        const right = document.querySelector(".arrow.right");
+    const step = () => {
+      // desplazamiento igual al ancho de una card + gap
+      const card = track?.querySelector(".card") as HTMLElement;
+      const gap = parseFloat(getComputedStyle(track).gap) || 0;
+      return (card?.offsetWidth || 320) + gap;
+    };
 
-        const step = () => {
-          // desplazamiento igual al ancho de una card + gap
-          const card = track?.querySelector(".card") as HTMLElement;
-          const gap = parseFloat(getComputedStyle(track).gap) || 0;
-          return (card?.offsetWidth || 320) + gap;
-        };
-
-        left?.addEventListener("click", () => {
-          track.scrollBy({ left: -step(), behavior: 'smooth' });
-        });
-        right?.addEventListener("click", () => {
-          track.scrollBy({ left: step(), behavior: 'smooth' });
-        });
-      });
-    </script>
+    left?.addEventListener("click", () => {
+      track.scrollBy({ left: -step(), behavior: "smooth" });
+    });
+    right?.addEventListener("click", () => {
+      track.scrollBy({ left: step(), behavior: "smooth" });
+    });
+  });
+</script>
 <LayoutBase>
+  <!-- NAVBAR -->
 
-    <!-- NAVBAR -->
-    
+  <!-- HERO -->
+  <BannerInicio />
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-content">
-        <h1>NewsMx Tv®</h1>
-        <p>Tu fuente de noticias y entretenimiento.<br>
-           Actualidad y análisis en medios digitales</p>
-      </div>
-    </section>
+  <!-- GALERÍA -->
+  <section class="gallery">
+    <img src="/img/1.jpg" alt="Imagen 1" />
+    <img src="/img/2.jpg" alt="Imagen 2" />
+    <img src="/img/3.jpg" alt="Imagen 3" />
+  </section>
 
-    <!-- GALERÍA -->
-    <section class="gallery">
-      <img src="/img/1.jpg" alt="Imagen 1">
-      <img src="/img/2.jpg" alt="Imagen 2">
-      <img src="/img/3.jpg" alt="Imagen 3">
-    </section>
+  <CarruselDestacados />
+  <!-- HEADER DE SECCIÓN -->
+  <section class="section-header">
+    <h2>LO MÁS DESTACADO</h2>
+  </section>
 
-    <!-- HEADER DE SECCIÓN -->
-    <section class="section-header">
-      <h2>LO MÁS DESTACADO</h2>
-    </section>
 
-    <!-- CARRUSEL -->
-    <section class="carousel">
-      <div class="arrow left">‹</div>
-      <div class="carousel-track">
-        
-        <!-- Tarjetas (puedes ajustar imágenes y textos) -->
-        <div class="card">
-          <img src="/img/4.jpg" alt="Nigeria">
-          <div class="card-text">
-            <h3>La noche del secuestro masivo en Nigeria</h3>
-            <p>La madrugada del 21 de noviembre, decenas de motocicletas irrumpieron en Papiri, estado de Níger...</p>
-            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
-          </div>
+  <!-- CARRUSEL -->
+  <section class="carousel">
+    <div class="arrow left">‹</div>
+    <div class="carousel-track">
+      <!-- Tarjetas (puedes ajustar imágenes y textos) -->
+      <div class="card">
+        <img src="/img/4.jpg" alt="Nigeria" />
+        <div class="card-text">
+          <h3>La noche del secuestro masivo en Nigeria</h3>
+          <p>
+            La madrugada del 21 de noviembre, decenas de motocicletas
+            irrumpieron en Papiri, estado de Níger...
+          </p>
+          <span class="meta"
+            >Por Renata Rodríguez · 18 Dic 2025 · Internacional</span
+          >
         </div>
-        <Card titulo="“Ley esposa”: Nepotismo o miedo a las mujeres" 
+      </div>
+      <Card
+        titulo="“Ley esposa”: Nepotismo o miedo a las mujeres"
         autor="Padme Zamorano"
         fecha="18 Dic 2025"
         categoria="Política"
         img="/img/5.jpg"
-        descripcion="Ricardo Gallardo defendió la reforma electoral bautizada como “Ley Esposa” ante críticas de la oposición..." />
-        
-        <div class="card">
-          <img src="/img/5.jpg" alt="Ley esposa">
-          <div class="card-text">
-            <h3>“Ley esposa”: Nepotismo o miedo a las mujeres</h3>
-            <p>Ricardo Gallardo defendió la reforma electoral bautizada como “Ley Esposa” ante críticas de la oposición...</p>
-            <span class="meta">Por Obed · 18 Dic 2025 · Política</span>
-          </div>
-        </div>
+        descripcion="Ricardo Gallardo defendió la reforma electoral bautizada como “Ley Esposa” ante críticas de la oposición..."
+      />
 
-        <div class="card">
-          <img src="/img/6.jpg" alt="Trump vs Venezuela">
-          <div class="card-text">
-            <h3>La narrativa de Trump contra Venezuela</h3>
-            <p>Reportes del IMCO y la OCDE evidencian rezago en paridad de género y tensiones geopolíticas...</p>
-            <span class="meta">Por Diana Zamorano · 19 Dic 2025 · Internacional</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <img src="/img/7.jpg" alt="Radar EE.UU.">
-          <div class="card-text">
-            <h3>EE. UU. instala radar  militar cerca de Venezuela</h3>
-            <p>Trinidad y Tobago permitió la instalación de un radar de largo alcance, generando polémica regional...</p>
-            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
-          </div>
-        </div>
-
-        <!-- Repetidas para llenar el carrusel -->
-        <div class="card">
-          <img src="/img/4.jpg" alt="Nigeria">
-          <div class="card-text">
-            <h3>La noche del secuestro masivo en Nigeria</h3>
-            <p>La madrugada del 21 de noviembre, decenas de motocicletas irrumpieron en Papiri, estado de Níger...</p>
-            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <img src="/img/5.jpg" alt="Ley esposa">
-          <div class="card-text">
-            <h3>“Ley esposa”: Nepotismo o miedo a las mujeres</h3>
-            <p>Ricardo Gallardo defendió la reforma electoral bautizada como “Ley Esposa” ante críticas de la oposición...</p>
-            <span class="meta">Por Padme Zamorano · 18 Dic 2025 · Política</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <img src="/img/6.jpg" alt="Trump vs Venezuela">
-          <div class="card-text">
-            <h3>La narrativa de Trump contra Venezuela</h3>
-            <p>Reportes del IMCO y la OCDE evidencian rezago en paridad de género y tensiones geopolíticas...</p>
-            <span class="meta">Por Diana Zamorano · 19 Dic 2025 · Internacional</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <img src="/img/7.jpg" alt="Radar EE.UU.">
-          <div class="card-text">
-            <h3>EE. UU. instala radar militar cerca de Venezuela</h3>
-            <p>Trinidad y Tobago permitió la instalación de un radar de largo alcance, generando polémica regional...</p>
-            <span class="meta">Por Renata Rodríguez · 18 Dic 2025 · Internacional</span>
-          </div>
+      <div class="card">
+        <img src="/img/5.jpg" alt="Ley esposa" />
+        <div class="card-text">
+          <h3>“Ley esposa”: Nepotismo o miedo a las mujeres</h3>
+          <p>
+            Ricardo Gallardo defendió la reforma electoral bautizada como “Ley
+            Esposa” ante críticas de la oposición...
+          </p>
+          <span class="meta">Por Obed · 18 Dic 2025 · Política</span>
         </div>
       </div>
-      <div class="arrow right">›</div>
-    </section>
+
+      <div class="card">
+        <img src="/img/6.jpg" alt="Trump vs Venezuela" />
+        <div class="card-text">
+          <h3>La narrativa de Trump contra Venezuela</h3>
+          <p>
+            Reportes del IMCO y la OCDE evidencian rezago en paridad de género y
+            tensiones geopolíticas...
+          </p>
+          <span class="meta"
+            >Por Diana Zamorano · 19 Dic 2025 · Internacional</span
+          >
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="/img/7.jpg" alt="Radar EE.UU." />
+        <div class="card-text">
+          <h3>EE. UU. instala radar militar cerca de Venezuela</h3>
+          <p>
+            Trinidad y Tobago permitió la instalación de un radar de largo
+            alcance, generando polémica regional...
+          </p>
+          <span class="meta"
+            >Por Renata Rodríguez · 18 Dic 2025 · Internacional</span
+          >
+        </div>
+      </div>
+
+      <!-- Repetidas para llenar el carrusel -->
+      <div class="card">
+        <img src="/img/4.jpg" alt="Nigeria" />
+        <div class="card-text">
+          <h3>La noche del secuestro masivo en Nigeria</h3>
+          <p>
+            La madrugada del 21 de noviembre, decenas de motocicletas
+            irrumpieron en Papiri, estado de Níger...
+          </p>
+          <span class="meta"
+            >Por Renata Rodríguez · 18 Dic 2025 · Internacional</span
+          >
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="/img/5.jpg" alt="Ley esposa" />
+        <div class="card-text">
+          <h3>“Ley esposa”: Nepotismo o miedo a las mujeres</h3>
+          <p>
+            Ricardo Gallardo defendió la reforma electoral bautizada como “Ley
+            Esposa” ante críticas de la oposición...
+          </p>
+          <span class="meta">Por Padme Zamorano · 18 Dic 2025 · Política</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="/img/6.jpg" alt="Trump vs Venezuela" />
+        <div class="card-text">
+          <h3>La narrativa de Trump contra Venezuela</h3>
+          <p>
+            Reportes del IMCO y la OCDE evidencian rezago en paridad de género y
+            tensiones geopolíticas...
+          </p>
+          <span class="meta"
+            >Por Diana Zamorano · 19 Dic 2025 · Internacional</span
+          >
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="/img/7.jpg" alt="Radar EE.UU." />
+        <div class="card-text">
+          <h3>EE. UU. instala radar militar cerca de Venezuela</h3>
+          <p>
+            Trinidad y Tobago permitió la instalación de un radar de largo
+            alcance, generando polémica regional...
+          </p>
+          <span class="meta"
+            >Por Renata Rodríguez · 18 Dic 2025 · Internacional</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="arrow right">›</div>
+  </section>
 </LayoutBase>
-
-
-
-
