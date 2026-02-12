@@ -1,0 +1,180 @@
+---
+---
+<section class="ad-forsetti">
+    <div class="ad-container">
+        <div class="ad-content">
+            <div class="ad-header">
+                <div class="ad-badge">PATROCINADO</div>
+                <div class="ad-logo-svg">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 5 L90 25 L90 75 L50 95 L10 75 L10 25 Z" fill="none" stroke="#ffd700" stroke-width="2"/>
+                        <path d="M30 40 L50 30 L70 40 L70 60 L50 70 L30 60 Z" fill="#ffd700"/>
+                        <rect x="48" y="20" width="4" height="60" fill="#ffd700" opacity="0.3"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h2 class="ad-title">CONSORCIO JURÍDICO <br/><span class="highlight">FORSETTI</span></h2>
+            <p class="ad-description">
+                Excelencia legal y defensa estratégica. Especialistas en derecho corporativo, 
+                civil y penal con resultados garantizados.
+            </p>
+            
+            <div class="ad-footer">
+                <div class="ad-contact">
+                    <span class="contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        CONSULTA ESPECIALIZADA
+                    </span>
+                </div>
+                <a href="#" class="ad-btn">CONTACTAR AHORA</a>
+            </div>
+        </div>
+        
+        <div class="ad-deco-side">
+            <div class="deco-lines"></div>
+            <div class="deco-text">JUSTICE • INTEGRITY • LAW</div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .ad-forsetti {
+        background-color: #1a1a1a;
+        padding: 4rem 2rem;
+        margin: 4rem 0;
+        position: relative;
+        overflow: hidden;
+        border-top: 5px solid #ffd700;
+        border-bottom: 5px solid #ffd700;
+    }
+
+    .ad-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+
+    .ad-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ad-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .ad-badge {
+        background: #ffd700;
+        color: #1a1a1a;
+        padding: 0.3rem 1rem;
+        font-weight: 900;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+    }
+
+    .ad-logo-svg {
+        width: 80px;
+        height: 80px;
+        opacity: 0.8;
+    }
+
+    .ad-title {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 900;
+        line-height: 0.9;
+        color: white;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+    }
+
+    .ad-title .highlight {
+        color: transparent;
+        -webkit-text-stroke: 1.5px #ffd700;
+    }
+
+    .ad-description {
+        font-size: 1.2rem;
+        color: #aaa;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+        border-left: 3px solid #ffd700;
+        padding-left: 1.5rem;
+    }
+
+    .ad-footer {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .ad-contact {
+        color: #ffd700;
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .ad-btn {
+        background: white;
+        color: #1a1a1a;
+        padding: 1rem 2.5rem;
+        font-weight: 900;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 2px solid white;
+    }
+
+    .ad-btn:hover {
+        background: transparent;
+        color: white;
+    }
+
+    .ad-deco-side {
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+    }
+
+    .deco-lines {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background-image: repeating-linear-gradient(45deg, #ffd700 0, #ffd700 1px, transparent 0, transparent 50%);
+        background-size: 20px 20px;
+        opacity: 0.05;
+    }
+
+    .deco-text {
+        font-size: 5rem;
+        font-weight: 900;
+        color: rgba(255, 215, 0, 0.05);
+        transform: rotate(90deg);
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    @media (max-width: 900px) {
+        .ad-container { grid-template-columns: 1fr; gap: 2rem; }
+        .ad-deco-side { display: none; }
+        .ad-footer { flex-direction: column; align-items: flex-start; }
+    }
+</style>
