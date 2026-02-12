@@ -1,10 +1,501 @@
 ---
 export const prerender = false
 import LayoutBase from "@/layouts/LayoutBase.astro";
+//import AnuncioForsetti from "@/componentes/AnuncioForsetti.astro";
+//import AnuncioArtisticas from "@/componentes/AnuncioArtisticas.astro";
+
+
 ---
 
 
-<LayoutBase>
-    
-</LayoutBase>
 
+
+<LayoutBase>
+    <section class="anunciate-hero-alt">
+        <div class="noise-bg"></div>
+        <div class="hero-bg-text-alt">ADS</div>
+        
+        <div class="floating-shape shape-1-alt"></div>
+        <div class="floating-shape shape-2-alt"></div>
+        
+        <div class="hero-content-alt">
+            <div class="hero-tag-alt">MARKETING & ADS</div>
+            <h1 class="hero-title-alt">
+                <span class="reveal-text-alt" style="--delay: 0.1s">IMPULSA TU</span><br/>
+                <span class="reveal-text-alt highlight-alt italic" style="--delay: 0.3s">MARCA</span>
+                <span class="reveal-text-alt outline-alt-title" style="--delay: 0.5s">AL LÍMITE</span>
+            </h1>
+            <div class="hero-sticker-alt floating-sticker-alt">TOP REACH</div>
+            <p class="hero-subtitle-alt reveal-text-alt" style="--delay: 0.7s">ESTRATEGIAS DIGITALES • IMPACTO REAL • AUDIENCIA GLOBAL</p>
+        </div>
+
+        <div class="scroll-indicator-alt">
+            <span class="scroll-text-alt">EXPLORE OPTIONS</span>
+            <div class="scroll-line-alt"></div>
+        </div>
+    </section>
+
+    <section class="anunciate-content-alt">
+        <div class="noise-bg"></div>
+        
+        <div class="aesthetic-header-alt">
+            <span class="line-alt"></span>
+            <div class="section-tag-alt">SOLUCIONES PUBLICITARIAS</div>
+            <span class="line-alt"></span>
+        </div>
+
+        <div class="container-alt">
+            <div class="ads-grid-alt">
+                <div class="reveal-text-alt" style="--delay: 0.2s">
+                    <!--<AnuncioForsetti /> -->
+                </div>
+                <div class="reveal-text-alt" style="--delay: 0.4s">
+                    <!--<AnuncioArtisticas /> -->
+                </div>
+            </div>
+            
+            <div class="contact-section-alt modern-card-alt reveal-text-alt" style="--delay: 0.6s">
+                <div class="contact-layout-alt">
+                    <div class="contact-info-alt">
+                        <span class="card-tag-alt">CONECTA CON NOSOTROS</span>
+                        <h2 class="contact-title-alt">¿LISTO PARA <br/><span class="text-teal-alt italic">BRILLAR?</span></h2>
+                        <p class="contact-desc-alt">Diseñamos campañas que rompen el ruido digital. Cuéntanos tu visión y la haremos realidad.</p>
+                        
+                        <div class="contact-meta-alt">
+                            <div class="meta-item-alt">
+                                <span class="meta-id-alt">@</span>
+                                <span>ads@newsmx.tv</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form class="aesthetic-form-alt">
+                        <div class="form-group-alt">
+                            <input type="text" placeholder="EMPRESA" required />
+                        </div>
+                        <div class="form-group-alt">
+                            <input type="email" placeholder="EMAIL" required />
+                        </div>
+                        <div class="form-group-alt">
+                            <textarea placeholder="MENSAJE" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="form-btn-alt">
+                            <span>ENVIAR PROPUESTA</span>
+                            <span class="btn-arrow-alt">→</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="contact-footer-alt">
+                    <div class="policy-deco-squares-alt">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="policy-vertical-tag-alt">
+                        <span>EST. 2008</span>
+                        <span>NEWSMX TV</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700;800&display=swap');
+
+        :root {
+            --max-teal-alt: #009999;
+            --max-yellow-alt: #ffcc00;
+            --max-black-alt: #111111;
+            --max-white-alt: #ffffff;
+            --max-bg-alt: #fcfcfc;
+            --border-alt-alt: #eeeeee;
+            --accent-soft-alt: rgba(0, 153, 153, 0.05);
+            --font-main-alt: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main-alt);
+            background-color: var(--max-bg-alt);
+        }
+
+        .noise-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* HERO ALT */
+        .anunciate-hero-alt {
+            height: 100vh;
+            background-color: var(--max-white-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-alt-alt);
+        }
+
+        .hero-bg-text-alt {
+            position: absolute;
+            font-size: 35vw;
+            font-weight: 900;
+            color: rgba(0,0,0,0.02);
+            z-index: 0;
+            letter-spacing: -2vw;
+            user-select: none;
+            line-height: 1;
+        }
+
+        .floating-shape {
+            position: absolute;
+            z-index: 0;
+            filter: blur(100px);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .shape-1-alt {
+            width: 45vw;
+            height: 45vw;
+            background: var(--max-teal-alt);
+            top: -10%;
+            right: -10%;
+            animation: float-alt-ads 12s infinite alternate;
+        }
+
+        .shape-2-alt {
+            width: 35vw;
+            height: 35vw;
+            background: var(--max-yellow-alt);
+            bottom: -5%;
+            left: -5%;
+            animation: float-alt-ads 10s infinite alternate-reverse;
+        }
+
+        @keyframes float-alt-ads {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(40px, -40px) rotate(15deg); }
+        }
+
+        .hero-content-alt {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+        }
+
+        .hero-tag-alt {
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.5em;
+            color: var(--max-teal-alt);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .hero-title-alt {
+            font-size: clamp(3rem, 12vw, 10rem);
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            color: var(--max-black-alt);
+            margin-bottom: 2rem;
+        }
+
+        .italic { font-style: italic; font-weight: 300; }
+        .outline-alt-title { 
+            display: block;
+            -webkit-text-stroke: 1px var(--max-black-alt);
+            color: transparent;
+            font-size: 0.7em;
+            margin-top: 0.5rem;
+        }
+
+        .hero-sticker-alt {
+            position: absolute;
+            top: 20%;
+            right: -50px;
+            background: var(--max-black-alt);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 800;
+            transform: rotate(-10deg);
+            border-radius: 50px;
+            box-shadow: 6px 6px 0 var(--max-yellow-alt);
+        }
+
+        .floating-sticker-alt {
+            animation: sticker-float-alt 4s ease-in-out infinite;
+        }
+
+        @keyframes sticker-float-alt {
+            0%, 100% { transform: rotate(-10deg) translateY(0); }
+            50% { transform: rotate(-5deg) translateY(-15px); }
+        }
+
+        .hero-subtitle-alt {
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 2rem;
+        }
+
+        /* REVEAL ANIMATIONS */
+        .reveal-text-alt {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(40px) skewY(3deg);
+            transition: all 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+            transition-delay: var(--delay, 0s);
+        }
+
+        .reveal-text-alt.active {
+            opacity: 1;
+            transform: translateY(0) skewY(0deg);
+        }
+
+        /* CONTENT ALT */
+        .anunciate-content-alt {
+            background-color: var(--max-bg-alt);
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .aesthetic-header-alt {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 6rem;
+        }
+
+        .aesthetic-header-alt .line-alt {
+            height: 1px;
+            flex: 1;
+            background: var(--border-alt-alt);
+            max-width: 100px;
+        }
+
+        .section-tag-alt {
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.5em;
+            color: var(--max-teal-alt);
+        }
+
+        .container-alt {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .ads-grid-alt {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-bottom: 8rem;
+        }
+
+        .modern-card-alt {
+            background: var(--max-white-alt);
+            border: 1px solid var(--border-alt-alt);
+            padding: 4rem;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .contact-section-alt {
+            border: 2px solid var(--max-black-alt);
+        }
+
+        .contact-layout-alt {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .card-tag-alt {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #bbb;
+            letter-spacing: 0.2em;
+            display: block;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-title-alt {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .text-teal-alt { color: var(--max-teal-alt); }
+
+        .contact-desc-alt {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 3rem;
+        }
+
+        .meta-item-alt {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .meta-id-alt {
+            width: 40px;
+            height: 40px;
+            background: var(--max-yellow-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* FORM ALT */
+        .aesthetic-form-alt {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group-alt input, .form-group-alt textarea {
+            width: 100%;
+            padding: 1.2rem;
+            background: #f9f9f9;
+            border: 1px solid var(--border-alt-alt);
+            font-family: var(--font-main-alt);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group-alt input:focus, .form-group-alt textarea:focus {
+            outline: none;
+            border-color: var(--max-black-alt);
+            background: var(--max-white-alt);
+        }
+
+        .form-btn-alt {
+            background: var(--max-black-alt);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .form-btn-alt:hover {
+            background: var(--max-teal-alt);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 153, 153, 0.2);
+        }
+
+        .contact-footer-alt {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-alt-alt);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .policy-deco-squares-alt {
+            display: flex;
+            gap: 8px;
+        }
+
+        .policy-deco-squares-alt span {
+            width: 15px;
+            height: 15px;
+            background: #eee;
+        }
+
+        .policy-deco-squares-alt span:last-child {
+            background: var(--max-yellow-alt);
+        }
+
+        .policy-vertical-tag-alt {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #ccc;
+            letter-spacing: 0.3em;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .scroll-indicator-alt {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scroll-text-alt {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.4em;
+            color: #999;
+        }
+
+        .scroll-line-alt {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--max-teal-alt), transparent);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .contact-layout-alt { grid-template-columns: 1fr; }
+            .hero-title-alt { font-size: 18vw; }
+            .ads-grid-alt { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .modern-card-alt { padding: 2rem; }
+            .contact-title-alt { font-size: 3rem; }
+        }
+    </style>
+
+    <script>
+        // Intersection Observer for reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-text-alt').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</LayoutBase>
+</LayoutBase>
