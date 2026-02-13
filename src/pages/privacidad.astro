@@ -26,7 +26,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 1: Introducción -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">01</span>  <!-- Número de sección -->
+              <i class="bi bi-info-circle-fill timeline-icon"></i>  <!-- Ícono de información -->
             </div>
             <div class="timeline-content">
               <!-- Tarjeta cuadrada con bordes redondeados -->
@@ -47,7 +47,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 2: Responsable del Tratamiento de Datos -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">02</span>
+              <i class="bi bi-person-badge timeline-icon"></i>  <!-- Ícono de persona con identificación -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -65,7 +65,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 3: Datos Personales Recopilados -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">03</span>
+              <i class="bi bi-database timeline-icon"></i>  <!-- Ícono de base de datos -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -83,7 +83,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 4: Finalidades del Tratamiento -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">04</span>
+              <i class="bi bi-bullseye timeline-icon"></i>  <!-- Ícono de objetivo/diana -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -101,7 +101,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 5: Base Legal para el Tratamiento -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">05</span>
+              <i class="bi bi-scale timeline-icon"></i>  <!-- Ícono de balanza (legal) -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -119,7 +119,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 6: Confidencialidad y Seguridad -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">06</span>
+              <i class="bi bi-lock-fill timeline-icon"></i>  <!-- Ícono de candado (seguridad) -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -137,7 +137,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 7: Compartición de Datos con Terceros -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">07</span>
+              <i class="bi bi-share timeline-icon"></i>  <!-- Ícono de compartir -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -155,7 +155,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 8: Conservación de Datos -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">08</span>
+              <i class="bi bi-calendar-check timeline-icon"></i>  <!-- Ícono de calendario con check -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -173,7 +173,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 9: Derechos de los Titulares de Datos -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">09</span>
+              <i class="bi bi-person-check timeline-icon"></i>  <!-- Ícono de persona con check -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -191,7 +191,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 10: Cookies y Tecnologías Similares -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">10</span>
+              <i class="bi bi-cookie timeline-icon"></i>  <!-- Ícono de cookie -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -209,7 +209,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 11: Términos y Condiciones Generales -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">11</span>
+              <i class="bi bi-file-earmark-text timeline-icon"></i>  <!-- Ícono de documento -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -227,7 +227,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 12: Contacto -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">12</span>
+              <i class="bi bi-telephone timeline-icon"></i>  <!-- Ícono de teléfono -->
             </div>
             <div class="timeline-content">
               <div class="policy-card">
@@ -268,7 +268,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           <!-- Sección 13 - Diseño especial para aceptación -->
           <div class="timeline-item">
             <div class="timeline-marker">
-              <span class="timeline-number">13</span>
+              <i class="bi bi-hand-thumbs-up-fill timeline-icon"></i>  <!-- Ícono de pulgar arriba (aceptación) -->
             </div>
             <div class="timeline-content">
               <div class="acceptance-section">
@@ -302,6 +302,20 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
           </div>
 
         </div>
+
+        <!-- FIRMA O SLAGER AGREGADO AL FINAL -->
+        <div class="signature-footer text-center mt-5 pt-4">
+          <div class="signature-divider mb-4"></div>
+          <div class="signature-content">
+            <i class="bi bi-shield-check signature-icon mb-3"></i>
+            <h4 class="signature-company-name text-center">NewsMx TV®</h4>
+            <p class="signature-date mt-3">
+              <i class="bi bi-calendar2-check me-2"></i>
+              <span>NewsMx Tv TI</span>
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -370,7 +384,7 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
       }
     }
 
-    /* Números circulares en la línea */
+    /* Íconos circulares en la línea (reemplazan a los números) */
     .timeline-marker {
       position: absolute;
       left: 0;
@@ -379,23 +393,24 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
       z-index: 2;
     }
 
-    .timeline-number {
-      display: inline-block;
+    .timeline-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 50px;
       height: 50px;
-      line-height: 50px;
       background: var(--primary-teal);
       color: white;
       border-radius: 50%;
-      font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.5rem;
       box-shadow: 0 4px 10px rgba(0, 128, 128, 0.3);
       transition: all 0.3s ease;
     }
 
-    /* Efecto cuando pasas el mouse sobre el número */
-    .timeline-item:hover .timeline-number {
+    /* Efecto cuando pasas el mouse sobre el ícono */
+    .timeline-item:hover .timeline-icon {
       transform: scale(1.1);
+      background: var(--dark-blue);
       box-shadow: 0 6px 15px rgba(0, 128, 128, 0.4);
     }
 
@@ -593,6 +608,82 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
       font-style: italic;
     }
 
+    /* ===== ESTILOS PARA LA FIRMA AL FINAL ===== */
+    .signature-footer {
+      position: relative;
+      padding: 2rem 1rem 1rem;
+    }
+
+    .signature-divider {
+      width: 150px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary-teal), transparent);
+      margin: 0 auto;
+    }
+
+    .signature-content {
+      background: linear-gradient(135deg, #ffffff, var(--teal-light));
+      padding: 2.5rem 2rem;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0, 128, 128, 0.15);
+      border: 2px solid var(--primary-teal);
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .signature-icon {
+      font-size: 3.5rem;
+      color: var(--primary-teal);
+      background: white;
+      padding: 1rem;
+      border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0, 128, 128, 0.2);
+      display: inline-block;
+    }
+
+    .signature-company-name {
+      color: var(--primary-teal);
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      width: 100%;
+      text-align: center !important;
+    }
+
+    .signature-message {
+      color: var(--gray-dark);
+      font-size: 1.1rem;
+      font-style: italic;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .signature-date {
+      color: var(--dark-blue);
+      font-size: 1rem;
+      font-weight: 500;
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: white;
+      border-radius: 50px;
+      box-shadow: 0 2px 8px rgba(0, 128, 128, 0.1);
+    }
+
+    .signature-date i {
+      color: var(--primary-teal);
+    }
+
+    /* Efecto hover en la firma */
+    .signature-content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 128, 128, 0.25);
+      transition: all 0.3s ease;
+    }
+
     /* Ajustes para pantallas de móvil */
     @media (max-width: 768px) {
       /* Título principal responsivo */
@@ -611,16 +702,15 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
         margin-left: 70px;
       }
       
-      /* Hacemos los números más pequeños */
+      /* Hacemos los íconos más pequeños */
       .timeline-marker {
         width: 70px;
       }
       
-      .timeline-number {
+      .timeline-icon {
         width: 40px;
         height: 40px;
-        line-height: 40px;
-        font-size: 0.9rem;
+        font-size: 1.2rem;
       }
       
       /* Ajustamos las tarjetas */
@@ -670,6 +760,24 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
       .acceptance-text p {
         font-size: 16px;
       }
+
+      /* Ajustes para la firma en móviles */
+      .signature-content {
+        padding: 2rem 1.5rem;
+      }
+
+      .signature-icon {
+        font-size: 2.5rem;
+        padding: 0.8rem;
+      }
+
+      .signature-company-name {
+        font-size: 1.6rem;
+      }
+
+      .signature-message {
+        font-size: 1rem;
+      }
     }
 
     /* Para pantallas muy pequeñas */
@@ -685,6 +793,14 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
       
       .policy-card-body p {
         font-size: 15px;
+      }
+
+      .signature-content {
+        padding: 1.5rem 1rem;
+      }
+
+      .signature-company-name {
+        font-size: 1.4rem;
       }
     }
 
@@ -702,6 +818,13 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
     .timeline-item:nth-child(11) { animation-delay: 1.1s; }
     .timeline-item:nth-child(12) { animation-delay: 1.2s; }
     .timeline-item:nth-child(13) { animation-delay: 1.3s; }
+
+    /* Animación para la firma */
+    .signature-footer {
+      animation: fadeInUp 0.8s ease-out forwards;
+      animation-delay: 1.4s;
+      opacity: 0;
+    }
 
   </style>
 </LayoutBase>
