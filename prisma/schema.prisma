@@ -8,7 +8,14 @@ datasource db {
 }
 
 
-   
+   model Place {
+  id          Int     @id @default(autoincrement())
+  title       String  @db.VarChar
+  description String  @db.VarChar
+  avg_rating  Decimal @db.Decimal
+  image       String  @db.VarChar
+}
+
 
 
 
