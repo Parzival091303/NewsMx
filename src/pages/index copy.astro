@@ -1,0 +1,32 @@
+---
+import "../styles/global.css";
+
+import MainLayout from "../layouts/MainLayout.astro";
+import PlaceCard from "../components/PlaceCard.astro";
+import { actions } from "astro:actions";
+
+// 🔥 Llamada correcta a la Action
+const { data, error } = await Astro.callAction(actions.getPlaces,null);
+
+if (error) {
+  throw error;
+}
+
+if (!data) {
+  throw new Error("No data returned from getPlaces");
+}
+
+// tu action devuelve { data: places }
+const places = data.data;
+---
+
+<MainLayout>
+  <h1 class="text-3xl font-extrabold">Lugares</h1>
+
+  <div class="grid grid-cols-3 gap-4">
+    {places.map((place) => (
+      <PlaceCard place={place} />
+    ))}
+    <h1>back</h1>
+  </div>
+</MainLayout>
