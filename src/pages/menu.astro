@@ -1,9 +1,11 @@
 ---
 import "../styles/global.css";
 
-import MainLayout from "../layouts/MainLayout.astro";
-import PlaceCard from "../components/PlaceCard.astro";
+
+
 import { actions } from "astro:actions";
+import PlaceCard from "@/componentes/PlaceCard.astro";
+import LayoutBase from "@/layouts/LayoutBase.astro";
 
 // 🔥 Llamada correcta a la Action
 const { data, error } = await Astro.callAction(actions.getPlaces,null);
@@ -20,7 +22,7 @@ if (!data) {
 const places = data.data;
 ---
 
-<MainLayout>
+<LayoutBase>
   <h1 class="text-3xl font-extrabold">Lugares</h1>
 
   <div class="grid grid-cols-3 gap-4">
@@ -29,4 +31,4 @@ const places = data.data;
     ))}
     <h1>back</h1>
   </div>
-</MainLayout>
+</LayoutBase>

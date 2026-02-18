@@ -1,10 +1,13 @@
 ---
 import type { GetStaticPaths } from "astro";
-import MainLayout from "../../layouts/MainLayout.astro";
+
 import { getPlaceById, getPlacesForBuild } from "../../lib/place";
-import Star from "../../components/Star.astro";
+
 import { Image } from "astro:assets";
-import Availability from "../../components/Availability.astro";
+
+import Star from "@/componentes/Star.astro";
+import LayoutBase from "@/layouts/LayoutBase.astro";
+import Availability from "@/componentes/Availability.astro";
 
 export const prerender = true;
 
@@ -27,7 +30,7 @@ if (!place) {
 const imageUrl = `/assets/assets/images/${place.image}`;
 ---
 
-<MainLayout>
+<LayoutBase>
     <div class="grid grid-cols-2 gap-2">
         <div class="bg-whit/80 p-5 rounded-xl">
             <h1 class=" text-2xl font-extrabold">#{id} {place.title}</h1>
@@ -60,4 +63,4 @@ const imageUrl = `/assets/assets/images/${place.image}`;
             />
         </div>
     </div>
-</MainLayout>
+</LayoutBase>

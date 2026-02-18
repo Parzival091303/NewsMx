@@ -15,6 +15,71 @@ datasource db {
   avg_rating  Decimal @db.Decimal
   image       String  @db.VarChar
 }
+model usuarios {
+  id_usuario   BigInt  @id @default(autoincrement())
+  id_rol       BigInt  @default(1)
+  nombre       String?
+  apellido     String?
+  telefono     String?
+  correo       String  @unique
+  contraseña   String
+
+  rol          roles   @relation(fields: [id_rol], references: [id_rol])
+  noticias     noticias[]
+  actualizaciones actualizacion[]
+}
+
+model roles {
+  id_rol   BigInt  @id
+  tipo_rol String  @unique
+
+  usuarios usuarios[]
+}
+
+model noticias {
+  id_noticia     BigInt   @id @default(autoincrement())
+  titulo_noticia String?
+  fecha_noticia  DateTime?
+  primer_parrafo String?
+  noticias_url   String? @unique
+  imagen         String?
+  contenido      String?
+  id_usuario     BigInt?
+  status         BigInt?
+
+  usuario        usuarios? @relation(fields: [id_usuario], references: [id_usuario])
+  categorias     categorias_noticias[]
+  actualizaciones actualizacion[]
+}
+
+model categorias {
+  id_categoria   BigInt @id @default(autoincrement())
+  nombre_categoria String
+
+  noticias categorias_noticias[]
+}
+
+model categorias_noticias {
+  id_noticia   BigInt
+  id_categoria BigInt
+
+  noticia   noticias   @relation(fields: [id_noticia], references: [id_noticia])
+  categoria categorias @relation(fields: [id_categoria], references: [id_categoria])
+
+  @@id([id_noticia, id_categoria])
+}
+
+model actualizacion {
+  id_actualizado      BigInt   @id @default(autoincrement())
+  campo_actualizado   String
+  fecha_actualizacion DateTime
+  id_usuario          BigInt
+  id_noticia          BigInt
+
+  usuario usuarios @relation(fields: [id_usuario], references: [id_usuario])
+  noticia noticias @relation(fields: [id_noticia], references: [id_noticia])
+}
+
 
 
 
