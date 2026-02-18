@@ -9,6 +9,8 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
 
 // 🔥 Llamada correcta a la Action
 const { data, error } = await Astro.callAction(actions.getPlaces,null);
+const {data : newsData, error : newsError } = await Astro.callAction(actions.getAllNews, {});
+console.log("News data:", newsData);
 
 if (error) {
   throw error;
