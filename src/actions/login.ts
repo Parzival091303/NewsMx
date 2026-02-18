@@ -1,43 +1,50 @@
 import { prisma } from "@/db";
 import { defineAction } from "astro:actions";
-
-
 import { z } from "astro:schema";
 
 export const login = defineAction({
-     
+  accept: "form",
   input: z.object({
     email: z.string(),
     password: z.string(),
   }),
 
   handler: async ({ email, password }, { cookies }) => {
-    const user = await prisma.usuarios.findFirst({
-      where: {
-        correo: email,
-        contraseña: password, // texto plano como lo tienes
-      },
-    });
+    console.log("Buscando usuario:", email);
 
-    if (!user) {
-      throw new Error("Correo o contraseña incorrectos");
-    }
+    try {
+      const user = await prisma.usuarios.findFirst({
+        where: {
+          correo: email,
+        },
+      });
 
-    cookies.set(
-      "user",
-      JSON.stringify({
-        id: user.id_usuario,
-        nombre: user.nombre,
-        rol: user.id_rol,
-      }),
-      {
-        httpOnly: true,
-        path: "/administrador",
-        sameSite: "lax",
-        secure: false, // en localhost
+      console.log("Usuario encontrado:", user);
+
+      if (!user) {
+        throw new Error("Usuario no encontrado");
       }
-    );
 
-    return { success: true };
+      if (user.contraseña !== password) {
+        throw new Error("Contraseña incorrecta");
+      }
+
+      cookies.set("user", JSON.stringify({
+        id: user.id_usuario.toString(),  // 👈 fix BigInt
+        nombre: user.nombre,
+        rol: user.id_rol.toString(),     // 👈 fix BigInt
+      }), {
+        httpOnly: true,
+        path: "/",
+        sameSite: "lax",
+        secure: false,
+      });
+
+      return { success: true };
+
+    } catch (e) {
+      console.error("Error en login:", e);
+      throw e;
+    }
   },
 });

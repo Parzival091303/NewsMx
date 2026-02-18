@@ -7,7 +7,16 @@ import { actions } from "astro:actions";
 const result = Astro.getActionResult(actions.login);
 
 if (result && !result.error) {
-  return Astro.redirect("/index");
+  const user = Astro.cookies.get("user")?.json();
+  
+  const rutas: Record<string, string> = {
+    "1": "/menu",
+    "2": "/administrador",
+    "3": "/podcats",
+  };
+
+  const destino = rutas[user?.rol] ?? "/menu";
+  return Astro.redirect(destino);
 }
 ---
 
