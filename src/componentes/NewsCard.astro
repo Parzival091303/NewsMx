@@ -1,0 +1,80 @@
+---
+import type { noticias, categorias, usuarios } from "@prisma/client";
+import { Image } from "astro:assets";
+
+interface CategoriaConNombre {
+  categoria: categorias;
+}
+
+interface NoticiaCompleta extends noticias {
+  categorias: CategoriaConNombre[];
+  usuario?: usuarios | null;
+}
+
+interface Props {
+  noticia: NoticiaCompleta;
+}
+
+const { noticia } = Astro.props;
+---
+
+<div class="max-w-3xl mx-auto mb-8">
+  <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-2xl transition duration-300">
+
+    <!-- Imagen -->
+<!-- Imagen -->
+<div class="w-full aspect-[16/9] overflow-hidden">
+  <img
+    src={noticia.imagen}
+    alt={noticia.titulo_noticia ?? 'Noticia'}
+    class="w-full h-full object-cover"
+  />
+</div>
+
+    <!-- Contenido -->
+    <div class="p-6">
+
+      <!-- Fecha -->
+      {noticia.fecha_noticia && (
+        <p class="text-sm text-gray-400 mb-2">
+          {new Date(noticia.fecha_noticia).toLocaleDateString()}
+        </p>
+      )}
+
+      <!-- Título -->
+      <h2 class="text-2xl font-bold text-[#0f4f4f] mb-3">
+        {noticia.titulo_noticia}
+      </h2>
+
+      <!-- Primer párrafo -->
+      <p class="text-gray-600 mb-4 line-clamp-3">
+        {noticia.primer_parrafo}
+      </p>
+
+      <!-- Categorías -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        {noticia.categorias.map((c) => (
+          <span class="bg-[#e6f7f7] text-[#0f4f4f] text-xs font-semibold px-3 py-1 rounded-full">
+            {c.categoria.nombre_categoria}
+          </span>
+        ))}
+      </div>
+
+      <!-- Autor -->
+      {noticia.usuario && (
+        <p class="text-sm text-gray-500 mb-4">
+          Por {noticia.usuario.nombre} {noticia.usuario.apellido}
+        </p>
+      )}
+
+      <!-- Botón -->
+      <a
+        href={`/noticias/${noticia.id_noticia}`}
+        class="inline-block bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white px-5 py-2 rounded-lg font-medium transition"
+      >
+        Leer más
+      </a>
+
+    </div>
+  </div>
+</div>

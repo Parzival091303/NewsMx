@@ -1,0 +1,28 @@
+---
+export const prerender = false;
+import "@/styles/global.css";
+import { prisma } from "@/db";
+import NewsCard from "@/componentes/NewsCard.astro";
+
+const { id } = Astro.params;
+
+const noticia = await prisma.noticias.findUnique({
+  where: {
+    id_noticia: Number(id),
+  },
+  include: {
+    categorias: {
+      include: {
+        categoria: true,
+      },
+    },
+    usuario: true,
+  },
+});
+
+if (!noticia) {
+  throw new Error("Noticia no encontrada");
+}
+---
+
+<NewsCard noticia={noticia} />

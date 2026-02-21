@@ -1,34 +1,34 @@
 ---
 import "../styles/global.css";
 
-
-
 import { actions } from "astro:actions";
-import PlaceCard from "@/componentes/PlaceCard.astro";
+import NewsCard from "@/componentes/NewsCard.astro";
 import LayoutBase from "@/layouts/LayoutBase.astro";
 
-// 🔥 Llamada correcta a la Action
-const { data, error } = await Astro.callAction(actions.getPlaces,null);
+// 🔥 Llamada correcta a tu Action
+const { data, error } = await Astro.callAction(actions.obtNoticias, null);
 
 if (error) {
   throw error;
 }
 
 if (!data) {
-  throw new Error("No data returned from getPlaces");
+  throw new Error("No data returned from obtNoticias");
 }
 
-// tu action devuelve { data: places }
-const places = data.data;
+// tu action devuelve { data: noticias }
+const noticias = data?.data ?? [];
+
 ---
 
 <LayoutBase>
-  <h1 class="text-3xl font-extrabold">Lugares</h1>
+  <h1 class="text-3xl font-extrabold mb-6">
+    Noticias
+  </h1>
 
-  <div class="grid grid-cols-3 gap-4">
-    {places.map((place) => (
-      <PlaceCard place={place} />
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {noticias.map((noticia) => (
+      <NewsCard noticia={noticia} />
     ))}
-    <h1>back</h1>
   </div>
 </LayoutBase>
