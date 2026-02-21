@@ -1,0 +1,268 @@
+---
+interface ImagenEquipo {
+  imageUrl: string;
+  nombre: string;
+}
+
+interface Props {
+  datos?: ImagenEquipo[];
+  titulo?: string;
+}
+
+const { datos = [], titulo = "Nuestro Equipo" } = Astro.props as Props;
+---
+
+<section class="conductores-section">
+  <h1>{titulo}</h1>
+
+  <section class="img-carrousel-section">
+    <button class="arrow arrow-left">‹</button>
+
+    <div class="img-carrousel-container">
+      <div class="item filler"></div>
+
+      {datos.length > 0 &&
+        datos.map((img) => (
+          <img
+            src={img.imageUrl}
+            alt={img.nombre}
+            class="item"
+          />
+        ))}
+
+      <div class="item filler"></div>
+    </div>
+
+    <button class="arrow arrow-right">›</button>
+
+    <section class="small-images-section">
+      <div class="small-images-container">
+        {datos.length > 0 &&
+          datos.map((img) => (
+            <img
+              src={img.imageUrl}
+              alt={img.nombre}
+              class="small-image"
+            />
+          ))}
+      </div>
+    </section>
+  </section>
+</section>
+
+
+<style>
+    .conductores-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .conductores-section h1 {
+        font-size: 3rem;
+        color: rgb(0, 153, 153);
+        text-transform: uppercase;
+        font-family: sans-serif;
+        font-weight: 700;
+        
+    }
+
+    .img-carrousel-section {
+        position: relative;
+        width: 70rem;
+        padding: 20px;
+
+    }
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        
+        background-color: rgba(0, 0, 0, 0.164);
+        border: none;
+        cursor: pointer;
+
+        font-size: 18px;
+        color: rgb(185, 185, 185);
+
+        width: 4rem;
+        height: 10rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+    }
+
+    .arrow-left {
+        left: -20px;
+    }
+
+    .arrow-right {
+        right: -20px;
+    }
+
+    .img-carrousel-container {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .img-carrousel-container::-webkit-scrollbar {
+        display: none;
+    }
+    .item {
+        height: 600px;
+        width: 600px;
+        scroll-snap-align: center;
+        filter: opacity(20%);
+        transition: filter 0.1s ease-in-out;
+    }
+
+    .item.is-active {
+        filter: none;
+    }
+
+    .filler {
+        min-width: 12rem;
+        min-height: 600px;
+    }
+
+    .small-images-container {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: row;
+        justify-items: start;
+        gap: 5px;
+    }
+
+    .small-image {
+        height: 80px;
+        width: auto;
+        border: none;
+        cursor: pointer;
+    }
+
+    .small-image.is-selected {
+        border: 1px solid rgb(0, 0, 0);
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector(".img-carrousel-container");
+  const items = Array.from(container.querySelectorAll(".item:not(.filler)"));
+  const smallImages = Array.from(document.querySelectorAll(".small-image"));
+  const leftArrow = document.querySelector(".arrow-left");
+  const rightArrow = document.querySelector(".arrow-right");
+
+  let index = 0;
+  let interval;
+
+  function getCenteredItem() {
+    const containerRect = container.getBoundingClientRect();
+    const centerX = containerRect.left + containerRect.width / 2;
+
+    let closest = null;
+    let closestDistance = Infinity;
+
+    items.forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const itemCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(centerX - itemCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closest = item;
+      }
+    });
+
+    return closest;
+  }
+
+  function updateActive() {
+    const centered = getCenteredItem();
+
+    items.forEach((item) => item.classList.remove("is-active"));
+    smallImages.forEach((img) => img.classList.remove("is-selected"));
+
+    if (centered) {
+      centered.classList.add("is-active");
+      index = items.indexOf(centered);
+      if (smallImages[index]) {
+        smallImages[index].classList.add("is-selected");
+      }
+    }
+  }
+
+  function scrollToIndex(i) {
+    if (!items[i]) return;
+
+    const item = items[i];
+    const offset =
+      item.offsetLeft -
+      container.offsetWidth / 2 +
+      item.offsetWidth / 2;
+
+    container.scrollTo({
+      left: offset,
+      behavior: "smooth",
+    });
+  }
+
+  function nextSlide() {
+    index = (index + 1) % items.length;
+    scrollToIndex(index);
+  }
+
+  function startAutoScroll() {
+    interval = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoScroll() {
+    clearInterval(interval);
+  }
+
+ 
+  container.addEventListener("scroll", () => {
+    window.requestAnimationFrame(updateActive);
+  });
+
+
+  smallImages.forEach((img, i) => {
+    img.addEventListener("click", () => {
+      stopAutoScroll();
+      scrollToIndex(i);
+      startAutoScroll();
+    });
+  });
+
+  updateActive();
+  startAutoScroll();
+
+  leftArrow.addEventListener("click", () => {
+  stopAutoScroll();
+  index = (index - 1 + items.length) % items.length;
+  scrollToIndex(index);
+  startAutoScroll();
+});
+
+rightArrow.addEventListener("click", () => {
+  stopAutoScroll();
+  nextSlide();
+  startAutoScroll();
+});
+
+});
+
+</script>
+

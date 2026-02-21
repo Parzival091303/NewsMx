@@ -1,9 +1,269 @@
 ---
-export const prerender = false
+export const prerender = false;
+import "@/styles/programacion.css";
 import LayoutBase from "@/layouts/LayoutBase.astro";
+
+const CHANNEL_ID = "UC43tM4E_mKoJmg2fBstXV6Q";
+
+const rostros = [
+    {   foto: "/img/pers1.png",
+        nombre: "Sergio Perez",
+        rol: "Conductor y Productor",
+        programa: "Los Rostros de las Noticias" },
+
+    {   foto: "/img/pers2.png",
+        nombre: "Victor Adan Santos Calva",
+        rol: "Marketing",
+        programa: "Emisión Matutina" },
+
+    /*{   foto: "/img/pers3.png",
+        nombre: "Nombre 3",
+        rol: "Analista",
+        programa: "Mesa de Debate" },*/
+
+    /*{   foto: "/img/pers4.png",
+        nombre: "Nombre 4",
+        rol: "Reportero/a",
+        programa: "Cobertura Especial" },*/
+
+    /*{   foto: "/img/pers5.png",
+        nombre: "Nombre 5",
+        rol: "Conductor/a",
+        programa: "Edición Vespertina" },*/
+
+    {   foto: "/img/pers6.png",
+        nombre: "Vladimir Galeana",
+        rol: "Columnista",
+        programa: "Resumen Nocturno" },
+
+    {   foto: "/img/pers7.png",
+        nombre: "Karla M. Vazquez",
+        rol: "Conductora",
+        programa: "Resumen Nocturno" },
+
+    {   foto: "/img/pers8.png",
+        nombre: "Abril Dominguez Vargas",
+        rol: "Conductora",
+        programa: "Resumen Nocturno" },
+
+    /*{   foto: "/img/pers9.png",
+        nombre: "Nombre 9",
+        rol: "Conductor/a",
+        programa: "Resumen Nocturno" },*/
+
+];
+
+const destacados = [
+    { titulo: "Cafecito Del Chisme", descripcion: "Platicas personales con invitados", etiqueta: "Platica" },
+    { titulo: "Ruta Financiera", descripcion: "Conversación con invitados y especialistas.", etiqueta: "Finanzas" },
+    { titulo: "Odisea Deportiva", descripcion: "Coberturas deportivas y reportajes en profundidad.", etiqueta: "Deportes" },
+];
+
+const semana = [
+    {
+        dia: "Lunes",
+        bloques: [
+        { hora: "15:00", nombre: "Somos Edomex" },
+        { hora: "19:00", nombre: "Ruta Financiera" },
+        ],
+    },
+    {
+        dia: "martes",
+        bloques: [
+        { hora: "19:00", nombre: "Historias que contar" },
+        { hora: "7:00", nombre: "Somos Mexico" },
+        ],
+    },
+    {
+        dia: "Miercoles",
+        bloques: [
+        { hora: "7:00", nombre: "Somos Mexico" },
+        ],
+    },
+    {
+        dia: "Jueves",
+        bloques: [
+        { hora: "7:00", nombre: "Somos Mexico" },
+        { hora: "15:00", nombre: "Somos Edomex" },
+        { hora: "19:00", nombre: "Historias que contar" }
+        ],
+    },
+    {
+        dia: "Viernes",
+        bloques: [
+        { hora: "7:00", nombre: "Somos Mexico" },
+        { hora: "12:00", nombre: "Odisea deportiva" },
+        { hora: "15:00", nombre: "Cafecito del chisme" },
+        { hora: "20:00", nombre: "En contraste" },
+        ],
+    },
+    {
+        dia: "Sábado",
+        bloques: [
+        { hora: "14:00", nombre: "Inclusion sin barreras" },
+        { hora: "19:00", nombre: "Juventudes exitosas" },
+        { hora: "21:00", nombre: "La ruleta" },
+        ],
+    },
+    {
+        dia: "Domingo",
+        bloques: [
+        { hora: "12:00", nombre: "Somos mexico" },
+        { hora: "14:00", nombre: "Abrimos los ojos al amor" },
+        { hora: "18:00", nombre: "Somos tu voz, la entrevista" },
+        { hora: "21:00", nombre: "Somos mexico" },
+        ],
+    },
+];
 ---
 
-
 <LayoutBase>
-    
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container hero__inner">
+        <div class="hero__copy">
+            <p class="kicker">PROGRAMACIÓN</p>
+            <h1 class="title">LOS ROSTROS DE LAS NOTICIAS</h1>
+            <p class="subtitle">
+            Conoce a nuestro equipo y consulta los horarios de transmisión.
+            </p>
+
+            <div class="hero__actions">
+            <a class="btn btn--primary" href="#horarios">Ver horarios</a>
+            <a class="btn btn--ghost" href="#rostros">Conocer al equipo</a>
+            </div>
+        </div>
+
+        <div class="hero__card">
+            <div class="hero__cardTop">
+            <span class="pill">EN VIVO</span>
+            <span class="statusDot" aria-hidden="true"></span>
+            <span class="statusText">Señal simulada</span>
+            </div>
+
+            <div class="video-wrapper">
+                <iframe
+                    src={`https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1`}
+                    title="Transmisión en vivo"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+            </div>
+
+
+            <div class="hero__cardBottom">
+            <div>
+                <p class="muted">Youtube</p>
+                <p class="strong">Aqui podras ver cualquier stream de nuestro canal de youtube</p>
+            </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- DESTACADOS -->
+    <section class="section">
+        <div class="container">
+        <h2 class="h2 values-title">Programas destacados</h2>
+        <p class="lead">
+            Una vista rápida de lo más visto y de nuestras producciones principales.
+        </p>
+
+        <div class="grid3">
+            {destacados.map((p) => (
+            <article class="panel">
+                <div class="panel__top">
+                <span class="tag">{p.etiqueta}</span>
+                </div>
+                <h3 class="h3">{p.titulo}</h3>
+                <p class="text">{p.descripcion}</p>
+                <div class="panel__cta">
+                <a class="link" href="#horarios">Ver horario</a>
+                </div>
+            </article>
+            ))}
+        </div>
+        </div>
+    </section>
+
+    <!-- HORARIOS -->
+    <section id="horarios" class="section section--alt">
+        <div class="container">
+        <h2 class="h2 values-title">Horarios</h2>
+
+        <div class="schedule">
+            {semana.map((d) => (
+            <div class="schedule__col">
+                <div class="schedule__head">{d.dia}</div>
+
+                <div class="schedule__list">
+                {d.bloques.map((b) => (
+                    <div class="slot">
+                    <div class="slot__time">{b.hora}</div>
+                    <div class="slot__name">{b.nombre}</div>
+                    </div>
+                ))}
+                </div>
+            </div>
+            ))}
+        </div>
+
+        </div>
+    </section>
+
+    <!-- ROSTROS -->
+    <section id="rostros" class="section">
+        <div class="container">
+            <h2 class="h2 values-title">El equipo</h2>
+
+            <div class="gridCards">
+            {rostros.map((r) => (
+                <article class="card">
+                <div class="avatarWrap">
+                    <img src={r.foto} alt={r.nombre} class="avatar" />
+                </div>
+
+                <div class="card__body">
+                    <h3 class="h3 card__name">{r.nombre}</h3>
+                    <p class="meta">{r.rol}</p>
+                    <p class="text">{r.programa}</p>
+
+                    <div class="card__links">
+                    <a class="social" href="#" aria-label="Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a class="social" href="#" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a class="social" href="#" aria-label="X / Twitter">
+                        <i class="fa-brands fa-x"></i>
+                    </a>
+                    </div>
+                </div>
+                </article>
+            ))}
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container cta__inner">
+        <div>
+            <h2 class="h2 h2--white">¿Quieres anunciarte en nuestros programas?</h2>
+            <p class="lead lead--white">
+            Te ayudamos a colocar tu marca en los espacios con mayor audiencia.
+            </p>
+        </div>
+
+        <div class="cta__actions">
+            <a class="btn btn--white" href="/anunciate">Anúnciate</a>
+            <a class="btn btn--outlineWhite" href="/nosotros">Conócenos</a>
+        </div>
+        </div>
+    </section>
 </LayoutBase>
+
+

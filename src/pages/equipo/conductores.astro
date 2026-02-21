@@ -1,0 +1,30 @@
+---
+import LayoutBase from "@/layouts/LayoutBase.astro";
+import CarrouselEquipo from "@/componentes/nosotros/CarrouselEquipo.astro";
+/* Aqui se definen las imagenes y el nombre de cada miembro en el carrusel, imageUrl corresponde a la URL de la IMAGEN
+y nombre al texto alternativo por si no cae, de preferencia el nombre del miembro. Todo se incluye en la variable correspondiente
+aca abajo */
+const conductores = [
+    {imageUrl:"/img/equipo/conductores/abril-dominguez-vargas.webp", nombre:"Abril Dominguez Vargaz"},
+    {imageUrl:"/img/equipo/conductores/alejandra-ramos-flores.webp", nombre:"Alejandra Ramos Flores"},
+    {imageUrl:"/img/equipo/conductores/diana-zamorano.webp", nombre:"Diana Zamorano"},
+    {imageUrl:"/img/equipo/conductores/elias-alvarez.webp", nombre:"Elias Alvarez"},
+    {imageUrl:"/img/equipo/conductores/gladys-flores.webp", nombre:"Gladys Flores"},
+    {imageUrl:"/img/equipo/conductores/humberto-quiroz.webp", nombre:"Humberto Quiroz"},
+    {imageUrl:"/img/equipo/conductores/israel-palma.webp", nombre:"Israel Palma"},
+    {imageUrl:"/img/equipo/conductores/jairo-bagnis.webp", nombre:"Jairo Bagnis"},
+    {imageUrl:"/img/equipo/conductores/karla-m-vazquez.webp", nombre:"Karla M Vazquez"},
+    {imageUrl:"/img/equipo/conductores/marco-jarquin.webp", nombre:"Marco Jarquin"},
+    {imageUrl:"/img/equipo/conductores/sergio-perez.webp", nombre:"Sergio Perez"},
+    {imageUrl:"/img/equipo/conductores/vladimir-galeana.webp", nombre:"Vladimir Galeana"},
+    ]
+---
+
+<LayoutBase>
+
+    <CarrouselEquipo
+        datos={conductores}
+        titulo="Nuestros conductores"
+    ></CarrouselEquipo>
+    
+</LayoutBase>

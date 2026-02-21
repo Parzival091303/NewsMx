@@ -1,13 +1,64 @@
 ---
 const {nombre} = Astro.params;
 export const prerender = false
+import NoticiaCard from "@/componentes/NoticiaCard.astro";
 import LayoutBase from "@/layouts/LayoutBase.astro";
+import "@/styles/categoria.css";
+
+const noticias = [
+  {
+    fecha: "20 de febrero de 2026",
+    categorias: "Nacional, Política, Salud, Sociales",
+    titulo: 'Senado aprueba alimentación "adecuada y suficiente" en guarderías',
+    autor: "Padme Zamorano",
+    imagen:
+      "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Imagen%2020-02-26%20a%20las%209.54.jpg/:/rs=w:1280",
+  },
+  {
+    fecha: "19 de febrero de 2026",
+    categorias:
+      "CDMX, Cultura, Entretenimiento, Local/Estatal/Regional, Nacional",
+    titulo: "Sonora Santanera encabezará el 4° Baile por un Trasplante en CDMX",
+    autor: "Padme Zamorano",
+    imagen:
+      "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/2AA77301-FB07-4AC7-B96F-BF3AF663D21C.jpeg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1280",
+  },
+
+  {
+    fecha: "17 de febrero de 2026",
+    categorias: "CDMX, Cultura, Deportes, Nacional, Salud",
+    titulo: "Más de mil corredores se unen contra el cáncer en CDMX",
+    autor: "Diana Zamorano",
+    imagen:
+      "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Circuito%20Actinver%20Ganadoras%205K%20Femenil.jpeg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1280",
+  },
+];
 ---
 
 
 
 <LayoutBase>
-    
+     <div class="container">
+    <div class="header">
+      <h1 class="titulo-seccion">SALUD</h1>
+      <p>
+        Información confiable sobre bienestar, prevención y avances médicos.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div>
+        {noticias.map((noticia) => <NoticiaCard {...noticia} />)}
+      </div>
+
+      <div class="sidebar">
+        <h3>Categorías</h3>
+        <a href="#">Todas las Publicaciones</a>
+        <a href="#">Salud</a>
+      </div>
+    </div>
+  </div>
+
 </LayoutBase>
 <!----- <div>
     <h1>Categoría de noticias: {nombre}</h1>

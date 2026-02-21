@@ -1,552 +1,582 @@
+<div class="revista-wrapper">
+  <!-- HERO SECTION CON EFECTO REVISTA -->
+  <section class="revista-hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-content">
+      <div class="hero-floating-elements">
+        <span class="float-element"></span>
+        <span class="float-element"></span>
+        <span class="float-element"></span>
+      </div>
+      
+      <div class="hero-text">
+        <span class="hero-subtitle">PUBLICACIÓN DIGITAL OFICIAL</span>
+        <h1>
+          <span class="text-block">Inside</span>
+          <span class="text-block gradient-text">NewsMx</span>
+        </h1>
+        <div class="hero-badge">EDICIÓN 2026</div>
+        <p class="hero-description">
+          La revista digital donde el periodismo, la creatividad y la información se encuentran.
+          <strong>7 ediciones</strong> de contenido exclusivo.
+        </p>
+      </div>
 
-    <div class="container">
-        <div class="header">
-            <h1>Inside NewsMx <span class="badge">TODAS LAS EDICIONES</span></h1>
-            <p>Revista digital oficial de <strong>NewsMx Tv ®</strong></p>
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-number">7</span>
-                    <span class="stat-label">EDICIONES</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">2025</span>
-                    <span class="stat-label">AÑO DE LANZAMIENTO</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">4</span>
-                    <span class="stat-label">MIEMBROS DEL EQUIPO</span>
-                </div>
-            </div>
+      <div class="hero-stats-modern">
+        <div class="stat-card">
+          <span class="stat-value">7</span>
+          <span class="stat-label">Ediciones</span>
         </div>
-
-        <!-- SE ELIMINÓ LA SECCIÓN .nav-menu QUE CONTENÍA LOS ENLACES "Edición 1, Edición 2, etc." -->
-
-        <div class="magazines-grid">
-            <!-- Revista 1 -->
-            <div class="magazine-card" id="edition1">
-                <div class="magazine-header">
-                    <div class="magazine-number">1</div>
-                    <h2 class="magazine-title">1ra Edición</h2>
-                    <div>Octubre 2025</div>
-                </div>
-                <div class="magazine-controls">
-                    <div class="controls">
-                        <div class="zoom-section">
-                            <button class="control-btn zoom-out" data-edition="1" aria-label="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <span class="zoom-level" data-edition="1">100%</span>
-                            <button class="control-btn zoom-in" data-edition="1" aria-label="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button class="action-btn reset-zoom" data-edition="1">
-                            <i class="fas fa-sync-alt"></i> Reiniciar Zoom
-                        </button>
-                    </div>
-                </div>
-                <div class="magazine-container loading" id="container-1">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin" style="color: var(--primary-medium); font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Cargando revista...</p>
-                        <small>Por favor espere</small>
-                    </div>
-                    <iframe class="magazine-iframe" data-edition="1" 
-                        src="https://insidenewsmxtv.my.canva.site/revista-inside-newsmxtv-octubre-2025-1"
-                        title="Inside NewsMx - 1ra Edición - Octubre 2025"
-                        loading="lazy"
-                        allow="fullscreen"
-                        onload="this.closest('.magazine-container').classList.remove('loading')">
-                    </iframe>
-                </div>
-                <div class="magazine-info">
-                    <div class="magazine-team">
-                        <div class="team-member">
-                            <i class="fas fa-user-tie"></i>Staff Editorial
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-newspaper"></i>Edición de Lanzamiento
-                        </div>
-                    </div>
-                    <div class="magazine-links">
-                        <a href="https://insidenewsmxtv.my.canva.site/revista-inside-newsmxtv-octubre-2025-1" target="_blank" class="view-link" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> Ver en Canva
-                        </a>
-                        <a href="https://insidenewsmxtv.my.canva.site/revista-inside-newsmxtv-octubre-2025-1" target="_blank" class="view-link full" rel="noopener">
-                            <i class="fas fa-eye"></i> Vista Completa
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revista 2 -->
-            <div class="magazine-card" id="edition2">
-                <div class="magazine-header">
-                    <div class="magazine-number">2</div>
-                    <h2 class="magazine-title">2da Edición</h2>
-                    <div>Octubre 2025</div>
-                </div>
-                <div class="magazine-controls">
-                    <div class="controls">
-                        <div class="zoom-section">
-                            <button class="control-btn zoom-out" data-edition="2" aria-label="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <span class="zoom-level" data-edition="2">100%</span>
-                            <button class="control-btn zoom-in" data-edition="2" aria-label="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button class="action-btn reset-zoom" data-edition="2">
-                            <i class="fas fa-sync-alt"></i> Reiniciar Zoom
-                        </button>
-                    </div>
-                </div>
-                <div class="magazine-container loading">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin" style="color: var(--primary-medium); font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Cargando revista...</p>
-                    </div>
-                    <iframe class="magazine-iframe" data-edition="2" 
-                        src="https://www.canva.com/design/DAG16IUoklw/hgnKeipNY-cGrO207ZqyxQ/view?embed"
-                        title="Inside NewsMx - 2da Edición - Octubre 2025"
-                        loading="lazy"
-                        allowfullscreen
-                        onload="this.closest('.magazine-container').classList.remove('loading')">
-                    </iframe>
-                </div>
-                <div class="magazine-info">
-                    <div class="magazine-team">
-                        <div class="team-member">
-                            <i class="fas fa-user-tie"></i>Jeanette Gutiérrez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-user-cog"></i>Karla M. Vázquez
-                        </div>
-                    </div>
-                    <div class="magazine-links">
-                        <a href="https://www.canva.com/design/DAG16IUoklw/hgnKeipNY-cGrO207ZqyxQ/view" target="_blank" class="view-link" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> Ver en Canva
-                        </a>
-                        <a href="https://www.canva.com/design/DAG16IUoklw/hgnKeipNY-cGrO207ZqyxQ/view" target="_blank" class="view-link full" rel="noopener">
-                            <i class="fas fa-eye"></i> Vista Completa
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revista 3 -->
-            <div class="magazine-card" id="edition3">
-                <div class="magazine-header">
-                    <div class="magazine-number">3</div>
-                    <h2 class="magazine-title">3ra Edición</h2>
-                    <div>Noviembre 2025</div>
-                </div>
-                <div class="magazine-controls">
-                    <div class="controls">
-                        <div class="zoom-section">
-                            <button class="control-btn zoom-out" data-edition="3" aria-label="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <span class="zoom-level" data-edition="3">100%</span>
-                            <button class="control-btn zoom-in" data-edition="3" aria-label="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button class="action-btn reset-zoom" data-edition="3">
-                            <i class="fas fa-sync-alt"></i> Reiniciar Zoom
-                        </button>
-                    </div>
-                </div>
-                <div class="magazine-container loading">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin" style="color: var(--primary-medium); font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Cargando revista...</p>
-                    </div>
-                    <iframe class="magazine-iframe" data-edition="3" 
-                        src="https://www.canva.com/design/DAG3YvznRNc/OHkjVMieqNtjwczFHoS6ZA/view?embed"
-                        title="Inside NewsMx - 3ra Edición - Noviembre 2025"
-                        loading="lazy"
-                        allowfullscreen
-                        onload="this.closest('.magazine-container').classList.remove('loading')">
-                    </iframe>
-                </div>
-                <div class="magazine-info">
-                    <div class="magazine-team">
-                        <div class="team-member">
-                            <i class="fas fa-user-tie"></i>Jeanette Gutiérrez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-user-cog"></i>Karla M. Vázquez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-edit"></i>Yanderlane Bermudez
-                        </div>
-                    </div>
-                    <div class="magazine-links">
-                        <a href="https://www.canva.com/design/DAG3YvznRNc/OHkjVMieqNtjwczFHoS6ZA/view" target="_blank" class="view-link" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> Ver en Canva
-                        </a>
-                        <a href="https://www.canva.com/design/DAG3YvznRNc/OHkjVMieqNtjwczFHoS6ZA/view" target="_blank" class="view-link full" rel="noopener">
-                            <i class="fas fa-eye"></i> Vista Completa
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revista 4 -->
-            <div class="magazine-card" id="edition4">
-                <div class="magazine-header">
-                    <div class="magazine-number">4</div>
-                    <h2 class="magazine-title">4ta Edición</h2>
-                    <div>Noviembre 2025</div>
-                </div>
-                <div class="magazine-controls">
-                    <div class="controls">
-                        <div class="zoom-section">
-                            <button class="control-btn zoom-out" data-edition="4" aria-label="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <span class="zoom-level" data-edition="4">100%</span>
-                            <button class="control-btn zoom-in" data-edition="4" aria-label="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button class="action-btn reset-zoom" data-edition="4">
-                            <i class="fas fa-sync-alt"></i> Reiniciar Zoom
-                        </button>
-                    </div>
-                </div>
-                <div class="magazine-container loading">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin" style="color: var(--primary-medium); font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Cargando revista...</p>
-                    </div>
-                    <iframe class="magazine-iframe" data-edition="4" 
-                        src="https://www.canva.com/design/DAG5MkDibNw/lACglMhN9zFv4j40hsPI-w/view?embed"
-                        title="Inside NewsMx - 4ta Edición - Noviembre 2025"
-                        loading="lazy"
-                        allowfullscreen
-                        onload="this.closest('.magazine-container').classList.remove('loading')">
-                    </iframe>
-                </div>
-                <div class="magazine-info">
-                    <div class="magazine-team">
-                        <div class="team-member">
-                            <i class="fas fa-user-tie"></i>Jeanette Gutiérrez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-user-cog"></i>Karla M. Vázquez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-edit"></i>Yanderlane Bermudez C.
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-handshake"></i>Miguel Angel Hernandez
-                        </div>
-                    </div>
-                    <div class="magazine-links">
-                        <a href="https://www.canva.com/design/DAG5MkDibNw/lACglMhN9zFv4j40hsPI-w/view" target="_blank" class="view-link" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> Ver en Canva
-                        </a>
-                        <a href="https://www.canva.com/design/DAG5MkDibNw/lACglMhN9zFv4j40hsPI-w/view" target="_blank" class="view-link full" rel="noopener">
-                            <i class="fas fa-eye"></i> Vista Completa
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revista 5 -->
-            <div class="magazine-card" id="edition5">
-                <div class="magazine-header">
-                    <div class="magazine-number">5</div>
-                    <h2 class="magazine-title">5ta Edición</h2>
-                    <div>Diciembre 2025</div>
-                </div>
-                <div class="magazine-controls">
-                    <div class="controls">
-                        <div class="zoom-section">
-                            <button class="control-btn zoom-out" data-edition="5" aria-label="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <span class="zoom-level" data-edition="5">100%</span>
-                            <button class="control-btn zoom-in" data-edition="5" aria-label="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button class="action-btn reset-zoom" data-edition="5">
-                            <i class="fas fa-sync-alt"></i> Reiniciar Zoom
-                        </button>
-                    </div>
-                </div>
-                <div class="magazine-container loading">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin" style="color: var(--primary-medium); font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Cargando revista...</p>
-                    </div>
-                    <iframe class="magazine-iframe" data-edition="5" 
-                        src="https://www.canva.com/design/DAG6mqxw_Lg/Lbu4_bXq3dQeIWFKJ68ZWw/view?embed"
-                        title="Inside NewsMx - 5ta Edición - Diciembre 2025"
-                        loading="lazy"
-                        allowfullscreen
-                        onload="this.closest('.magazine-container').classList.remove('loading')">
-                    </iframe>
-                </div>
-                <div class="magazine-info">
-                    <div class="magazine-team">
-                        <div class="team-member">
-                            <i class="fas fa-user-tie"></i>Jeanette Gutiérrez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-user-cog"></i>Karla M. Vázquez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-edit"></i>Yanderlane Bermudez C.
-                        </div>
-                    </div>
-                    <div class="magazine-links">
-                        <a href="https://www.canva.com/design/DAG6mqxw_Lg/Lbu4_bXq3dQeIWFKJ68ZWw/view" target="_blank" class="view-link" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> Ver en Canva
-                        </a>
-                        <a href="https://www.canva.com/design/DAG6mqxw_Lg/Lbu4_bXq3dQeIWFKJ68ZWw/view" target="_blank" class="view-link full" rel="noopener">
-                            <i class="fas fa-eye"></i> Vista Completa
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revista 6 -->
-            <div class="magazine-card" id="edition6">
-                <div class="magazine-header">
-                    <div class="magazine-number">6</div>
-                    <h2 class="magazine-title">6ta Edición</h2>
-                    <div>Edición Especial</div>
-                </div>
-                <div class="magazine-controls">
-                    <div class="controls">
-                        <div class="zoom-section">
-                            <button class="control-btn zoom-out" data-edition="6" aria-label="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <span class="zoom-level" data-edition="6">100%</span>
-                            <button class="control-btn zoom-in" data-edition="6" aria-label="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button class="action-btn reset-zoom" data-edition="6">
-                            <i class="fas fa-sync-alt"></i> Reiniciar Zoom
-                        </button>
-                    </div>
-                </div>
-                <div class="magazine-container loading">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin" style="color: var(--primary-medium); font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Cargando revista...</p>
-                    </div>
-                    <iframe class="magazine-iframe" data-edition="6" 
-                        src="https://www.canva.com/design/DAG8QlePdzo/y02RXJyaxIFr0-JVVVtQ_A/view?embed"
-                        title="Inside NewsMx - 6ta Edición Especial"
-                        loading="lazy"
-                        allowfullscreen
-                        onload="this.closest('.magazine-container').classList.remove('loading')">
-                    </iframe>
-                </div>
-                <div class="magazine-info">
-                    <div class="magazine-team">
-                        <div class="team-member">
-                            <i class="fas fa-star"></i>Edición Especial
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-user-tie"></i>Jeanette Gutiérrez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-user-cog"></i>Karla M. Vázquez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-edit"></i>Yanderlane Bermudez
-                        </div>
-                    </div>
-                    <div class="magazine-links">
-                        <a href="https://www.canva.com/design/DAG8QlePdzo/y02RXJyaxIFr0-JVVVtQ_A/view?embed" target="_blank" class="view-link" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> Ver en Canva
-                        </a>
-                        <a href="https://www.canva.com/design/DAG8QlePdzo/y02RXJyaxIFr0-JVVVtQ_A/view?embed" target="_blank" class="view-link full" rel="noopener">
-                            <i class="fas fa-crown"></i> Vista Especial
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-
-
-<!-- Revista 7 -->
-            <div class="magazine-card" id="edition7">
-                <div class="magazine-header">
-                    <div class="magazine-number">7</div>
-                    <h2 class="magazine-title">7ma Edición</h2>
-                    <div>Febrero 2026</div>
-                </div>
-                <div class="magazine-controls">
-                    <div class="controls">
-                        <div class="zoom-section">
-                            <button class="control-btn zoom-out" data-edition="7" aria-label="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <span class="zoom-level" data-edition="7">100%</span>
-                            <button class="control-btn zoom-in" data-edition="7" aria-label="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button class="action-btn reset-zoom" data-edition="7">
-                            <i class="fas fa-sync-alt"></i> Reiniciar Zoom
-                        </button>
-                    </div>
-                </div>
-                <div class="magazine-container loading">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin" style="color: var(--primary-medium); font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Cargando revista...</p>
-                    </div>
-
-                    <iframe class="magazine-iframe" data-edition="7" 
-                        src="https://www.canva.com/design/DAG-nlImZOQ/2zoOtTMRLt2VjVx3vmBbWQ/view?embed"
-                        title="Inside NewsMx - 4ta Edición - Noviembre 2025"
-                        loading="lazy"
-                        allowfullscreen
-                        onload="this.closest('.magazine-container').classList.remove('loading')">
-                    </iframe>
-                </div>
-                <div class="magazine-info">
-                    <div class="magazine-team">
-                        <div class="team-member">
-                            <i class="fas fa-user-tie"></i>Jeanette Gutiérrez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-user-cog"></i>Karla M. Vázquez
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-edit"></i>Yanderlane Bermudez C.
-                        </div>
-                        <div class="team-member">
-                            <i class="fas fa-handshake"></i>Miguel Angel Hernandez
-                        </div>
-                    </div>
-                    <div class="magazine-links">
-                        <a href="https://www.canva.com/design/DAG-nlImZOQ/2zoOtTMRLt2VjVx3vmBbWQ/view?embed" target="_blank" class="view-link" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> Ver en Canva
-                        </a>
-                        <a href="https://www.canva.com/design/DAG-nlImZOQ/2zoOtTMRLt2VjVx3vmBbWQ/view?embed" target="_blank" class="view-link full" rel="noopener">
-                            <i class="fas fa-eye"></i> Vista Completa
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
+        <div class="stat-card">
+          <span class="stat-value">2025</span>
+          <span class="stat-label">Lanzamiento</span>
         </div>
-
-        <div class="footer">
-            <p>© 2025 NewsMx Tv ® - Todos los derechos reservados. <a href="https://newsmxtv.com.mx/" target="_blank" rel="noopener">newsmxtv.com.mx</a></p>
-            <p>Inside NewsMx es una publicación digital de NewsMx Tv ®.</p>
-            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
-                <i class="fas fa-mobile-alt"></i> Compatible con dispositivos móviles y desktop
-            </p>
+        <div class="stat-card">
+          <span class="stat-value">4+</span>
+          <span class="stat-label">Colaboradores</span>
         </div>
+      </div>
     </div>
 
-  <script type="text/javascript">
-  
-        document.addEventListener('DOMContentLoaded', function() {
-            const zoomConfigs = {};
-            
-            // Inicializar configuraciones de zoom para cada edición
-            for (let i = 1; i <= 6; i++) {
-                zoomConfigs[i] = {
-                    zoom: 1,
-                    minZoom: 0.6,
-                    maxZoom: 1.5,
-                    step: 0.1
-                };
-                loadSavedZoom(i);
-            }
-            
-            // Aplicar zoom a un elemento específico
-            function applyZoom(edition) {
-                const config = zoomConfigs[edition];
-                const elements = document.querySelectorAll(`[data-edition="${edition}"]`);
-                const zoomLevel = document.querySelector(`.zoom-level[data-edition="${edition}"]`);
-                
-                elements.forEach(element => {
-                    if (element.classList.contains('magazine-iframe')) {
-                        element.style.transform = `scale(${config.zoom})`;
-                    }
-                });
-                
-                if (zoomLevel) {
-                    zoomLevel.textContent = Math.round(config.zoom * 100) + "%";
-                }
-                
-                // Guardar en localStorage
-                localStorage.setItem(`newsMxZoom_${edition}`, config.zoom);
-            }
-            
-            // Cargar zoom guardado
-            function loadSavedZoom(edition) {
-                const savedZoom = localStorage.getItem(`newsMxZoom_${edition}`);
-                if (savedZoom) { 
-                    zoomConfigs[edition].zoom = parseFloat(savedZoom); 
-                    applyZoom(edition); 
-                }
-            }
-            
-            // Configurar eventos para botones de zoom
-            document.querySelectorAll('.zoom-in').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const edition = parseInt(this.getAttribute('data-edition'));
-                    const config = zoomConfigs[edition];
-                    if (config.zoom < config.maxZoom) { 
-                        config.zoom = Math.min(config.maxZoom, config.zoom + config.step); 
-                        applyZoom(edition); 
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.zoom-out').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const edition = parseInt(this.getAttribute('data-edition'));
-                    const config = zoomConfigs[edition];
-                    if (config.zoom > config.minZoom) { 
-                        config.zoom = Math.max(config.minZoom, config.zoom - config.step); 
-                        applyZoom(edition); 
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.reset-zoom').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const edition = parseInt(this.getAttribute('data-edition'));
-                    zoomConfigs[edition].zoom = 1; 
-                    applyZoom(edition);
-                });
-            });
-            
-            // Control de carga para todos los iframes
-            document.querySelectorAll('.magazine-iframe').forEach(iframe => {
-                iframe.addEventListener('load', function() {
-                    this.closest('.magazine-container').classList.remove('loading');
-                });
-                
-                iframe.addEventListener('error', function() {
-                    const container = this.closest('.magazine-container');
-                    container.classList.remove('loading');
-                    console.warn('Error al cargar la revista:', this.src);
-                });
-            });
-            
-            // Timeout de seguridad para quitar loading
-            setTimeout(() => {
-                document.querySelectorAll('.magazine-container.loading').forEach(container => {
-                    container.classList.remove('loading');
-                });
-            }, 8000);
-        });
-    </script>
+    <div class="hero-wave-bottom">
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0L60 10C120 20 240 40 360 48C480 56 600 52 720 44C840 36 960 24 1080 22C1200 20 1320 28 1380 32L1440 36V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z" fill="#F0F7F7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- FILTROS Y BÚSQUEDA DE EDICIONES -->
+  <!-- <section class="revista-filters">
+    <div class="filters-container">
+      <div class="filters-left">
+        <h2>Todas las ediciones <span class="edition-count">(7)</span></h2>
+        <div class="filter-chips">
+          <button class="chip active">Todas</button>
+          <button class="chip">2026</button>
+          <button class="chip">2025</button>
+          <button class="chip">Especiales</button>
+        </div>
+      </div>
+      <div class="filters-right">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar edición..." />
+        </div>
+        <button class="view-toggle">
+          <i class="fas fa-grid-2"></i>
+        </button>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- GRID DE REVISTAS -->
+  <div class="revista-grid-modern">
+    <!-- Revista 1 - Destacada -->
+    <div class="magazine-card-modern featured" id="edition1">
+      <div class="card-badge">LANZAMIENTO</div>
+      <div class="card-media">
+        <div class="media-overlay"></div>
+        <div class="magazine-number-floating">#1</div>
+        <div class="magazine-preview">
+          <div class="preview-dots"></div>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="card-header">
+          <div>
+            <h3>1ra Edición</h3>
+            <p class="card-date">Octubre 2025</p>
+          </div>
+          <div class="card-staff">
+            <div class="staff-avatars">
+              <span class="avatar" title="Staff Editorial">📰</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controles de zoom mejorados -->
+        <div class="zoom-controls-modern">
+          <button class="zoom-btn zoom-out" data-edition="1" aria-label="Reducir zoom">
+            <i class="fas fa-minus"></i>
+          </button>
+          <span class="zoom-level-display" data-edition="1">100%</span>
+          <button class="zoom-btn zoom-in" data-edition="1" aria-label="Aumentar zoom">
+            <i class="fas fa-plus"></i>
+          </button>
+          <button class="zoom-reset" data-edition="1" title="Reiniciar zoom">
+            <i class="fas fa-undo-alt"></i>
+          </button>
+        </div>
+
+        <!-- Contenedor de la revista -->
+        <div class="magazine-viewer loading" id="viewer-1">
+          <!-- <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Cargando revista...</p>
+          </div> -->
+          <iframe 
+            class="magazine-frame" 
+            data-edition="1"
+            src="https://insidenewsmxtv.my.canva.site/revista-inside-newsmxtv-octubre-2025-1"
+            title="Inside NewsMx - 1ra Edición"
+            loading="lazy"
+            allowfullscreen
+            onload="this.closest('.magazine-viewer').classList.remove('loading')"
+          ></iframe>
+        </div>
+
+        <!-- Equipo y acciones -->
+        <div class="card-footer">
+          <div class="team-tags">
+            <span class="team-tag"><i class="fas fa-user-tie"></i>Staff Editorial</span>
+            <span class="team-tag"><i class="fas fa-star"></i>Edición de Lanzamiento</span>
+          </div>
+          <div class="action-buttons">
+            <a href="https://insidenewsmxtv.my.canva.site/revista-inside-newsmxtv-octubre-2025-1" target="_blank" class="action-btn canva" rel="noopener">
+              <i class="fab fa-canva"></i>
+              <span>Canva</span>
+            </a>
+            <a href="https://insidenewsmxtv.my.canva.site/revista-inside-newsmxtv-octubre-2025-1" target="_blank" class="action-btn fullscreen" rel="noopener">
+              <i class="fas fa-expand-alt"></i>
+              <span>Completa</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revista 2 -->
+    <div class="magazine-card-modern" id="edition2">
+      <div class="card-media">
+        <div class="magazine-number-floating">#2</div>
+      </div>
+      <div class="card-content">
+        <div class="card-header">
+          <div>
+            <h3>2da Edición</h3>
+            <p class="card-date">Octubre 2025</p>
+          </div>
+          <div class="card-staff">
+            <div class="staff-avatars">
+              <span class="avatar" title="Jeanette Gutiérrez">👩‍💼</span>
+              <span class="avatar" title="Karla M. Vázquez">👩‍💻</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zoom-controls-modern">
+          <button class="zoom-btn zoom-out" data-edition="2"><i class="fas fa-minus"></i></button>
+          <span class="zoom-level-display" data-edition="2">100%</span>
+          <button class="zoom-btn zoom-in" data-edition="2"><i class="fas fa-plus"></i></button>
+          <button class="zoom-reset" data-edition="2"><i class="fas fa-undo-alt"></i></button>
+        </div>
+
+        <div class="magazine-viewer loading" id="viewer-2">
+          <!-- <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Cargando revista...</p>
+          </div> -->
+          <iframe 
+            class="magazine-frame" 
+            data-edition="2"
+            src="https://www.canva.com/design/DAG16IUoklw/hgnKeipNY-cGrO207ZqyxQ/view?embed"
+            title="Inside NewsMx - 2da Edición"
+            loading="lazy"
+            allowfullscreen
+            onload="this.closest('.magazine-viewer').classList.remove('loading')"
+          ></iframe>
+        </div>
+
+        <div class="card-footer">
+          <div class="team-tags">
+            <span class="team-tag"><i class="fas fa-user-tie"></i>Jeanette G.</span>
+            <span class="team-tag"><i class="fas fa-user-cog"></i>Karla V.</span>
+          </div>
+          <div class="action-buttons">
+            <a href="https://www.canva.com/design/DAG16IUoklw/hgnKeipNY-cGrO207ZqyxQ/view" target="_blank" class="action-btn canva"><i class="fab fa-canva"></i><span>Canva</span></a>
+            <a href="https://www.canva.com/design/DAG16IUoklw/hgnKeipNY-cGrO207ZqyxQ/view" target="_blank" class="action-btn fullscreen"><i class="fas fa-expand-alt"></i><span>Completa</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revista 3 -->
+    <div class="magazine-card-modern" id="edition3">
+      <div class="card-media">
+        <div class="magazine-number-floating">#3</div>
+      </div>
+      <div class="card-content">
+        <div class="card-header">
+          <div>
+            <h3>3ra Edición</h3>
+            <p class="card-date">Noviembre 2025</p>
+          </div>
+          <div class="card-staff">
+            <div class="staff-avatars">
+              <span class="avatar">👩‍💼</span>
+              <span class="avatar">👩‍💻</span>
+              <span class="avatar">✍️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zoom-controls-modern">
+          <button class="zoom-btn zoom-out" data-edition="3"><i class="fas fa-minus"></i></button>
+          <span class="zoom-level-display" data-edition="3">100%</span>
+          <button class="zoom-btn zoom-in" data-edition="3"><i class="fas fa-plus"></i></button>
+          <button class="zoom-reset" data-edition="3"><i class="fas fa-undo-alt"></i></button>
+        </div>
+
+        <div class="magazine-viewer loading" id="viewer-3">
+          <!-- <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Cargando revista...</p>
+          </div> -->
+          <iframe 
+            class="magazine-frame" 
+            data-edition="3"
+            src="https://www.canva.com/design/DAG3YvznRNc/OHkjVMieqNtjwczFHoS6ZA/view?embed"
+            title="Inside NewsMx - 3ra Edición"
+            loading="lazy"
+            allowfullscreen
+            onload="this.closest('.magazine-viewer').classList.remove('loading')"
+          ></iframe>
+        </div>
+
+        <div class="card-footer">
+          <div class="team-tags">
+            <span class="team-tag">Jeanette G.</span>
+            <span class="team-tag">Karla V.</span>
+            <span class="team-tag">Yanderlane B.</span>
+          </div>
+          <div class="action-buttons">
+            <a href="https://www.canva.com/design/DAG3YvznRNc/OHkjVMieqNtjwczFHoS6ZA/view" target="_blank" class="action-btn canva"><i class="fab fa-canva"></i><span>Canva</span></a>
+            <a href="https://www.canva.com/design/DAG3YvznRNc/OHkjVMieqNtjwczFHoS6ZA/view" target="_blank" class="action-btn fullscreen"><i class="fas fa-expand-alt"></i><span>Completa</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revista 4 -->
+    <div class="magazine-card-modern" id="edition4">
+      <div class="card-media">
+        <div class="magazine-number-floating">#4</div>
+      </div>
+      <div class="card-content">
+        <div class="card-header">
+          <div>
+            <h3>4ta Edición</h3>
+            <p class="card-date">Noviembre 2025</p>
+          </div>
+          <div class="card-staff">
+            <div class="staff-avatars">
+              <span class="avatar">👩‍💼</span>
+              <span class="avatar">👩‍💻</span>
+              <span class="avatar">✍️</span>
+              <span class="avatar">🤝</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zoom-controls-modern">
+          <button class="zoom-btn zoom-out" data-edition="4"><i class="fas fa-minus"></i></button>
+          <span class="zoom-level-display" data-edition="4">100%</span>
+          <button class="zoom-btn zoom-in" data-edition="4"><i class="fas fa-plus"></i></button>
+          <button class="zoom-reset" data-edition="4"><i class="fas fa-undo-alt"></i></button>
+        </div>
+
+        <div class="magazine-viewer loading" id="viewer-4">
+          <!-- <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Cargando revista...</p>
+          </div> -->
+          <iframe 
+            class="magazine-frame" 
+            data-edition="4"
+            src="https://www.canva.com/design/DAG5MkDibNw/lACglMhN9zFv4j40hsPI-w/view?embed"
+            title="Inside NewsMx - 4ta Edición"
+            loading="lazy"
+            allowfullscreen
+            onload="this.closest('.magazine-viewer').classList.remove('loading')"
+          ></iframe>
+        </div>
+
+        <div class="card-footer">
+          <div class="team-tags">
+            <span class="team-tag">Jeanette G.</span>
+            <span class="team-tag">Karla V.</span>
+            <span class="team-tag">Yanderlane B.</span>
+            <span class="team-tag">Miguel H.</span>
+          </div>
+          <div class="action-buttons">
+            <a href="https://www.canva.com/design/DAG5MkDibNw/lACglMhN9zFv4j40hsPI-w/view" target="_blank" class="action-btn canva"><i class="fab fa-canva"></i><span>Canva</span></a>
+            <a href="https://www.canva.com/design/DAG5MkDibNw/lACglMhN9zFv4j40hsPI-w/view" target="_blank" class="action-btn fullscreen"><i class="fas fa-expand-alt"></i><span>Completa</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revista 5 -->
+    <div class="magazine-card-modern" id="edition5">
+      <div class="card-media">
+        <div class="magazine-number-floating">#5</div>
+      </div>
+      <div class="card-content">
+        <div class="card-header">
+          <div>
+            <h3>5ta Edición</h3>
+            <p class="card-date">Diciembre 2025</p>
+          </div>
+          <div class="card-staff">
+            <div class="staff-avatars">
+              <span class="avatar">👩‍💼</span>
+              <span class="avatar">👩‍💻</span>
+              <span class="avatar">✍️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zoom-controls-modern">
+          <button class="zoom-btn zoom-out" data-edition="5"><i class="fas fa-minus"></i></button>
+          <span class="zoom-level-display" data-edition="5">100%</span>
+          <button class="zoom-btn zoom-in" data-edition="5"><i class="fas fa-plus"></i></button>
+          <button class="zoom-reset" data-edition="5"><i class="fas fa-undo-alt"></i></button>
+        </div>
+
+        <div class="magazine-viewer loading" id="viewer-5">
+          <!-- <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Cargando revista...</p>
+          </div> -->
+          <iframe 
+            class="magazine-frame" 
+            data-edition="5"
+            src="https://www.canva.com/design/DAG6mqxw_Lg/Lbu4_bXq3dQeIWFKJ68ZWw/view?embed"
+            title="Inside NewsMx - 5ta Edición"
+            loading="lazy"
+            allowfullscreen
+            onload="this.closest('.magazine-viewer').classList.remove('loading')"
+          ></iframe>
+        </div>
+
+        <div class="card-footer">
+          <div class="team-tags">
+            <span class="team-tag">Jeanette G.</span>
+            <span class="team-tag">Karla V.</span>
+            <span class="team-tag">Yanderlane B.</span>
+          </div>
+          <div class="action-buttons">
+            <a href="https://www.canva.com/design/DAG6mqxw_Lg/Lbu4_bXq3dQeIWFKJ68ZWw/view" target="_blank" class="action-btn canva"><i class="fab fa-canva"></i><span>Canva</span></a>
+            <a href="https://www.canva.com/design/DAG6mqxw_Lg/Lbu4_bXq3dQeIWFKJ68ZWw/view" target="_blank" class="action-btn fullscreen"><i class="fas fa-expand-alt"></i><span>Completa</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revista 6 - Edición Especial -->
+    <div class="magazine-card-modern special" id="edition6">
+      <div class="card-badge">ESPECIAL</div>
+      <div class="card-media">
+        <div class="magazine-number-floating">#6</div>
+        <div class="special-glow"></div>
+      </div>
+      <div class="card-content">
+        <div class="card-header">
+          <div>
+            <h3>6ta Edición Especial</h3>
+            <p class="card-date">Edición Especial</p>
+          </div>
+          <div class="card-staff">
+            <div class="staff-avatars">
+              <span class="avatar">👩‍💼</span>
+              <span class="avatar">👩‍💻</span>
+              <span class="avatar">✍️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zoom-controls-modern">
+          <button class="zoom-btn zoom-out" data-edition="6"><i class="fas fa-minus"></i></button>
+          <span class="zoom-level-display" data-edition="6">100%</span>
+          <button class="zoom-btn zoom-in" data-edition="6"><i class="fas fa-plus"></i></button>
+          <button class="zoom-reset" data-edition="6"><i class="fas fa-undo-alt"></i></button>
+        </div>
+
+        <div class="magazine-viewer loading" id="viewer-6">
+          <!-- <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Cargando revista...</p>
+          </div> -->
+          <iframe 
+            class="magazine-frame" 
+            data-edition="6"
+            src="https://www.canva.com/design/DAG8QlePdzo/y02RXJyaxIFr0-JVVVtQ_A/view?embed"
+            title="Inside NewsMx - 6ta Edición Especial"
+            loading="lazy"
+            allowfullscreen
+            onload="this.closest('.magazine-viewer').classList.remove('loading')"
+          ></iframe>
+        </div>
+
+        <div class="card-footer">
+          <div class="team-tags">
+            <span class="team-tag"><i class="fas fa-crown"></i>Especial</span>
+            <span class="team-tag">Jeanette G.</span>
+            <span class="team-tag">Karla V.</span>
+            <span class="team-tag">Yanderlane B.</span>
+          </div>
+          <div class="action-buttons">
+            <a href="https://www.canva.com/design/DAG8QlePdzo/y02RXJyaxIFr0-JVVVtQ_A/view?embed" target="_blank" class="action-btn canva"><i class="fab fa-canva"></i><span>Canva</span></a>
+            <a href="https://www.canva.com/design/DAG8QlePdzo/y02RXJyaxIFr0-JVVVtQ_A/view?embed" target="_blank" class="action-btn fullscreen special"><i class="fas fa-crown"></i><span>Especial</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revista 7 -->
+    <div class="magazine-card-modern" id="edition7">
+      <div class="card-media">
+        <div class="magazine-number-floating">#7</div>
+      </div>
+      <div class="card-content">
+        <div class="card-header">
+          <div>
+            <h3>7ma Edición</h3>
+            <p class="card-date">Febrero 2026</p>
+          </div>
+          <div class="card-staff">
+            <div class="staff-avatars">
+              <span class="avatar">👩‍💼</span>
+              <span class="avatar">👩‍💻</span>
+              <span class="avatar">✍️</span>
+              <span class="avatar">🤝</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zoom-controls-modern">
+          <button class="zoom-btn zoom-out" data-edition="7"><i class="fas fa-minus"></i></button>
+          <span class="zoom-level-display" data-edition="7">100%</span>
+          <button class="zoom-btn zoom-in" data-edition="7"><i class="fas fa-plus"></i></button>
+          <button class="zoom-reset" data-edition="7"><i class="fas fa-undo-alt"></i></button>
+        </div>
+
+        <div class="magazine-viewer loading" id="viewer-7">
+          <!-- <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Cargando revista...</p>
+          </div> -->
+          <iframe 
+            class="magazine-frame" 
+            data-edition="7"
+            src="https://www.canva.com/design/DAG-nlImZOQ/2zoOtTMRLt2VjVx3vmBbWQ/view?embed"
+            title="Inside NewsMx - 7ma Edición"
+            loading="lazy"
+            allowfullscreen
+            onload="this.closest('.magazine-viewer').classList.remove('loading')"
+          ></iframe>
+        </div>
+
+        <div class="card-footer">
+          <div class="team-tags">
+            <span class="team-tag">Jeanette G.</span>
+            <span class="team-tag">Karla V.</span>
+            <span class="team-tag">Yanderlane B.</span>
+            <span class="team-tag">Miguel H.</span>
+          </div>
+          <div class="action-buttons">
+            <a href="https://www.canva.com/design/DAG-nlImZOQ/2zoOtTMRLt2VjVx3vmBbWQ/view?embed" target="_blank" class="action-btn canva"><i class="fab fa-canva"></i><span>Canva</span></a>
+            <a href="https://www.canva.com/design/DAG-nlImZOQ/2zoOtTMRLt2VjVx3vmBbWQ/view?embed" target="_blank" class="action-btn fullscreen"><i class="fas fa-expand-alt"></i><span>Completa</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    const zoomConfigs = {};
+    const editions = [1, 2, 3, 4, 5, 6, 7];
+    
+    // Inicializar configuraciones
+    editions.forEach(edition => {
+      zoomConfigs[edition] = {
+        zoom: 1,
+        minZoom: 0.5,
+        maxZoom: 2,
+        step: 0.1
+      };
+      loadSavedZoom(edition);
+    });
+    
+    function applyZoom(edition) {
+      const config = zoomConfigs[edition];
+      const frames = document.querySelectorAll(`.magazine-frame[data-edition="${edition}"]`);
+      const display = document.querySelector(`.zoom-level-display[data-edition="${edition}"]`);
+      
+      frames.forEach(frame => {
+        frame.style.transform = `scale(${config.zoom})`;
+        frame.style.transformOrigin = 'center center';
+      });
+      
+      if (display) {
+        display.textContent = Math.round(config.zoom * 100) + '%';
+      }
+      
+      localStorage.setItem(`revista_zoom_${edition}`, config.zoom);
+    }
+    
+    function loadSavedZoom(edition) {
+      const saved = localStorage.getItem(`revista_zoom_${edition}`);
+      if (saved) {
+        zoomConfigs[edition].zoom = parseFloat(saved);
+        applyZoom(edition);
+      }
+    }
+    
+    // Event listeners
+    document.querySelectorAll('.zoom-in').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const edition = parseInt(this.getAttribute('data-edition'));
+        const config = zoomConfigs[edition];
+        if (config.zoom < config.maxZoom) {
+          config.zoom = Math.min(config.maxZoom, config.zoom + config.step);
+          applyZoom(edition);
+        }
+      });
+    });
+    
+    document.querySelectorAll('.zoom-out').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const edition = parseInt(this.getAttribute('data-edition'));
+        const config = zoomConfigs[edition];
+        if (config.zoom > config.minZoom) {
+          config.zoom = Math.max(config.minZoom, config.zoom - config.step);
+          applyZoom(edition);
+        }
+      });
+    });
+    
+    document.querySelectorAll('.zoom-reset').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const edition = parseInt(this.getAttribute('data-edition'));
+        zoomConfigs[edition].zoom = 1;
+        applyZoom(edition);
+      });
+    });
+    
+    // Loader timeout
+    setTimeout(() => {
+      document.querySelectorAll('.magazine-viewer.loading').forEach(container => {
+        container.classList.remove('loading');
+      });
+    }, 5000);
+  });
+</script>

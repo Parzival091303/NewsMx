@@ -1,0 +1,61 @@
+---
+const { fecha, categorias, titulo, autor, imagen } = Astro.props;
+---
+
+<div class="noticia">
+  <img src={imagen} alt={titulo} />
+
+  <div>
+    <div class="meta">
+      {fecha} | {categorias}
+    </div>
+
+    <div class="titulo">
+      {titulo}
+    </div>
+
+    <div class="autor">
+      Por: {autor}
+    </div>
+
+    <a href="#" class="leer"> Continuar leyendo </a>
+  </div>
+</div>
+
+<style>
+  .noticia {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .noticia img {
+    width: 150px;
+    height: 90px;
+    object-fit: cover;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 5px;
+  }
+
+  .titulo {
+    font-size: 18px;
+    margin: 5px 0;
+  }
+
+  .autor {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .leer {
+    font-size: 13px;
+    color: #0b7a75;
+    text-decoration: none;
+  }
+</style>
