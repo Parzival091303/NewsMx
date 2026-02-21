@@ -12,14 +12,11 @@ export const server = {
      getPlaces,
   getAvailabilityById,
   login,
-<<<<<<< HEAD
   createNews,
   getCategorias,
   obtNoticias,
   noticiasId,
-=======
   getAllNews
->>>>>>> 3077d711fadb2b478f290889acd15b7f6c937bbd
 
 };
 

@@ -5,15 +5,12 @@ import { actions } from "astro:actions";
 import NewsCard from "@/componentes/NewsCard.astro";
 import LayoutBase from "@/layouts/LayoutBase.astro";
 
-<<<<<<< HEAD
 // 🔥 Llamada correcta a tu Action
 const { data, error } = await Astro.callAction(actions.obtNoticias, null);
-=======
 // 🔥 Llamada correcta a la Action
-const { data, error } = await Astro.callAction(actions.getPlaces,null);
+const { data :NOSE, error: NOSA } = await Astro.callAction(actions.getPlaces,null);
 const {data : newsData, error : newsError } = await Astro.callAction(actions.getAllNews, {});
 console.log("News data:", newsData);
->>>>>>> 3077d711fadb2b478f290889acd15b7f6c937bbd
 
 if (error) {
   throw error;
