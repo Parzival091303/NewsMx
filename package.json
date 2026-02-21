@@ -4,9 +4,12 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "old:start": "astro dev",
+    "start": "node ./dist/server/entry.mjs",
+    "build": "pnpm run prisma:generate && astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
