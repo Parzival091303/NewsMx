@@ -9,14 +9,15 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@prisma/client": "6.19.2",
-    "dotenv": "^17.3.1",
     "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/node": "^9.5.4",
+    "@prisma/client": "6.19.2",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
+    "dotenv": "^17.3.1",
     "tailwindcss": "^4.1.18"
   },
-    "devDependencies": {
+  "devDependencies": {
     "prisma": "6.19.2"
   }
 }
