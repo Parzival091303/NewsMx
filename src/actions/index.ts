@@ -8,6 +8,8 @@ import { getAvailabilityById } from "./places/get-availability-by-id.action";
 import { getPlaces } from "./places/get-places.action";
 import { getAllNews, addNews, countNews, getNewsById, getNewsBySlug, getNewsByCategory, getNewsByUserId } from "@/actions/noticias";
 import { getAllCategories, getCategoryById, addCategory, deleteCategory, updateCategory } from "@/actions/categorias";
+import { getAllUsers, deleteUser, updateUser, getUserById } from "@/actions/usuarios";
+import {loginAuth, register, updatePassword, resetPassword} from "@/actions/auth";
 export const server = {
   getNews,
   getPlaces,
@@ -28,7 +30,13 @@ export const server = {
   getCategoryById,
   addCategory,
   deleteCategory,
-  updateCategory
+  updateCategory,
+  getAllUsers,
+  deleteUser,
+  getUserById,
+  updateUser,
+  loginAuth,
+  register
 };
 
 

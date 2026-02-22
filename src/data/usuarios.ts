@@ -6,7 +6,7 @@ export interface UserInput {
     apellido: string;
     telefono: string;
     correo: string;
-    contraseña: string;
+    contraseña?: string;
     id_rol: number;
 }
 
@@ -38,7 +38,7 @@ export const getUserByEmail = async (email: string) => {
             rol: true
         }
     });
-}  
+}
 
 
 
@@ -50,16 +50,32 @@ export const addUser = async (userData: UserInput) => {
             apellido: userData.apellido,
             telefono: userData.telefono,
             correo: userData.correo,
-            contraseña: hashSync(userData.contraseña, salt),
+            contraseña: hashSync(userData.contraseña!, salt),
             id_rol: userData.id_rol
         }
     });
 }
 
-export const deleteUserById = async (id: number) => {
-    return await prisma.usuarios.delete({
+export const updateUserPassword = async (email: string, newPassword: string) => {
+    const salt = genSaltSync(10);
+    return await prisma.usuarios.update({
+        where: {
+            correo: email
+        },
+        data: {
+            contraseña: hashSync(newPassword, salt)
+        }
+    });
+}
+
+export const restoreUserPassword = async (id: number, newPassword: string) => {
+    const salt = genSaltSync(10);
+    return await prisma.usuarios.update({
         where: {
             id_usuario: id
+        },
+        data: {
+            contraseña: hashSync(newPassword, salt)
         }
     });
 }
@@ -80,7 +96,7 @@ export const updateUser = async (id: number, userData: UserInput) => {
     });
 }
 
-export const verifyPassword = (inputPassword: string, storedHash: string) : boolean => {
+export const verifyPassword = (inputPassword: string, storedHash: string): boolean => {
     return compareSync(inputPassword, storedHash);
 }
 
