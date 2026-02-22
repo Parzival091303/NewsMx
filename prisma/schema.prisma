@@ -54,7 +54,7 @@ model noticias {
 
 model categorias {
   id_categoria   BigInt @id @default(autoincrement())
-  nombre_categoria String
+  nombre_categoria String @unique
 
   noticias categorias_noticias[]
 }

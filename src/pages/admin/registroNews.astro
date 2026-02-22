@@ -1,41 +1,57 @@
 ---
+import LayoutBase from "@/layouts/LayoutBase.astro";
 import "@/styles/global.css";
 import { actions } from "astro:actions";
 
 let mensaje = "";
 
-// ✅ SIEMPRE usar Astro.callAction en server
 const { data } = await Astro.callAction(
   actions.getCategorias,
   null
 );
 
 const categorias = data ?? [];
-// POST
-if (Astro.request.method === "POST") {
-  const formData = await Astro.request.formData();
-  const categoriasSeleccionadas = formData.getAll("categorias");
 
-  if (categoriasSeleccionadas.length === 0) {
-    mensaje = "Debes seleccionar al menos una categoría.";
-  } else {
-    const { error } = await Astro.callAction(
-      actions.createNews,
-      formData
-    );
-
-    if (error) {
-      mensaje = "Error al guardar la noticia.";
-    } else {
-      mensaje = "Noticia creada correctamente.";
-    }
-  }
-}
 ---
+<form id="noticia-form" class="space-y-6">
+  </form>
+
+<script>
+import { actions } from "astro:actions";
+
+  const form = document.getElementById('news-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true; 
+    const formData = new FormData(form);
+    
+    // Si necesitas enviarlo como JSON:
+    
+    // Para los checkboxes de categorías (que se repiten):
+
+    try {
+      const { data: response, error } = await actions.addNews(formData);
+
+      if (error) {
+        alert('Error al registrar la noticia: ' + error.message);
+        console.error('Error:', error);
+      } else {
+        alert('Noticia registrada con éxito');
+        form.reset();
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    finally {
+      submitBtn.disabled = false; 
+    }
+  });
+</script>
 
 
-
-<div class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-center p-6">
+<LayoutBase>
+  <div class="min-h-screen bg-linear-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-center p-6">
 
   <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-10">
 
@@ -50,7 +66,7 @@ if (Astro.request.method === "POST") {
       <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
     </div>
 
-    <form class="space-y-6" method="POST">
+    <form class="space-y-6" method="POST" id="news-form">
 
       <!-- TÍTULO -->
       <div>
@@ -64,7 +80,17 @@ if (Astro.request.method === "POST") {
           placeholder="Titulo de la noticia"
         />
       </div>
-
+      <div>
+        <label class="block font-semibold text-[#0f4f4f] mb-2">
+          SLUG
+        </label>
+        <input
+          name="slug"
+          required
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
+          placeholder="slug-de-la-noticia"
+        />
+      </div>
       <!-- PRIMER PÁRRAFO -->
       <div>
         <label class="block font-semibold text-[#0f4f4f] mb-2">
@@ -99,6 +125,8 @@ if (Astro.request.method === "POST") {
           URL Imagen *
         </label>
         <input
+          type="file"
+          accept="image/*"
           name="imagen"
           required
           class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
@@ -119,7 +147,7 @@ if (Astro.request.method === "POST") {
               <input
                 type="checkbox"
                 name="categorias"
-                value={cat.id_categoria.toString()}
+                value={cat.nombre_categoria}
                 class="mr-3 accent-[#2aa3a3] w-4 h-4"
               />
               <span class="text-gray-700">
@@ -133,12 +161,12 @@ if (Astro.request.method === "POST") {
 
       <!-- BOTÓN -->
       <div class="pt-4">
-        <button
+        <input
+        id="submit-btn"
           type="submit"
           class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
         >
-          Guardar Noticia
-        </button>
+        </input>
       </div>
 
       {mensaje && (
@@ -151,3 +179,5 @@ if (Astro.request.method === "POST") {
 
   </div>
 </div>
+
+</LayoutBase>
