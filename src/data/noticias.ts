@@ -64,7 +64,6 @@ export const updateNews = async (id: number, newsData: NewsInput) => {
         }
     });
 };
-
 export const getNewsByUserId = async (userId: number) => {
     return await prisma.noticias.findMany({
         where: {
@@ -85,6 +84,9 @@ export const countNewsByUserId = async (userId: number) => {
     return await prisma.noticias.count({ where: { id_usuario: userId } });
 }
 
+export const countNews = async() => {
+    return await prisma.noticias.count();
+}
 export const countNewsByCategory = async (category: string) => {
     return await prisma.noticias.count({
         where: {

@@ -23,7 +23,7 @@ const { noticia } = Astro.props;
 
     <!-- Imagen -->
 <!-- Imagen -->
-<div class="w-full aspect-[16/9] overflow-hidden">
+<div class="w-full aspect-video overflow-hidden">
   <img
     src={noticia.imagen}
     alt={noticia.titulo_noticia ?? 'Noticia'}
@@ -69,7 +69,7 @@ const { noticia } = Astro.props;
 
       <!-- Botón -->
       <a
-        href={`/noticias/${noticia.id_noticia}`}
+        href={`/noticias/${noticia.noticias_url}`}
         class="inline-block bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white px-5 py-2 rounded-lg font-medium transition"
       >
         Leer más

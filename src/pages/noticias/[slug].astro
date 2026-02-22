@@ -1,13 +1,19 @@
 ---
-const { slug } = Astro.params;
+import "@/styles/global.css";
+import NewsCard from "@/componentes/NewsCard.astro";
+import { actions } from "astro:actions";
+import LayoutBase from "@/layouts/LayoutBase.astro";
 
-const jejeje = "jejeje";
+const slug  = Astro.params.slug!;
 
+const { data : noticia, error } = await Astro.callAction(actions.getNewsBySlug, { slug });
+
+
+if (!noticia || error) {
+  throw new Error("Noticia no encontrada" + (error ? `: ${error.message}` : ""));
+}
 ---
 
-<div>
-    <h1>Noticia: {slug}</h1>
-    <p>{jejeje}</p>
-</div>
-
-
+<LayoutBase>
+  <NewsCard noticia={noticia} />
+</LayoutBase>

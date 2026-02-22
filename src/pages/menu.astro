@@ -1,5 +1,5 @@
 ---
-import "../styles/global.css";
+import "@/styles/global.css";
 
 import { actions } from "astro:actions";
 import NewsCard from "@/componentes/NewsCard.astro";
@@ -7,10 +7,18 @@ import LayoutBase from "@/layouts/LayoutBase.astro";
 
 // 🔥 Llamada correcta a tu Action
 const { data, error } = await Astro.callAction(actions.obtNoticias, null);
+
+const ofsset = Astro.url.searchParams.get("offset") || "0";
 // 🔥 Llamada correcta a la Action
-const { data :NOSE, error: NOSA } = await Astro.callAction(actions.getPlaces,null);
-const {data : newsData, error : newsError } = await Astro.callAction(actions.getAllNews, {});
-console.log("News data:", newsData);
+const { data: NOSE, error: NOSA } = await Astro.callAction(
+  actions.getPlaces,
+  null,
+);
+const { data: newsData, error: newsError } = await Astro.callAction(
+  actions.getAllNews,
+  { offset: parseInt(ofsset) },
+);
+
 
 if (error) {
   throw error;
@@ -22,17 +30,12 @@ if (!data) {
 
 // tu action devuelve { data: noticias }
 const noticias = data?.data ?? [];
-
 ---
 
 <LayoutBase>
-  <h1 class="text-3xl font-extrabold mb-6">
-    Noticias
-  </h1>
+  <h1 class="text-3xl font-extrabold mb-6">Noticias</h1>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {noticias.map((noticia) => (
-      <NewsCard noticia={noticia} />
-    ))}
+    {newsData?.news.map((noticia) => <NewsCard noticia={noticia} />)}
   </div>
 </LayoutBase>
