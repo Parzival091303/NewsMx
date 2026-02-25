@@ -3,6 +3,22 @@ import { defineMiddleware } from "astro/middleware";
 export const onRequest = defineMiddleware((context, next) => {
   const path = context.url.pathname;
 
+if (path === "/login") {
+  const user = context.cookies.get("user")?.json();
+  if (user) {
+    const rutas: Record<string, string> = {
+      "1": "/admin/registroNews",
+      "2": "/admin/editor",
+      "3": "/admin/CEO/menu",
+    };
+    return context.redirect(rutas[user.rol] ?? "/menu");
+  }
+  const referer = context.request.headers.get("referer") ?? "";
+  if (!referer.includes("/privacidad")) {
+    return context.redirect("/");
+  }
+  return next();
+}
   // Excluir rutas públicas
   if (path === "/login" || path === "/acceso-denegado") return next();
 

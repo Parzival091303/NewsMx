@@ -1,12 +1,12 @@
 ---
 export const prerender = false;
-import { updateUserPassword } from "@/data/usuarios";
+
 import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
 import "@/styles/global.css";
 import { actions } from "astro:actions";
 
 
-await updateUserPassword("erik@newsmx.com", "web123");
+
 const result = Astro.getActionResult(actions.loginAuth);
 
 if (result && !result.error) {
