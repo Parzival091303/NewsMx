@@ -165,6 +165,15 @@ onclick={`window.location.href='/admin/CEO/${`${u.nombre}-${u.apellido}`.toLower
     } else {
       url.searchParams.delete("rol");
     }
+
+    Swal.fire({
+      title: "Filtrando usuarios...",
+      text: "Por favor espera",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
+
     window.location.href = url.toString();
   });
 

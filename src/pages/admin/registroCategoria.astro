@@ -1,96 +1,155 @@
 ---
+export const prerender = false;
 import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
-import "@/styles/global.css";
 import { actions } from "astro:actions";
 
 let mensaje = "";
 
-const { data } = await Astro.callAction(
-  actions.getCategorias,
-  null
-);
-
+const { data } = await Astro.callAction(actions.getCategorias, null);
 const categorias = data ?? [];
-
-
+const categoriasJSON = JSON.stringify(categorias.map(c => ({ id: c.id_categoria.toString(), nombre: c.nombre_categoria })));
 ---
-<form id="noticia-form" class="space-y-6">
-  </form>
-
-<script>
-import { actions } from "astro:actions";
-
-const btn = document.getElementById('submit-btn');
-const input = document.querySelector('input[name="categoria"]')as HTMLInputElement;
-
-btn?.addEventListener('click', async () => {
-
-  const nombre = input.value;
-
-  const { data, error } = await actions.addCategory({ nombre });
-
-  if (error) {
-    alert('Error al agregar categoría: ' + error.message);
-    console.error(error);
-  } else {
-   
-    window.location.href = "/admin/registroNews";
-  }
-});
-</script>
-
 
 <LayoutAdmin>
   <div class="min-h-screen bg-linear-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-center p-6">
+    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-10">
 
-  <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-10">
-
-    <!-- HEADER -->
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-[#0f4f4f] tracking-wide">
-        Registrar Nueva Categoria
-      </h1>
-      <p class="text-gray-500 mt-2">
-        Agrega una nueva categoria para NEWSMX TV
-      </p>
-      <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
-    </div>
-
-    <form class="space-y-6" method="POST" id="news-form">
-
-      <!-- Categoria -->
-      <div>
-        <label class="block font-semibold text-[#0f4f4f] mb-2">
-          Categoria
-        </label>
-        <input
-          name="categoria"
-          required
-          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
-          placeholder="Nueva categoria de noticas"
-        />
+      <!-- HEADER -->
+      <div class="text-center mb-8">
+        <a href="/admin/registroNews" class="inline-block mb-4 text-sm text-[#2aa3a3] hover:underline">← Volver a registro de noticias</a>
+        <h1 class="text-3xl font-bold text-[#0f4f4f] tracking-wide">
+          Gestionar Categorías
+        </h1>
+        <p class="text-gray-500 mt-2">Agrega o elimina categorías de NEWSMX TV</p>
+        <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
       </div>
 
+      <!-- AGREGAR CATEGORÍA -->
+      <div class="mb-8">
+        <label class="block font-semibold text-[#0f4f4f] mb-2">Nueva Categoría</label>
+        <div class="flex gap-3">
+          <input
+            id="input-categoria"
+            name="categoria"
+            type="text"
+            class="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
+            placeholder="Nombre de la nueva categoría"
+          />
+          <button
+            id="btn-agregar"
+            type="button"
+            class="bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white px-6 py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
 
- 
-      <!--Botom agregar categoria -->
-<button
-  id="submit-btn"
-  type="button"
-  class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
->
-  Agregar Categoría
-</button>
+      <!-- LISTA DE CATEGORÍAS -->
+      <div>
+        <label class="block font-semibold text-[#0f4f4f] mb-3">Categorías existentes</label>
+        <div
+          class="border border-gray-200 rounded-xl p-4 h-64 overflow-y-auto bg-[#f4fafa]"
+          id="categorias-container"
+          data-categorias={categoriasJSON}
+        >
+        </div>
+      </div>
 
-      {mensaje && (
-        <p class="text-center mt-4 font-medium text-[#0f4f4f]">
-          {mensaje}
-        </p>
-      )}
-
-    </form>
-
+    </div>
   </div>
-</div>
+
+  <script>
+    import { actions } from "astro:actions";
+    import Swal from "sweetalert2";
+
+    const container = document.getElementById("categorias-container")!;
+    let categoriasData: { id: string, nombre: string }[] = JSON.parse(container.dataset.categorias!);
+
+    function renderCategorias() {
+      container.innerHTML = "";
+      if (categoriasData.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-center py-4">No hay categorías registradas.</p>';
+        return;
+      }
+      categoriasData.forEach((cat) => {
+        const item = document.createElement("div");
+        item.className = "flex items-center justify-between mb-2 p-2 rounded-lg hover:bg-[#e6f7f7] transition";
+        item.innerHTML = `
+          <span class="text-gray-700 font-medium">${cat.nombre}</span>
+          <button
+            class="btn-eliminar text-red-500 hover:text-red-700 text-sm font-semibold transition"
+            data-id="${cat.id}"
+            data-nombre="${cat.nombre}"
+          >
+            🗑 Eliminar
+          </button>
+        `;
+        container.appendChild(item);
+      });
+
+      // Listeners de eliminar
+      document.querySelectorAll(".btn-eliminar").forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+          const target = e.currentTarget as HTMLButtonElement;
+          const id = Number(target.dataset.id);
+          const nombre = target.dataset.nombre;
+
+          const confirmed = await Swal.fire({
+            icon: "warning",
+            title: `¿Eliminar "${nombre}"?`,
+            text: "Las noticias con esta categoría la perderán.",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#0f4f4f",
+          });
+
+          if (!confirmed.isConfirmed) return;
+
+          Swal.fire({
+            title: "Eliminando...",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => { Swal.showLoading(); }
+          });
+
+          const { error } = await actions.deleteCategory({ id });
+
+          if (error) {
+            Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
+          } else {
+            categoriasData = categoriasData.filter(c => c.id !== target.dataset.id);
+            renderCategorias();
+            Swal.fire({ icon: "success", title: "Eliminada", text: `La categoría "${nombre}" fue eliminada.`, confirmButtonColor: "#0f4f4f" });
+          }
+        });
+      });
+    }
+
+    renderCategorias();
+
+    // Agregar categoría
+    document.getElementById("btn-agregar")!.addEventListener("click", async () => {
+      const input = document.getElementById("input-categoria") as HTMLInputElement;
+      const nombre = input.value.trim();
+
+      if (!nombre) {
+        Swal.fire({ icon: "warning", title: "Escribe un nombre", confirmButtonColor: "#0f4f4f" });
+        return;
+      }
+
+      const { data, error } = await actions.addCategory({ nombre });
+
+      if (error) {
+        Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
+      } else {
+        Swal.fire({ icon: "success", title: "¡Categoría agregada!", confirmButtonColor: "#0f4f4f" });
+        input.value = "";
+        window.location.reload();
+      }
+    });
+  </script>
 
 </LayoutAdmin>

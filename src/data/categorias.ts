@@ -25,10 +25,13 @@ export const addCategory = async (categoriaData: CategoriaInput) => {
 };
 
 export const deleteCategory = async (id: number) => {
+    // Borrar relaciones primero
+    await prisma.categorias_noticias.deleteMany({
+        where: { id_categoria: id }
+    });
+
     return await prisma.categorias.delete({
-        where: {
-            id_categoria: id
-        }
+        where: { id_categoria: id }
     });
 };
 

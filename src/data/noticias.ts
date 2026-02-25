@@ -155,11 +155,9 @@ export const getNewsById = async (id: number) => {
 };
 
 export const deleteNewsById = async (id: number) => {
-    return await prisma.noticias.delete({
-        where: {
-            id_noticia: id
-        }
-    })
+    await prisma.categorias_noticias.deleteMany({ where: { id_noticia: id } });
+    await prisma.actualizacion.deleteMany({ where: { id_noticia: id } });
+    return await prisma.noticias.delete({ where: { id_noticia: id } });
 }
 
 export async function addNews(newsData: NewsInput) {

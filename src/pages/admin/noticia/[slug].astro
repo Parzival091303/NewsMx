@@ -45,7 +45,7 @@ const noticiaId = noticia.id_noticia?.toString();
         <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
       </div>
 
-      <form id="edit-form" class="space-y-6">
+    
         <!-- ID oculto -->
         <input type="hidden" id="noticia-id" value={noticiaId} />
 
@@ -192,7 +192,7 @@ const noticiaId = noticia.id_noticia?.toString();
             Eliminar Noticia
           </button>
         </div>
-      </form>
+      
     </div>
   </div>
 </LayoutAdmin>
@@ -206,59 +206,66 @@ const noticiaId = noticia.id_noticia?.toString();
   const id = (document.getElementById("noticia-id") as HTMLInputElement).value;
 
   // ACTUALIZAR
-  document
-    .getElementById("btn-actualizar")!
-    .addEventListener("click", async () => {
-      const categoriasSeleccionadas = Array.from(
-        document.querySelectorAll<HTMLInputElement>(
-          "input[name='categorias']:checked",
-        ),
-      ).map((cb) => cb.value);
+document.getElementById("btn-actualizar")!.addEventListener("click", async () => {
+    const titulo = (document.getElementById("titulo") as HTMLInputElement).value.trim();
+    const primerParrafo = (document.getElementById("primer-parrafo") as HTMLTextAreaElement).value.trim();
+    const contenido = (document.getElementById("contenido") as HTMLTextAreaElement).value.trim();
+    const slug = (document.getElementById("slug-input") as HTMLInputElement).value.trim();
+    const categoriasSeleccionadas = Array.from(
+        document.querySelectorAll<HTMLInputElement>("input[name='categorias']:checked"),
+    ).map((cb) => cb.value);
 
-      const { error } = await actions.updateNews({
-        id_noticia: id,
-        titulo_noticia: (document.getElementById("titulo") as HTMLInputElement)
-          .value,
-        primer_parrafo: (
-          document.getElementById("primer-parrafo") as HTMLTextAreaElement
-        ).value,
-        contenido: (document.getElementById("contenido") as HTMLTextAreaElement)
-          .value,
-        imagen: (document.getElementById("imagen") as HTMLInputElement).value,
-        noticias_url: (
-          document.getElementById("slug-input") as HTMLInputElement
-        ).value,
-        fecha_noticia: (document.getElementById("fecha") as HTMLInputElement)
-          .value,
-        
-        categorias: categoriasSeleccionadas,
-      });
+    if (!titulo) {
+        Swal.fire({ icon: "warning", title: "¡Falta el título!", confirmButtonColor: "#0f4f4f" });
+        return;
+    }
+    if (!slug) {
+        Swal.fire({ icon: "warning", title: "¡Falta el slug!", confirmButtonColor: "#0f4f4f" });
+        return;
+    }
+    if (!primerParrafo) {
+        Swal.fire({ icon: "warning", title: "¡Falta el primer párrafo!", confirmButtonColor: "#0f4f4f" });
+        return;
+    }
+    if (!contenido) {
+        Swal.fire({ icon: "warning", title: "¡Falta el contenido!", confirmButtonColor: "#0f4f4f" });
+        return;
+    }
+    if (categoriasSeleccionadas.length === 0) {
+        Swal.fire({ icon: "warning", title: "¡Falta seleccionar una categoría!", confirmButtonColor: "#0f4f4f" });
+        return;
+    }
 
-      if (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.message,
-          confirmButtonColor: "#0f4f4f",
-        });
-      } else {
-        Swal.fire({
-          icon: "success",
-          title: "¡Actualizada!",
-          text: "La noticia fue actualizada correctamente.",
-          confirmButtonColor: "#0f4f4f",
-        }).then(() => {
-          window.location.href = "/admin/editor";
-        });
-      }
+    Swal.fire({
+        title: "Actualizando noticia...",
+        text: "Por favor espera",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => { Swal.showLoading(); }
     });
 
-  // ELIMINAR
-  document
-    .getElementById("btn-eliminar")!
-    .addEventListener("click", async () => {
-      // @ts-ignore
-      const confirmed = await Swal.fire({
+    const { error } = await actions.updateNews({
+        id_noticia: id,
+        titulo_noticia: titulo,
+        primer_parrafo: primerParrafo,
+        contenido: contenido,
+        imagen: (document.getElementById("imagen") as HTMLInputElement).value,
+        noticias_url: slug,
+        fecha_noticia: (document.getElementById("fecha") as HTMLInputElement).value,
+        categorias: categoriasSeleccionadas,
+    });
+
+    if (error) {
+        Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
+    } else {
+        Swal.fire({ icon: "success", title: "¡Actualizada!", text: "La noticia fue actualizada correctamente.", confirmButtonColor: "#0f4f4f" })
+            .then(() => { window.location.href = "/admin/editor"; });
+    }
+});
+
+// ELIMINAR
+document.getElementById("btn-eliminar")!.addEventListener("click", async () => {
+    const confirmed = await Swal.fire({
         icon: "warning",
         title: "¿Eliminar noticia?",
         text: "Esta acción no se puede deshacer.",
@@ -267,29 +274,25 @@ const noticiaId = noticia.id_noticia?.toString();
         cancelButtonText: "Cancelar",
         confirmButtonColor: "#dc2626",
         cancelButtonColor: "#0f4f4f",
-      });
-
-      if (!confirmed.isConfirmed) return;
-
-      const { error } = await actions.deleteNews({ id_noticia: id });
-
-      if (error) {
-        // @ts-ignore
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.message,
-          confirmButtonColor: "#0f4f4f",
-        });
-      } else {
-        // @ts-ignore
-        await Swal.fire({
-          icon: "success",
-          title: "Eliminada",
-          text: "La noticia fue eliminada.",
-          confirmButtonColor: "#0f4f4f",
-        });
-        window.location.href = "/admin/editor";
-      }
     });
+
+    if (!confirmed.isConfirmed) return;
+
+    Swal.fire({
+        title: "Eliminando noticia...",
+        text: "Por favor espera",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    const { error } = await actions.deleteNews({ id_noticia: id });
+
+    if (error) {
+        Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
+    } else {
+        await Swal.fire({ icon: "success", title: "Eliminada", text: "La noticia fue eliminada.", confirmButtonColor: "#0f4f4f" });
+        window.location.href = "/admin/editor";
+    }
+});
 </script>

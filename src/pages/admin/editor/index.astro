@@ -146,19 +146,28 @@ import Swal from "sweetalert2";
       "filtro-select",
     ) as HTMLSelectElement;
 
-    select.addEventListener("change", () => {
-      const userId = select.value;
-      const url = new URL(window.location.href);
+select.addEventListener("change", () => {
+  const userId = select.value;
+  const url = new URL(window.location.href);
 
-      if (userId) {
-        url.searchParams.set("userId", userId);
-      } else {
-        url.searchParams.delete("userId");
-      }
+  if (userId) {
+    url.searchParams.set("userId", userId);
+  } else {
+    url.searchParams.delete("userId");
+  }
 
-      url.searchParams.delete("offset");
-      window.location.href = url.toString();
-    });
+  url.searchParams.delete("offset");
+
+  Swal.fire({
+    title: "Filtrando noticias...",
+    text: "Por favor espera",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  window.location.href = url.toString();
+});
     document.getElementById("btn-logout")!.addEventListener("click", async () => {
   const confirmed = await Swal.fire({
     icon: "question",
