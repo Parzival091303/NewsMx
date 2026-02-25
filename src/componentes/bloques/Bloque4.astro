@@ -1,0 +1,131 @@
+---
+import { prisma } from "@/db";
+
+// Traer todas las categorías
+const categorias = await prisma.categorias.findMany({
+  include: {
+    noticias: {
+      include: {
+        noticia: true
+      },
+      orderBy: {
+        noticia: {
+          fecha_noticia: "desc"
+        }
+      },
+      take: 1
+    }
+  },
+  orderBy: {
+    nombre_categoria: "asc"
+  }
+});
+
+// Función para limpiar nombre para URL
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-");
+}
+---
+
+<section class="categories-section">
+  <div class="categories-grid">
+    {categorias.map((cat) => {
+
+      const noticiaMasNueva = cat.noticias[0]?.noticia ?? null;
+      const imagen = noticiaMasNueva?.imagen ?? "/placeholder.jpg";
+      const slug = slugify(cat.nombre_categoria);
+
+      return (
+        <a 
+          href={`/noticias/categoria/${slug}`}
+          class="category-card"
+          style={`background-image:url('${imagen}')`}
+        >
+          <span>{cat.nombre_categoria.toUpperCase()}</span>
+        </a>
+      );
+    })}
+  </div>
+</section>
+<style>
+    .categories-section {
+  max-width: 1200px;
+  margin: 0 auto 100px auto;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+/* TARJETA */
+.category-card {
+  position: relative;
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  display: flex;
+  align-items: flex-end;
+  text-decoration: none;
+}
+
+/* Overlay oscuro */
+.category-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2));
+  transition: background 0.3s ease;
+  z-index: 1;
+}
+
+/* Texto */
+.category-card span {
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* HOVER EFECTO LEVANTAR */
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 132, 137, 0.25);
+}
+
+.category-card:hover::after {
+  background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.1));
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .categories-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>

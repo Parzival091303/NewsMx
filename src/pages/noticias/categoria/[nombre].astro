@@ -1,66 +1,130 @@
 ---
-const {nombre} = Astro.params;
-export const prerender = false
-import NoticiaCard from "@/componentes/NoticiaCard.astro";
 import LayoutBase from "@/layouts/LayoutBase.astro";
-import "@/styles/categoria.css";
 
-const noticias = [
-  {
-    fecha: "20 de febrero de 2026",
-    categorias: "Nacional, Política, Salud, Sociales",
-    titulo: 'Senado aprueba alimentación "adecuada y suficiente" en guarderías',
-    autor: "Padme Zamorano",
-    imagen:
-      "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Imagen%2020-02-26%20a%20las%209.54.jpg/:/rs=w:1280",
-  },
-  {
-    fecha: "19 de febrero de 2026",
-    categorias:
-      "CDMX, Cultura, Entretenimiento, Local/Estatal/Regional, Nacional",
-    titulo: "Sonora Santanera encabezará el 4° Baile por un Trasplante en CDMX",
-    autor: "Padme Zamorano",
-    imagen:
-      "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/2AA77301-FB07-4AC7-B96F-BF3AF663D21C.jpeg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1280",
-  },
 
-  {
-    fecha: "17 de febrero de 2026",
-    categorias: "CDMX, Cultura, Deportes, Nacional, Salud",
-    titulo: "Más de mil corredores se unen contra el cáncer en CDMX",
-    autor: "Diana Zamorano",
-    imagen:
-      "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Circuito%20Actinver%20Ganadoras%205K%20Femenil.jpeg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1280",
-  },
-];
+import NoticiasDelMomento from "@/componentes/noticias/NoticiasDelMomento.astro";
+import Bloque2 from "@/componentes/bloques/Bloque2.astro";
+import Bloque3 from "@/componentes/bloques/Bloque3.astro";
+import Bloque4 from "@/componentes/bloques/Bloque4.astro";
 ---
 
 
-
 <LayoutBase>
-     <div class="container">
-    <div class="header">
-      <h1 class="titulo-seccion">SALUD</h1>
-      <p>
-        Información confiable sobre bienestar, prevención y avances médicos.
-      </p>
+
+    <!-- CARRUSEL -->
+<Bloque2 />
+
+
+<Bloque3 />
+
+  <!-- BANNER -->
+  <section class="mega-banner">
+    <div class="banner-content">
+      <h1>¡LO MÁS NUEVO!</h1>
+      <h2>Nuevas categorías de noticias</h2>
     </div>
+  </section>
 
-    <div class="grid">
-      <div>
-        {noticias.map((noticia) => <NoticiaCard {...noticia} />)}
-      </div>
-
-      <div class="sidebar">
-        <h3>Categorías</h3>
-        <a href="#">Todas las Publicaciones</a>
-        <a href="#">Salud</a>
-      </div>
-    </div>
-  </div>
-
+<Bloque4 />
+ 
 </LayoutBase>
-<!----- <div>
-    <h1>Categoría de noticias: {nombre}</h1>
-    <p>Aquí se mostrarán las noticias relacionadas con la categoría "{nombre}".</p>-->
+
+
+<style>
+
+.carousel-section {
+  margin: 100px 0 200px 0;
+}
+
+.mega-banner {
+  max-width: 1200px;
+  margin: 150px auto 50px auto; /* separación inferior */
+  background: linear-gradient(to right, #1e6f8a, #2da385);
+  padding: 80px 60px 60px 60px;
+  text-align: center;
+  color: white;
+  border-radius: 4px;
+}
+
+
+.mega-banner h1 {
+  font-size: 7rem;
+  font-weight: bolder;
+  font-family: "Helvetica Neue", sans-serif, Arial;
+  text-shadow: rgba(0, 0, 0, 0.2) 0px 4px 15px;
+}
+
+.mega-banner h2 {
+  font-size: 1.5rem;
+  font-family: Montserrat, sans-serif, Arial;
+  font-weight: bolder;
+}
+
+/* Categorías */
+.categories-section {
+  max-width: 1200px;
+  margin: 0 auto 80px auto;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.category-card {
+  position: relative;
+  height: 140px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.category-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  transition: 0.3s;
+}
+
+.category-card:hover::after {
+  background: rgba(0,0,0,0.3);
+  transform: scale(110%);
+}
+
+.category-card span {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  z-index: 2;
+}
+
+/*  RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .categories-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+</style>
+
+
 

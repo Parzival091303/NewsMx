@@ -1,0 +1,190 @@
+---
+import { prisma } from "@/db";
+
+const noticias = await prisma.noticias.findMany({
+  include: {
+    usuario: true,
+    categorias: {
+      include: {
+        categoria: true
+      }
+    }
+  },
+  orderBy: {
+    fecha_noticia: "desc"
+  },
+  take: 6
+});
+---
+
+<section class="noticias-momento">
+
+  <h2 class="titulo-seccion">
+    NOTICIAS DEL MOMENTO
+  </h2>
+
+  <div class="grid-principal">
+
+    {/* 2 GRANDES */}
+    {noticias.slice(0,2).map((n) => (
+      <a href={`/noticias/${n.noticias_url}`} class="card-grande">
+        <img src={n.imagen ?? "/placeholder.jpg"} alt={n.titulo_noticia} />
+
+        <div class="overlay">
+          <h3>{n.titulo_noticia}</h3>
+          <p>{n.usuario?.nombre ?? "Autor"} · {n.categorias[0]?.categoria.nombre_categoria}</p>
+        </div>
+      </a>
+    ))}
+
+  </div>
+
+  {/* 4 pequeñas */}
+  <div class="grid-secundario">
+    {noticias.slice(2,6).map((n) => (
+      <a href={`/noticias/${n.noticias_url}`} class="card-pequena">
+        <img src={n.imagen ?? "/placeholder.jpg"} alt={n.titulo_noticia} />
+
+        <div class="overlay">
+          <h4>{n.titulo_noticia}</h4>
+          <small>
+            {n.usuario?.nombre ?? "Autor"} <br />
+            {n.categorias[0]?.categoria.nombre_categoria}
+          </small>
+        </div>
+      </a>
+    ))}
+  </div>
+
+</section>
+
+<style>
+
+.noticias-momento {
+  background: #f5f5f5;
+  padding: 80px 20px;
+}
+
+/* TITULO */
+
+.titulo-seccion {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 900;
+  color: #008489;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.titulo-seccion::after {
+  content: "";
+  width: 300px;
+  height: 4px;
+  background: #008489;
+  display: block;
+  margin: 15px auto 0;
+}
+
+/* GRID SUPERIOR */
+
+.grid-principal {
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+/* GRID INFERIOR */
+
+.grid-secundario {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* CARDS */
+
+.card-grande,
+.card-pequena {
+  position: relative;
+  background: #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  text-decoration: none;
+  color: white;
+}
+
+.card-grande {
+  height: 420px;
+}
+
+.card-pequena {
+  height: 180px;
+}
+
+.card-grande img,
+.card-pequena img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* OVERLAY */
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  padding: 20px;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+.card-grande h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.card-pequena h4 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.overlay p,
+.overlay small {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* HOVER SUAVE */
+
+.card-grande:hover img,
+.card-pequena:hover img {
+  transform: scale(1.05);
+  transition: 0.4s ease;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .grid-principal {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-secundario {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .grid-secundario {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>

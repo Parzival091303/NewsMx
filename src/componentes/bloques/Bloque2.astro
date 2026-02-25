@@ -1,0 +1,168 @@
+---
+import { prisma } from "@/db";
+
+// 1️⃣ Obtener categorías con conteo de noticias
+const categorias = await prisma.categorias.findMany({
+  include: {
+    _count: {
+      select: { noticias: true }
+    }
+  },
+  orderBy: {
+    noticias: {
+      _count: "desc"
+    }
+  },
+  take: 6
+});
+
+// 2️⃣ Para cada categoría traer 1 noticia representativa
+const categoriasConImagen = await Promise.all(
+  categorias.map(async (cat) => {
+    const noticia = await prisma.noticias.findFirst({
+      where: {
+        categorias: {
+          some: {
+            id_categoria: cat.id_categoria
+          }
+        }
+      },
+      orderBy: { fecha_noticia: "desc" }
+    });
+
+    return {
+      nombre: cat.nombre_categoria,
+      total: cat._count.noticias,
+      imagen: noticia?.imagen ?? "/placeholder.jpg"
+    };
+  })
+);
+
+// Duplicamos para efecto infinito
+const carrusel = [...categoriasConImagen, ...categoriasConImagen];
+---
+
+{categoriasConImagen.length > 0 && (
+
+<div class="bloque2-container">
+
+  <h2 class="titulo-bloque2">
+    CATEGORÍAS MÁS VISITADAS
+  </h2>
+
+  <div class="carousel-wrapper">
+    <div class="carousel-track">
+      {carrusel.map((cat) => (
+        <a href={`/noticias/categoria/${cat.nombre}`} class="card">
+          <img src={cat.imagen} alt={cat.nombre} />
+          <div class="overlay">
+            <h3>{cat.nombre.toUpperCase()}</h3>
+            <span>{cat.total} noticias</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+</div>
+
+)}
+
+<style>
+
+.bloque2-container {
+  margin-top: 80px;
+  margin-bottom: 40px;
+}
+
+.titulo-bloque2 {
+  text-align:center;
+  color:#008489;
+  font-size:2.5rem;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:40px;
+  position: relative;
+}
+
+.titulo-bloque2::after {
+  content:"";
+  width:80px;
+  height:4px;
+  background:#008489;
+  display:block;
+  margin:15px auto 0;
+  border-radius:4px;
+}
+
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 25px;
+  animation: scroll 30s linear infinite;
+}
+
+.card {
+  min-width: 300px;
+  height: 320px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  transition: 0.4s ease;
+  text-decoration: none;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.card:hover {
+  transform: translateY(-12px);
+}
+
+.card:hover img {
+  transform: scale(1.1);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  padding: 25px;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  color: white;
+}
+
+.overlay h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.overlay span {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .card {
+    min-width: 240px;
+    height: 260px;
+  }
+}
+
+</style>
