@@ -1,5 +1,5 @@
 ---
-import LayoutBase from "@/layouts/LayoutBase.astro";
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
 import "@/styles/global.css";
 import { actions } from "astro:actions";
 
@@ -11,46 +11,147 @@ const { data } = await Astro.callAction(
 );
 
 const categorias = data ?? [];
-
+const user = Astro.cookies.get("user")?.json();
+const esWebMaster = user?.rol === "3";
 ---
 <form id="noticia-form" class="space-y-6">
   </form>
 
 <script>
-import { actions } from "astro:actions";
+  import { actions } from "astro:actions";
+  import Swal from "sweetalert2";
 
   const form = document.getElementById('news-form') as HTMLFormElement;
   const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+  async function comprimirImagen(file: File): Promise<File> {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+
+      img.onload = () => {
+        const MAX = 1200;
+        let w = img.width;
+        let h = img.height;
+
+        if (w > MAX) { h = (h * MAX) / w; w = MAX; }
+        if (h > MAX) { w = (w * MAX) / h; h = MAX; }
+
+        canvas.width = w;
+        canvas.height = h;
+        ctx.drawImage(img, 0, 0, w, h);
+
+        canvas.toBlob((blob) => {
+          URL.revokeObjectURL(url);
+          resolve(new File([blob!], file.name, { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.8);
+      };
+
+      img.src = url;
+    });
+  }
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    submitBtn.disabled = true; 
-    const formData = new FormData(form);
-    
-    // Si necesitas enviarlo como JSON:
-    
-    // Para los checkboxes de categorías (que se repiten):
+
+    const titulo = (document.querySelector('input[name="titulo"]') as HTMLInputElement).value.trim();
+    const slug = (document.querySelector('input[name="slug"]') as HTMLInputElement).value.trim();
+    const primerParrafo = (document.querySelector('textarea[name="primer_parrafo"]') as HTMLTextAreaElement).value.trim();
+    const contenido = (document.querySelector('textarea[name="contenido"]') as HTMLTextAreaElement).value.trim();
+    const imagenInput = (document.querySelector('input[name="imagen"]') as HTMLInputElement);
+    const imagen = imagenInput.files;
+    const categorias = document.querySelectorAll('input[name="categorias"]:checked');
+
+    if (!titulo) {
+      Swal.fire({ icon: "warning", title: "¡Falta llenar el título!", confirmButtonColor: "#0f4f4f" });
+      return;
+    }
+    if (!slug) {
+      Swal.fire({ icon: "warning", title: "¡Falta llenar el slug!", confirmButtonColor: "#0f4f4f" });
+      return;
+    }
+    if (!primerParrafo) {
+      Swal.fire({ icon: "warning", title: "¡Falta llenar el primer párrafo!", confirmButtonColor: "#0f4f4f" });
+      return;
+    }
+    if (!contenido) {
+      Swal.fire({ icon: "warning", title: "¡Falta llenar el contenido!", confirmButtonColor: "#0f4f4f" });
+      return;
+    }
+    if (!imagen || imagen.length === 0) {
+      Swal.fire({ icon: "warning", title: "¡Falta seleccionar una imagen!", confirmButtonColor: "#0f4f4f" });
+      return;
+    }
+    if (categorias.length === 0) {
+      Swal.fire({ icon: "warning", title: "¡Falta seleccionar una categoría!", confirmButtonColor: "#0f4f4f" });
+      return;
+    }
+
+    submitBtn.disabled = true;
+
+    Swal.fire({
+      title: "Subiendo noticia...",
+      text: "Por favor espera",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
 
     try {
+      // Comprimir imagen antes de subir
+      const imagenComprimida = await comprimirImagen(imagen[0]);
+
+      const formData = new FormData(form);
+      formData.set('imagen', imagenComprimida, imagenComprimida.name);
+
       const { data: response, error } = await actions.addNews(formData);
 
       if (error) {
-        alert('Error al registrar la noticia: ' + error.message);
-        console.error('Error:', error);
+        Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
       } else {
-        alert('Noticia registrada con éxito');
-        form.reset();
+        Swal.fire({ icon: "success", title: "¡Noticia registrada!", text: "La noticia fue publicada con éxito.", confirmButtonColor: "#0f4f4f" })
+          .then(() => { form.reset(); });
       }
     } catch (error) {
-      console.error('Error:', error);
-    }
-    finally {
-      submitBtn.disabled = false; 
+      Swal.fire({ icon: "error", title: "Error inesperado", text: "Ocurrió un error al registrar la noticia.", confirmButtonColor: "#0f4f4f" });
+    } finally {
+      submitBtn.disabled = false;
     }
   });
+  
+
+document.getElementById("btn-logout")!.addEventListener("click", async () => {
+  const confirmed = await Swal.fire({
+    icon: "question",
+    title: "¿Cerrar sesión?",
+    text: "¿Estás seguro que deseas salir?",
+    showCancelButton: true,
+    confirmButtonText: "Sí, salir",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#0f4f4f",
+  });
+
+  if (!confirmed.isConfirmed) return;
+
+  await actions.logout({});
+  window.location.href = "/login";
+});
 </script>
 
-
-<LayoutBase>
+<div class="fixed bottom-6 right-6 flex flex-col gap-3">
+  {esWebMaster && (
+    <a href="/admin/CEO/menu" class="bg-[#0f4f4f] hover:bg-[#1f6f6f] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 text-center">
+      MENU PRINCIPAL
+    </a>
+  )}
+  <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300">
+    CERRAR SESION
+  </button>
+</div>
+<LayoutAdmin>
   <div class="min-h-screen bg-linear-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-center p-6">
 
   <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-10">
@@ -75,7 +176,7 @@ import { actions } from "astro:actions";
         </label>
         <input
           name="titulo"
-          required
+         
           class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
           placeholder="Titulo de la noticia"
         />
@@ -86,7 +187,7 @@ import { actions } from "astro:actions";
         </label>
         <input
           name="slug"
-          required
+        
           class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
           placeholder="slug-de-la-noticia"
         />
@@ -98,7 +199,7 @@ import { actions } from "astro:actions";
         </label>
         <textarea
           name="primer_parrafo"
-          required
+          
           rows="3"
           class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
           placeholder="Resumen breve"
@@ -112,7 +213,7 @@ import { actions } from "astro:actions";
         </label>
         <textarea
           name="contenido"
-          required
+         
           rows="6"
           class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
           placeholder="Contenido completo"
@@ -128,7 +229,7 @@ import { actions } from "astro:actions";
           type="file"
           accept="image/*"
           name="imagen"
-          required
+       
           class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
           placeholder="https://..."
         />
@@ -164,6 +265,18 @@ import { actions } from "astro:actions";
         <input
         id="submit-btn"
           type="submit"
+          value="Subir Noticia"
+          class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
+        >
+        </input>
+      </div>
+      <!--Botom agregar categoria -->
+            <div class="pt-4">
+        <input
+        id="submit-btn1"
+          type="submit"
+          value="Agregar Categoría"
+           onclick="window.location.href='/admin/registroCategoria'"
           class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
         >
         </input>
@@ -180,4 +293,4 @@ import { actions } from "astro:actions";
   </div>
 </div>
 
-</LayoutBase>
+</LayoutAdmin>

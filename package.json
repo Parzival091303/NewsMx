@@ -21,6 +21,7 @@
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
     "dotenv": "^17.3.1",
+    "sweetalert2": "^11.26.20",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {

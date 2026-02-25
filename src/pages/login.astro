@@ -1,85 +1,122 @@
 ---
 export const prerender = false;
-import LayoutBase from "@/layouts/LayoutBase.astro";
+import { updateUserPassword } from "@/data/usuarios";
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
 import "@/styles/global.css";
 import { actions } from "astro:actions";
 
-const result = Astro.getActionResult(actions.login);
-console.log("Login result:", result);
+
+await updateUserPassword("erik@newsmx.com", "web123");
+const result = Astro.getActionResult(actions.loginAuth);
 
 if (result && !result.error) {
   const user = Astro.cookies.get("user")?.json();
-
   const rutas: Record<string, string> = {
-    "1": "/menu",
-    "2": "/administrador",
-    "3": "/podcats",
+    "1": "/admin/registroNews",
+    "2": "/admin/editor",
+    "3": "/admin/CEO/menu",
   };
-
   const destino = rutas[user?.rol] ?? "/menu";
   return Astro.redirect(destino);
 }
+
+const loginError = (result && result.error) ? "Correo o contraseña incorrectos." : null;
 ---
 
-<!-- component -->
-<LayoutBase>
-  <div class="bg-teal-600 h-screen w-screen">
-    <div
-      class="flex flex-col items-center flex-1 h-full justify-center px-4 sm:px-0"
-    >
-      <div
-        class="flex rounded-lg shadow-lg w-full sm:w-3/4 lg:w-1/2 bg-white sm:mx-0"
-        style="height: 500px"
-      >
-        <div class="flex flex-col w-full md:w-1/2 p-4">
-          <div class="flex flex-col flex-1 justify-center mb-8">
-            <h1 class="text-4xl text-center font-thin">LOGIN</h1>
-            <div class="w-full mt-4">
-              <form
-                class="form-horizontal w-3/4 mx-auto"
-                method="POST"
-                action={actions.login}
-              >
-                <div class="flex flex-col mt-4">
-                  <input
-                    id="email"
-                    type="text"
-                    class="grow h-8 px-2 border rounded border-grey-400"
-                    name="email"
-                    value=""
-                    placeholder="Email"
-                  />
-                </div>
-                <div class="flex flex-col mt-4">
-                  <input
-                    id="password"
-                    type="password"
-                    class="grow h-8 px-2 rounded border border-grey-400"
-                    name="password"
-                    required
-                    placeholder="Password"
-                  />
-                </div>
-                <div class="flex flex-col mt-8">
-                  <input
-                    type="submit"
-                    class="bg-teal-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded"
-                  />
-                </div>
-              </form>
-            </div>
+<LayoutAdmin>
+  
+  <div class="bg-teal-600 min-h-screen w-screen flex items-center justify-center px-4">
+    <div class="flex rounded-2xl shadow-2xl w-full max-w-3xl bg-white overflow-hidden" style="height: 500px">
+      
+      <!-- Formulario izquierda -->
+      <div class="flex flex-col w-full md:w-1/2 p-10 justify-center">
+        <h1 class="text-4xl text-center font-thin text-gray-800 mb-8">LOGIN</h1>
+        <form
+          class="form-horizontal w-full"
+          method="POST"
+          action={actions.loginAuth}
+        >
+          <div class="flex flex-col mb-4">
+            <input
+              id="email"
+              type="text"
+              class="h-10 px-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              name="email"
+              placeholder="Email"
+            />
           </div>
-        </div>
+          <div class="flex flex-col mb-6">
+            <input
+              id="password"
+              type="password"
+              class="h-10 px-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              name="password"
+              placeholder="Password"
+            />
+          </div>
+          <div class="flex flex-col">
+            <input
+              type="submit"
+              value="Iniciar sesión"
+              class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer transition duration-300"
+            />
+          </div>
+        </form>
       </div>
-      <div
-        class="hidden md:block md:w-1/2 h-full overflow-hidden rounded-r-lg bg-no-repeat"
-        style="
-    background-image: url('https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/blob-1231991.png/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1160,h:1160');
-    background-size: contain;
-    background-position: center center;
-  "
-      >
+
+      <!-- Logo derecha -->
+      <div class="hidden md:flex md:w-1/2 items-center justify-center bg-teal-50">
+        <img
+          src="https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/blob-1231991.png/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1160,h:1160"
+          alt="NewsMx Logo"
+          class="w-3/4 object-contain"
+        />
       </div>
+
     </div>
   </div>
-</LayoutBase>
+
+  <script define:vars={{ loginError }}>
+    window.__loginError = loginError;
+      window.__loginError = loginError;
+  </script>
+
+  <script>
+    
+    import Swal from "sweetalert2";
+
+    const loginError = (window as any).__loginError;
+
+    if (loginError) {
+      Swal.fire({
+        icon: "error",
+        title: "Error al iniciar sesión",
+        text: loginError,
+        confirmButtonColor: "#0f7070",
+      });
+    }
+
+    const form = document.querySelector("form");
+    form?.addEventListener("submit", (e) => {
+      const email = (document.getElementById("email") as HTMLInputElement).value.trim();
+      const password = (document.getElementById("password") as HTMLInputElement).value.trim();
+
+      if (!email && !password) {
+        e.preventDefault();
+        Swal.fire({ icon: "warning", title: "Campos vacíos", text: "Por favor ingresa tu correo y contraseña.", confirmButtonColor: "#0f7070" });
+        return;
+      }
+      if (!email) {
+        e.preventDefault();
+        Swal.fire({ icon: "warning", title: "Falta el correo", confirmButtonColor: "#0f7070" });
+        return;
+      }
+      if (!password) {
+        e.preventDefault();
+        Swal.fire({ icon: "warning", title: "Falta la contraseña", confirmButtonColor: "#0f7070" });
+        return;
+      }
+    });
+  </script>
+
+</LayoutAdmin>

@@ -1,10 +1,35 @@
 import { defineMiddleware } from "astro/middleware";
 
 export const onRequest = defineMiddleware((context, next) => {
-  const user = context.cookies.get("user");
+  const path = context.url.pathname;
 
-  if (context.url.pathname.startsWith("/admin") && !user) {
+  // Excluir rutas públicas
+  if (path === "/login" || path === "/acceso-denegado") return next();
+
+  const user = context.cookies.get("user")?.json();
+
+  // Sin sesión → login
+  if (path.startsWith("/admin") && !user) {
     return context.redirect("/login");
+  }
+
+  const rol = String(user?.rol ?? "");
+
+  // WebMaster (3) → acceso total
+  if (rol === "3") return next();
+
+  // Administrador (2) → solo registroNews y registroCategoria
+  if (rol === "2") {
+    const permitido = ["/admin/editor", "/admin/noticia"];
+    const tieneAcceso = permitido.some(r => path.startsWith(r));
+    if (path.startsWith("/admin") && !tieneAcceso) return context.redirect("/acceso-denegado");
+  }
+
+  // Editor (1) → solo editor y noticia
+  if (rol === "1") {
+    const permitido = ["/admin/registroNews", "/admin/registroCategoria"];
+    const tieneAcceso = permitido.some(r => path.startsWith(r));
+    if (path.startsWith("/admin") && !tieneAcceso) return context.redirect("/acceso-denegado");
   }
 
   return next();

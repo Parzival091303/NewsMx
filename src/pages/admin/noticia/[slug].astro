@@ -1,0 +1,295 @@
+---
+export const prerender = false;
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import { actions } from "astro:actions";
+
+const { slug } = Astro.params;
+
+// Obtener noticia por slug
+const { data: noticia, error } = await Astro.callAction(actions.getNewsBySlug, {
+  slug: slug!,
+});
+
+if (!noticia || error) {
+  return Astro.redirect("/admin/editor");
+}
+
+// Obtener categorías disponibles
+const { data: categorias } = await Astro.callAction(
+  actions.getCategorias,
+  null,
+);
+
+// Serializar id a string para evitar problemas con BigInt en el cliente
+const noticiaId = noticia.id_noticia?.toString();
+---
+
+<LayoutAdmin>
+  <div
+    class="min-h-screen bg-linear-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-start p-6"
+  >
+    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-10 my-6">
+      <!-- HEADER -->
+      <div class="text-center mb-8">
+        <a
+          href="/admin/editor"
+          class="inline-block mb-4 text-sm text-[#2aa3a3] hover:underline"
+          >← Volver al listado</a
+        >
+        <h1 class="text-3xl font-bold text-[#0f4f4f] tracking-wide">
+          Editar Noticia
+        </h1>
+        <p class="text-gray-500 mt-2">
+          Modifica el contenido y guarda los cambios
+        </p>
+        <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
+      </div>
+
+      <form id="edit-form" class="space-y-6">
+        <!-- ID oculto -->
+        <input type="hidden" id="noticia-id" value={noticiaId} />
+
+        <!-- TÍTULO -->
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2">TÍTULO</label>
+          <input
+            id="titulo"
+            name="titulo"
+            type="text"
+            value={noticia.titulo_noticia ?? ""}
+            required
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+            placeholder="Título de la noticia"
+          />
+        </div>
+
+        <!-- SLUG -->
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2">SLUG</label>
+          <input
+            id="slug-input"
+            name="slug"
+            type="text"
+            value={noticia.noticias_url ?? ""}
+            required
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+            placeholder="slug-de-la-noticia"
+          />
+        </div>
+
+        <!-- PRIMER PÁRRAFO -->
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >Primer Párrafo</label
+          >
+          <textarea
+            id="primer-parrafo"
+            name="primer_parrafo"
+            rows="3"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+            placeholder="Resumen breve">{noticia.primer_parrafo ?? ""}</textarea
+          >
+        </div>
+
+        <!-- CONTENIDO -->
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >Contenido</label
+          >
+          <textarea
+            id="contenido"
+            name="contenido"
+            rows="8"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+            placeholder="Contenido completo">{noticia.contenido ?? ""}</textarea
+          >
+        </div>
+
+        <!-- IMAGEN -->
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >URL Imagen</label
+          >
+          {
+            noticia.imagen && (
+              <img
+                src={noticia.imagen}
+                alt="Imagen actual"
+                class="w-full h-48 object-cover rounded-lg mb-3 border border-gray-200"
+                onerror="this.style.display='none'"
+              />
+            )
+          }
+          <input
+            id="imagen"
+            name="imagen"
+            type="text"
+            value={noticia.imagen ?? ""}
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+            placeholder="https://..."
+          />
+        </div>
+
+       
+
+        <!-- FECHA -->
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2">Fecha</label>
+          <input
+            id="fecha"
+            name="fecha_noticia"
+            type="date"
+            value={noticia.fecha_noticia
+              ? new Date(noticia.fecha_noticia).toISOString().slice(0, 10)
+              : ""}
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+          />
+        </div>
+
+        <!-- CATEGORÍAS -->
+        {
+          categorias && categorias.length > 0 && (
+            <div>
+              <label class="block font-semibold text-[#0f4f4f] mb-3">
+                Categorías
+              </label>
+              <div class="border border-gray-200 rounded-xl p-4 h-44 overflow-y-auto bg-[#f4fafa]">
+                {categorias.map((cat: any) => (
+                  <label class="flex items-center mb-2 cursor-pointer hover:bg-[#e6f7f7] p-2 rounded-lg transition">
+                    <input
+                      type="checkbox"
+                      name="categorias"
+                      value={cat.nombre_categoria}
+                      checked={noticia.categorias?.some(
+                        (c: any) =>
+                          c.categoria.nombre_categoria === cat.nombre_categoria,
+                      )}
+                      class="mr-3 accent-[#2aa3a3] w-4 h-4"
+                    />
+                    <span class="text-gray-700">{cat.nombre_categoria}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <!-- BOTONES -->
+        <div class="pt-4 space-y-3">
+          <button
+            type="button"
+            id="btn-actualizar"
+            class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
+          >
+            Actualizar Noticia
+          </button>
+
+          <button
+            type="button"
+            id="btn-eliminar"
+            class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-3 rounded-xl font-semibold tracking-wide shadow-sm transition duration-300"
+          >
+            Eliminar Noticia
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</LayoutAdmin>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  import { actions } from "astro:actions";
+  import Swal from "sweetalert2";
+
+  const id = (document.getElementById("noticia-id") as HTMLInputElement).value;
+
+  // ACTUALIZAR
+  document
+    .getElementById("btn-actualizar")!
+    .addEventListener("click", async () => {
+      const categoriasSeleccionadas = Array.from(
+        document.querySelectorAll<HTMLInputElement>(
+          "input[name='categorias']:checked",
+        ),
+      ).map((cb) => cb.value);
+
+      const { error } = await actions.updateNews({
+        id_noticia: id,
+        titulo_noticia: (document.getElementById("titulo") as HTMLInputElement)
+          .value,
+        primer_parrafo: (
+          document.getElementById("primer-parrafo") as HTMLTextAreaElement
+        ).value,
+        contenido: (document.getElementById("contenido") as HTMLTextAreaElement)
+          .value,
+        imagen: (document.getElementById("imagen") as HTMLInputElement).value,
+        noticias_url: (
+          document.getElementById("slug-input") as HTMLInputElement
+        ).value,
+        fecha_noticia: (document.getElementById("fecha") as HTMLInputElement)
+          .value,
+        
+        categorias: categoriasSeleccionadas,
+      });
+
+      if (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message,
+          confirmButtonColor: "#0f4f4f",
+        });
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "¡Actualizada!",
+          text: "La noticia fue actualizada correctamente.",
+          confirmButtonColor: "#0f4f4f",
+        }).then(() => {
+          window.location.href = "/admin/editor";
+        });
+      }
+    });
+
+  // ELIMINAR
+  document
+    .getElementById("btn-eliminar")!
+    .addEventListener("click", async () => {
+      // @ts-ignore
+      const confirmed = await Swal.fire({
+        icon: "warning",
+        title: "¿Eliminar noticia?",
+        text: "Esta acción no se puede deshacer.",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#0f4f4f",
+      });
+
+      if (!confirmed.isConfirmed) return;
+
+      const { error } = await actions.deleteNews({ id_noticia: id });
+
+      if (error) {
+        // @ts-ignore
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message,
+          confirmButtonColor: "#0f4f4f",
+        });
+      } else {
+        // @ts-ignore
+        await Swal.fire({
+          icon: "success",
+          title: "Eliminada",
+          text: "La noticia fue eliminada.",
+          confirmButtonColor: "#0f4f4f",
+        });
+        window.location.href = "/admin/editor";
+      }
+    });
+</script>

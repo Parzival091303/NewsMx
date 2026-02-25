@@ -1,5 +1,421 @@
 ---
+export const prerender = false;
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import { actions } from "astro:actions";
 
+const offset = Number(Astro.url.searchParams.get("offset") ?? 0);
+const userId = Astro.url.searchParams.get("userId") ?? "";
+const LIMIT = 10;
+
+const { data: usuarios } = await Astro.callAction(actions.allUsers, undefined);
+
+let news: any[] = [];
+let pagination: any = null;
+
+if (userId) {
+  const { data } = await Astro.callAction(actions.getNewsByUserId, {
+    userId: Number(userId),
+  });
+  news = data ?? [];
+} else {
+  const { data } = await Astro.callAction(actions.getAllNews, {
+    limit: LIMIT,
+    offset,
+  });
+  news = data?.news ?? [];
+  pagination = data?.pagination;
+}
+
+const user = Astro.cookies.get("user")?.json();
+const esWebMaster = user?.rol === "3";
 ---
+<div class="fixed bottom-6 right-6 flex flex-col gap-3">
+  {esWebMaster && (
+    <a href="/admin/CEO/menu" class="bg-[#0f4f4f] hover:bg-[#1f6f6f] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 text-center">
+      MENU PRINCIPAL
+    </a>
+  )}
+  <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300">
+    CERRAR SESION
+  </button>
+</div>
+<LayoutAdmin>
+  <div class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] py-8 px-4">
+  <div class="noticias-container">
+    <div class="noticias-header">
+      <div class="filtro-usuario">
+        <select id="filtro-select">
+          <option value="">— Todos los usuarios —</option>
+          {
+            (usuarios ?? []).map((u: any) => (
+              <option value={u.id} selected={userId === u.id}>
+                {u.nombre} {u.apellido} — {u.correo}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+      <h1>Noticias</h1>
+      <span class="total-badge"
+        >{userId ? news.length : (pagination?.totalItems ?? 0)} noticias</span
+      >
 
-<h1>Editor Admin Page</h1>
+    </div>
+
+    <ul class="noticias-list">
+      {news.length === 0 && <li class="empty">No hay noticias registradas.</li>}
+
+      {
+        news.map((n: any) => (
+          <li
+            class="noticia-item"
+            onclick={`window.location.href='/admin/noticia/${n.noticias_url ?? n.id_noticia}'`}
+          >
+            <div class="noticia-img-wrap">
+              {n.imagen ? (
+                <img
+                  src={n.imagen}
+                  alt={n.titulo_noticia ?? ""}
+                  onerror="this.src=''"
+                />
+              ) : (
+                <div class="noticia-img-placeholder">📰</div>
+              )}
+            </div>
+            <div class="noticia-info">
+              <div class="cats">
+                {(n.categorias ?? []).length === 0 ? (
+                  <span class="cat-pill sin">Sin categoría</span>
+                ) : (
+                  (n.categorias as any[]).map((c) => (
+                    <span class="cat-pill">{c.categoria.nombre_categoria}</span>
+                  ))
+                )}
+              </div>
+              <h2>{n.titulo_noticia ?? "Sin título"}</h2>
+              <p>{n.primer_parrafo ?? ""}</p>
+              <span class="fecha">
+                {n.fecha_noticia
+                  ? new Date(n.fecha_noticia).toLocaleDateString("es-MX", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "Sin fecha"}
+              </span>
+              <span class="autor">
+                {" "}
+                {n.usuario
+                  ? `${n.usuario.nombre ?? ""} ${n.usuario.apellido ?? ""}`.trim()
+                  : "Sin autor"}
+              </span>
+            </div>
+            <div class="noticia-arrow">›</div>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      pagination && (
+        <div class="paginacion">
+          <a
+            href={`?offset=${offset - LIMIT}`}
+            class={pagination.hasPrevious ? "page-btn" : "page-btn disabled"}
+          >
+            ← Anterior
+          </a>
+          <span class="page-info">
+            Página {pagination.currentPage} de {pagination.totalPages}
+          </span>
+          <a
+            href={`?offset=${offset + LIMIT}`}
+            class={pagination.hasNext ? "page-btn" : "page-btn disabled"}
+          >
+            Siguiente →
+          </a>
+        </div>
+      )
+    }
+  </div>
+  <script>
+import { actions } from "astro:actions";
+import Swal from "sweetalert2";
+
+    const select = document.getElementById(
+      "filtro-select",
+    ) as HTMLSelectElement;
+
+    select.addEventListener("change", () => {
+      const userId = select.value;
+      const url = new URL(window.location.href);
+
+      if (userId) {
+        url.searchParams.set("userId", userId);
+      } else {
+        url.searchParams.delete("userId");
+      }
+
+      url.searchParams.delete("offset");
+      window.location.href = url.toString();
+    });
+    document.getElementById("btn-logout")!.addEventListener("click", async () => {
+  const confirmed = await Swal.fire({
+    icon: "question",
+    title: "¿Cerrar sesión?",
+    text: "¿Estás seguro que deseas salir?",
+    showCancelButton: true,
+    confirmButtonText: "Sí, salir",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#0f4f4f",
+  });
+
+  if (!confirmed.isConfirmed) return;
+
+  await actions.logout({});
+  window.location.href = "/login";
+});
+  </script>
+  </div>
+</LayoutAdmin>
+
+<style>
+  .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-add-user {
+  background: #0f4f4f;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.15s;
+  border: 1px solid #0f4f4f;
+}
+
+.btn-add-user:hover {
+  background: #1f6f6f;
+  border-color: #1f6f6f;
+}
+  .autor {
+    font-size: 0.68rem;
+    color: #6aacac;
+    font-weight: 600;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .autor::before,
+  .autor::after {
+    content: "";
+    flex: 1;
+    max-width: 18px;
+    height: 1px;
+    background: #c0e8e8;
+  }
+  .filtro-usuario {
+    margin-bottom: 1.25rem;
+  }
+  .filtro-usuario select {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid #c0e8e8;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    color: #0f4f4f;
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border 0.15s;
+  }
+.filtro-usuario select {
+  width: 100%; padding: 0.6rem 1rem; border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px; font-size: 0.875rem; color: #0f4f4f;
+  background: #fff; cursor: pointer; outline: none; transition: border 0.15s;
+}
+  .noticias-container {
+    max-width: 860px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+  }
+  .noticias-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+.noticias-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 700; color: #ffffff;
+}
+.total-badge {
+  background: rgba(255,255,255,0.2); color: #ffffff; font-size: 0.75rem;
+  font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+  .noticias-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .empty {
+    text-align: center;
+    color: #9ca3af;
+    padding: 3rem;
+    font-size: 0.95rem;
+  }
+
+  .noticia-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid #e0f2f2;
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    cursor: pointer;
+    transition:
+      box-shadow 0.15s,
+      border-color 0.15s;
+  }
+  .noticia-item:hover {
+    border-color: #2aa3a3;
+    box-shadow: 0 4px 16px rgba(42, 163, 163, 0.1);
+  }
+
+  .noticia-img-wrap img,
+  .noticia-img-placeholder {
+    width: 70px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e0f2f2;
+    flex-shrink: 0;
+  }
+  .noticia-img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e6f7f7;
+    font-size: 1.4rem;
+  }
+
+  .noticia-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .noticia-info h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f2e2e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0.2rem 0;
+  }
+  .noticia-info p {
+    font-size: 0.78rem;
+    color: #6aacac;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fecha {
+    font-size: 0.7rem;
+    color: #aac8c8;
+    font-family: monospace;
+  }
+
+  .status-pill {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+  }
+  .status-pill.pub {
+    background: #d4f5e9;
+    color: #0a7a4a;
+  }
+  .status-pill.draft {
+    background: #fde8e8;
+    color: #c0392b;
+  }
+
+  .noticia-arrow {
+    color: #c0e8e8;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .noticia-item:hover .noticia-arrow {
+    color: #2aa3a3;
+  }
+
+  .paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0f2f2;
+  }
+  .page-btn {
+    background: #fff;
+    border: 1px solid #c0e8e8;
+    color: #0f4f4f;
+    padding: 0.45rem 1.1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .page-btn:hover {
+    background: #e6f7f7;
+    border-color: #2aa3a3;
+  }
+  .page-btn.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .page-info {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    font-family: monospace;
+  }
+
+  .cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.2rem;
+  }
+  .cat-pill {
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: #e6f7f7;
+    color: #0f4f4f;
+    border: 1px solid #c0e8e8;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .cat-pill.sin {
+    background: #f3f4f6;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+  }
+</style>

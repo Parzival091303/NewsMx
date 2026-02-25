@@ -101,9 +101,60 @@ export const verifyPassword = (inputPassword: string, storedHash: string): boole
 }
 
 export const deleteUser = async (id: number) => {
+    const noticias = await prisma.noticias.findMany({
+        where: { id_usuario: BigInt(id) }
+    });
+
+    for (const noticia of noticias) {
+        await prisma.categorias_noticias.deleteMany({ where: { id_noticia: noticia.id_noticia } });
+        await prisma.actualizacion.deleteMany({ where: { id_noticia: noticia.id_noticia } });
+    }
+
+    await prisma.noticias.deleteMany({ where: { id_usuario: BigInt(id) } });
+    await prisma.actualizacion.deleteMany({ where: { id_usuario: BigInt(id) } });
+
     return await prisma.usuarios.delete({
-        where: {
-            id_usuario: id
-        }
+        where: { id_usuario: BigInt(id) }
+    });
+}
+
+export const getUserByNombreSlug = async (slug: string) => {
+    const usuarios = await prisma.usuarios.findMany({
+        include: { rol: true }
+    });
+
+    console.log("Buscando slug:", slug);
+    console.log("Slugs generados:", usuarios.map(u => ({
+        nombre: u.nombre,
+        apellido: u.apellido,
+        slug: `${u.nombre}-${u.apellido}`
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+    })));
+
+    return usuarios.find(u => {
+        const slugGenerado = `${u.nombre}-${u.apellido}`
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-');
+        return slugGenerado === slug;
+    }) ?? null;
+}
+
+export const deleteUserOnly = async (id: number) => {
+    // Desvincular noticias
+    await prisma.noticias.updateMany({
+        where: { id_usuario: BigInt(id) },
+        data: { id_usuario: null }
+    });
+
+    // Borrar actualizaciones del usuario
+    await prisma.actualizacion.deleteMany({ where: { id_usuario: BigInt(id) } });
+
+    return await prisma.usuarios.delete({
+        where: { id_usuario: BigInt(id) }
     });
 }

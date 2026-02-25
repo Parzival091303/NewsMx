@@ -27,35 +27,45 @@ export const getNewsBySlug = async (slug : string) => {
 }
 
 export const updateNews = async (id: number, newsData: NewsInput) => {
-    // Genera el slug a partir del url proporcionado, quitando los espacios en blanco y caracteres especiales y los remplace por "-" y pasando a minúsculas
     const slug = newsData.url.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-    // actualiza la noticia
+    // 1. Borrar categorías anteriores
+    await prisma.categorias_noticias.deleteMany({
+        where: { id_noticia: id }
+    });
+
+// 2. Buscar o crear cada categoría y obtener su id
+const categoriasIds = await Promise.all(
+    newsData.categorias.map(async (nombre) => {
+        let cat = await prisma.categorias.findFirst({
+            where: { nombre_categoria: nombre }
+        });
+        if (!cat) {
+            cat = await prisma.categorias.create({
+                data: { nombre_categoria: nombre }
+            });
+        }
+        return cat.id_categoria;
+    })
+);
+
+    // 3. Crear las nuevas relaciones
+    await prisma.categorias_noticias.createMany({
+        data: categoriasIds.map((id_categoria) => ({
+            id_noticia: id,
+            id_categoria,
+        })),
+    });
+
+    // 4. Actualizar la noticia
     return await prisma.noticias.update({
-        // where
-        where: {
-            id_noticia: id
-        },
-        // los datos de la noticia a actualizar
+        where: { id_noticia: id },
         data: {
             titulo_noticia: newsData.titulo,
             primer_parrafo: newsData.primerParrafo,
             contenido: newsData.contenido,
             noticias_url: slug,
             imagen: newsData.imagen,
-            categorias: {
-                // limpia las relaciones con la categoría para luego volver a crear las relaciones con las categorías actualizadas
-                deleteMany: {}, 
-                // mapea el array de strings a la estructura de Prisma para crear las relaciones con las categorías, usando connectOrCreate para evitar duplicados
-                create: newsData.categorias.map((nombre) => ({
-                    categoria: {
-                        connectOrCreate: {
-                            where: { nombre_categoria: nombre },
-                            create: { nombre_categoria: nombre }
-                        }
-                    }
-                }))
-            }
         },
         include: {
             categorias: {
@@ -117,7 +127,8 @@ export const getAllNews = async (category?: string, limit: number = 10, offset: 
         include: {
             categorias: {
                 include: { categoria: true }
-            }
+            },
+            usuario: true
         },
         take: limit,
         skip: offset,
@@ -154,6 +165,21 @@ export const deleteNewsById = async (id: number) => {
 export async function addNews(newsData: NewsInput) {
     const slug = newsData.url.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
+    // Buscar o crear cada categoría
+    const categoriasIds = await Promise.all(
+        newsData.categorias.map(async (nombre) => {
+            let cat = await prisma.categorias.findFirst({
+                where: { nombre_categoria: nombre }
+            });
+            if (!cat) {
+                cat = await prisma.categorias.create({
+                    data: { nombre_categoria: nombre }
+                });
+            }
+            return cat.id_categoria;
+        })
+    );
+
     return await prisma.noticias.create({
         data: {
             titulo_noticia: newsData.titulo,
@@ -166,13 +192,8 @@ export async function addNews(newsData: NewsInput) {
                 connect: { id_usuario: newsData.idUsuario }
             },
             categorias: {
-                create: newsData.categorias.map((nombre) => ({
-                    categoria: {
-                        connectOrCreate: {
-                            where: { nombre_categoria: nombre }, 
-                            create: { nombre_categoria: nombre }
-                        }
-                    }
+                create: categoriasIds.map((id_categoria) => ({
+                    id_categoria
                 }))
             }
         },

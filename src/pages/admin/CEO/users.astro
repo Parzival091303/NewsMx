@@ -1,0 +1,240 @@
+---
+export const prerender = false;
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import { actions } from "astro:actions";
+
+const roles = [
+  { id: "1", nombre: "Editor" },
+  { id: "2", nombre: "Administrador" },
+  { id: "3", nombre: "Web Master" },
+];
+---
+
+<LayoutAdmin>
+  <div
+    class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-start p-6"
+  >
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl p-10 my-6">
+      <!-- HEADER -->
+      <div class="text-center mb-8">
+        <a
+          href="/admin/CEO"
+          class="inline-block mb-4 text-sm text-[#2aa3a3] hover:underline"
+        >
+          ← Volver al listado
+        </a>
+
+        <div
+          class="w-20 h-20 rounded-full bg-[#0f4f4f] text-white text-2xl font-black flex items-center justify-center mx-auto mb-4"
+        >
+          +
+        </div>
+
+        <h1 class="text-3xl font-bold text-[#0f4f4f] tracking-wide">
+          Agregar Usuario
+        </h1>
+        <p class="text-gray-500 mt-1">
+          Completa la información del nuevo usuario
+        </p>
+
+        <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
+      </div>
+
+      <div class="space-y-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-[#0f4f4f] mb-2">Nombre</label
+            >
+            <input
+              id="input-nombre"
+              type="text"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3]"
+            />
+          </div>
+          <div>
+            <label class="block font-semibold text-[#0f4f4f] mb-2"
+              >Apellido</label
+            >
+            <input
+              id="input-apellido"
+              type="text"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3]"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2">Correo</label>
+          <input
+            id="input-correo"
+            type="email"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2">Teléfono</label
+          >
+          <input
+            id="input-telefono"
+            type="text"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >Contraseña</label
+          >
+          <input
+            id="input-password"
+            type="password"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2">Rol</label>
+          <select
+            id="input-rol"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3]"
+          >
+            {roles.map((r) => <option value={r.id}>{r.nombre}</option>)}
+          </select>
+        </div>
+
+        <!-- BOTÓN -->
+        <div class="pt-4">
+          <button
+            id="btn-crear"
+            type="button"
+            class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
+          >
+            Crear Usuario
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</LayoutAdmin>
+
+<script>
+  import { actions } from "astro:actions";
+  import Swal from "sweetalert2";
+
+  document.getElementById("btn-crear")!.addEventListener("click", async () => {
+    const nombre = (
+      document.getElementById("input-nombre") as HTMLInputElement
+    ).value.trim();
+    const apellido = (
+      document.getElementById("input-apellido") as HTMLInputElement
+    ).value.trim();
+    const correo = (
+      document.getElementById("input-correo") as HTMLInputElement
+    ).value.trim();
+    const telefono = (
+      document.getElementById("input-telefono") as HTMLInputElement
+    ).value.trim();
+    const contraseña = (
+      document.getElementById("input-password") as HTMLInputElement
+    ).value.trim();
+    const id_rol = Number(
+      (document.getElementById("input-rol") as HTMLSelectElement).value,
+    );
+
+    if (!nombre) {
+      Swal.fire({
+        icon: "warning",
+        title: "¡Falta el nombre!",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+    if (!apellido) {
+      Swal.fire({
+        icon: "warning",
+        title: "¡Falta el apellido!",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+    if (!telefono) {
+      Swal.fire({
+        icon: "warning",
+        title: "¡Falta el teléfono!",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+    if (telefono.length < 10) {
+      Swal.fire({
+        icon: "warning",
+        title: "Teléfono inválido",
+        text: "El teléfono debe tener al menos 10 dígitos.",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+    if (!correo) {
+      Swal.fire({
+        icon: "warning",
+        title: "¡Falta el correo!",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      Swal.fire({
+        icon: "warning",
+        title: "Correo inválido",
+        text: "Por favor ingresa un correo válido.",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+    if (!contraseña) {
+      Swal.fire({
+        icon: "warning",
+        title: "¡Falta la contraseña!",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+    if (contraseña.length < 8) {
+      Swal.fire({
+        icon: "warning",
+        title: "Contraseña muy corta",
+        text: "La contraseña debe tener al menos 8 caracteres.",
+        confirmButtonColor: "#0f4f4f",
+      });
+      return;
+    }
+
+    const { error } = await actions.register({
+      id_rol,
+      nombre,
+      apellido,
+      telefono,
+      correo,
+      contraseña,
+    });
+
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+        confirmButtonColor: "#0f4f4f",
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Usuario creado",
+        text: "El usuario fue registrado correctamente.",
+        confirmButtonColor: "#0f4f4f",
+      }).then(() => {
+        window.location.href = "/admin/CEO";
+      });
+    }
+  });
+</script>

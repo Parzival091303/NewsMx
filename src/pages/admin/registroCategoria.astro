@@ -1,0 +1,96 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import "@/styles/global.css";
+import { actions } from "astro:actions";
+
+let mensaje = "";
+
+const { data } = await Astro.callAction(
+  actions.getCategorias,
+  null
+);
+
+const categorias = data ?? [];
+
+
+---
+<form id="noticia-form" class="space-y-6">
+  </form>
+
+<script>
+import { actions } from "astro:actions";
+
+const btn = document.getElementById('submit-btn');
+const input = document.querySelector('input[name="categoria"]')as HTMLInputElement;
+
+btn?.addEventListener('click', async () => {
+
+  const nombre = input.value;
+
+  const { data, error } = await actions.addCategory({ nombre });
+
+  if (error) {
+    alert('Error al agregar categoría: ' + error.message);
+    console.error(error);
+  } else {
+   
+    window.location.href = "/admin/registroNews";
+  }
+});
+</script>
+
+
+<LayoutAdmin>
+  <div class="min-h-screen bg-linear-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-center p-6">
+
+  <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-10">
+
+    <!-- HEADER -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-[#0f4f4f] tracking-wide">
+        Registrar Nueva Categoria
+      </h1>
+      <p class="text-gray-500 mt-2">
+        Agrega una nueva categoria para NEWSMX TV
+      </p>
+      <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
+    </div>
+
+    <form class="space-y-6" method="POST" id="news-form">
+
+      <!-- Categoria -->
+      <div>
+        <label class="block font-semibold text-[#0f4f4f] mb-2">
+          Categoria
+        </label>
+        <input
+          name="categoria"
+          required
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
+          placeholder="Nueva categoria de noticas"
+        />
+      </div>
+
+
+ 
+      <!--Botom agregar categoria -->
+<button
+  id="submit-btn"
+  type="button"
+  class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
+>
+  Agregar Categoría
+</button>
+
+      {mensaje && (
+        <p class="text-center mt-4 font-medium text-[#0f4f4f]">
+          {mensaje}
+        </p>
+      )}
+
+    </form>
+
+  </div>
+</div>
+
+</LayoutAdmin>

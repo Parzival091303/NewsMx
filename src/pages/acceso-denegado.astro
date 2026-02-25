@@ -1,0 +1,23 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+---
+
+<LayoutAdmin>
+  <div class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] flex items-center justify-center">
+  </div>
+</LayoutAdmin>
+
+<script>
+  import Swal from "sweetalert2";
+
+  Swal.fire({
+    icon: "error",
+    title: "Acceso denegado",
+    text: "No tienes permiso para acceder a esta página.",
+    confirmButtonText: "Volver",
+    confirmButtonColor: "#0f4f4f",
+    allowOutsideClick: false,
+  }).then(() => {
+    history.back();
+  });
+</script>

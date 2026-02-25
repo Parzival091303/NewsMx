@@ -1,0 +1,421 @@
+---
+export const prerender = false;
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import { actions } from "astro:actions";
+
+const rolFiltro = Astro.url.searchParams.get("rol") ?? "";
+
+const { data: usuarios } = await Astro.callAction(actions.getAllUsers, undefined);
+
+const todosUsuarios = usuarios ?? [];
+
+const todosSerializados = todosUsuarios.map((u: any) => ({
+  id_usuario: u.id_usuario?.toString(),
+  id_rol:     u.id_rol?.toString(), 
+  nombre:     u.nombre ?? "",
+  apellido:   u.apellido ?? "",
+  correo:     u.correo ?? "",
+  telefono:   u.telefono ?? "",
+}));
+
+const usuariosFiltrados = rolFiltro
+  ? todosSerializados.filter((u: any) => u.id_rol === rolFiltro)
+  : todosSerializados;
+
+const roles = [
+  { id: "1", nombre: "Editor" },
+  { id: "2", nombre: "Administrador" },
+  { id: "3", nombre: "Web Master" },
+];
+const user = Astro.cookies.get("user")?.json();
+const esWebMaster = user?.rol === "3";
+---
+<div class="fixed bottom-6 right-6 flex flex-col gap-3">
+  {esWebMaster && (
+    <a href="/admin/CEO/menu" class="bg-[#0f4f4f] hover:bg-[#1f6f6f] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 text-center">
+      MENU PRINCIPAL
+    </a>
+  )}
+  <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300">
+    CERRAR SESION
+  </button>
+</div>
+
+<LayoutAdmin>
+   <div class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] py-8 px-4">
+  <div class="usuarios-container">
+
+    <div class="usuarios-header">
+  <div>
+    <h1>Gestión de Usuarios</h1>
+    <p class="subtitulo">Administra los usuarios del sistema</p>
+  </div>
+
+  <div class="header-actions">
+    <span class="total-badge">{usuariosFiltrados.length} usuarios</span>
+
+    <a href="/admin/CEO/users" class="btn-add-user">
+      + Agregar usuario
+    </a>
+  
+  </div>
+</div>
+
+    <!-- Filtro por rol -->
+    <div class="filtro-rol">
+      <select id="filtro-select">
+        <option value="">— Todos los roles —</option>
+        {roles.map(r => (
+          <option value={r.id} selected={rolFiltro === r.id}>{r.nombre}</option>
+        ))}
+      </select>
+    </div>
+
+    <ul class="usuarios-list">
+      {usuariosFiltrados.length === 0 && (
+        <li class="empty">No hay usuarios registrados.</li>
+      )}
+
+      {usuariosFiltrados.map((u: any) => (
+        <li
+  class="usuario-item"
+onclick={`window.location.href='/admin/CEO/${`${u.nombre}-${u.apellido}`.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}'`}
+>
+          <div class="usuario-avatar">
+            {(u.nombre?.[0] ?? "?").toUpperCase()}{(u.apellido?.[0] ?? "").toUpperCase()}
+          </div>
+          <div class="usuario-info">
+            <h2>{u.nombre ?? ""} {u.apellido ?? ""}</h2>
+            <p>{u.correo}</p>
+            <span class="telefono">{u.telefono ?? "Sin teléfono"}</span>
+          </div>
+          <span class={`rol-pill rol-${u.id_rol}`}>
+            {roles.find(r => r.id === u.id_rol?.toString())?.nombre ?? "Sin rol"}
+          </span>
+          <div class="usuario-arrow">›</div>
+        </li>
+      ))}
+    </ul>
+
+  </div>
+  </div>
+</LayoutAdmin>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-avatar" id="modal-avatar"></div>
+      <div>
+        <h2 id="modal-nombre"></h2>
+        <p id="modal-correo-header"></p>
+      </div>
+      <button class="modal-close" id="btn-close">✕</button>
+    </div>
+
+    <input type="hidden" id="modal-id" />
+
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" id="modal-nombre-input" placeholder="Nombre" />
+    </div>
+
+    <div class="form-group">
+      <label>Apellido</label>
+      <input type="text" id="modal-apellido" placeholder="Apellido" />
+    </div>
+
+    <div class="form-group">
+      <label>Correo</label>
+      <input type="email" id="modal-correo" placeholder="correo@ejemplo.com" />
+    </div>
+
+    <div class="form-group">
+      <label>Teléfono</label>
+      <input type="text" id="modal-telefono" placeholder="Teléfono" />
+    </div>
+
+    <div class="form-group">
+      <label>Rol</label>
+      <select id="modal-rol">
+        <option value="1">Editor</option>
+        <option value="2">Administrador</option>
+        <option value="3">Web Master</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-update" id="btn-update"> Guardar cambios</button>
+      <button class="btn-delete" id="btn-delete"> Eliminar usuario</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  import { actions } from "astro:actions";
+  import Swal from "sweetalert2";
+
+  // Filtro por rol
+  const select = document.getElementById("filtro-select") as HTMLSelectElement;
+  select.addEventListener("change", () => {
+    const url = new URL(window.location.href);
+    if (select.value) {
+      url.searchParams.set("rol", select.value);
+    } else {
+      url.searchParams.delete("rol");
+    }
+    window.location.href = url.toString();
+  });
+
+  // Abrir modal
+  (window as any).openModal = function(u: any) {
+    const initials = `${u.nombre?.[0] ?? "?"}${u.apellido?.[0] ?? ""}`.toUpperCase();
+    (document.getElementById("modal-avatar") as HTMLElement).textContent = initials;
+    (document.getElementById("modal-nombre") as HTMLElement).textContent = `${u.nombre ?? ""} ${u.apellido ?? ""}`;
+    (document.getElementById("modal-correo-header") as HTMLElement).textContent = u.correo;
+    (document.getElementById("modal-id") as HTMLInputElement).value = u.id_usuario?.toString();
+    (document.getElementById("modal-nombre-input") as HTMLInputElement).value = u.nombre ?? "";
+    (document.getElementById("modal-apellido") as HTMLInputElement).value = u.apellido ?? "";
+    (document.getElementById("modal-correo") as HTMLInputElement).value = u.correo ?? "";
+    (document.getElementById("modal-telefono") as HTMLInputElement).value = u.telefono ?? "";
+    (document.getElementById("modal-rol") as HTMLSelectElement).value = u.id_rol?.toString() ?? "1";
+    document.getElementById("modal-overlay")!.classList.add("open");
+  };
+
+  // Cerrar modal
+  function closeModal() {
+    document.getElementById("modal-overlay")!.classList.remove("open");
+  }
+
+  document.getElementById("btn-close")!.addEventListener("click", closeModal);
+  document.getElementById("modal-overlay")!.addEventListener("click", (e) => {
+    if (e.target === document.getElementById("modal-overlay")) closeModal();
+  });
+
+  // Actualizar usuario
+  document.getElementById("btn-update")!.addEventListener("click", async () => {
+    const id = Number((document.getElementById("modal-id") as HTMLInputElement).value);
+
+    const { error } = await actions.updateUser({
+      id_usuario: id,
+      nombre:     (document.getElementById("modal-nombre-input") as HTMLInputElement).value,
+      apellido:   (document.getElementById("modal-apellido") as HTMLInputElement).value,
+      correo:     (document.getElementById("modal-correo") as HTMLInputElement).value,
+      telefono:   (document.getElementById("modal-telefono") as HTMLInputElement).value,
+      id_rol:     Number((document.getElementById("modal-rol") as HTMLSelectElement).value),
+    });
+
+    if (error) {
+      Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
+    } else {
+      Swal.fire({ icon: "success", title: "¡Actualizado!", text: "El usuario fue actualizado.", confirmButtonColor: "#0f4f4f" })
+        .then(() => { closeModal(); window.location.reload(); });
+    }
+  });
+
+  // Eliminar usuario
+  document.getElementById("btn-delete")!.addEventListener("click", async () => {
+    const id = Number((document.getElementById("modal-id") as HTMLInputElement).value);
+
+    const confirmed = await Swal.fire({
+      icon: "warning",
+      title: "¿Eliminar usuario?",
+      text: "Esta acción no se puede deshacer.",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#0f4f4f",
+    });
+
+    if (!confirmed.isConfirmed) return;
+
+    const { error } = await actions.deleteUser({ id });
+
+    if (error) {
+      Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
+    } else {
+      Swal.fire({ icon: "success", title: "Eliminado", text: "El usuario fue eliminado.", confirmButtonColor: "#0f4f4f" })
+        .then(() => { closeModal(); window.location.reload(); });
+    }
+  });
+
+  document.getElementById("btn-logout")!.addEventListener("click", async () => {
+  const confirmed = await Swal.fire({
+    icon: "question",
+    title: "¿Cerrar sesión?",
+    text: "¿Estás seguro que deseas salir?",
+    showCancelButton: true,
+    confirmButtonText: "Sí, salir",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#0f4f4f",
+  });
+
+  if (!confirmed.isConfirmed) return;
+
+  await actions.logout({});
+  window.location.href = "/login";
+});
+</script>
+
+<style>
+    .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-add-user {
+  background: #0f4f4f;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.15s;
+  border: 1px solid #0f4f4f;
+}
+
+.btn-add-user:hover {
+  background: #1f6f6f;
+  border-color: #1f6f6f;
+}
+  .usuarios-container {
+    max-width: 860px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+  }
+
+  .usuarios-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+.usuarios-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 700; color: #ffffff;
+}
+.subtitulo { 
+  font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-top: 2px; 
+}
+.total-badge {
+  background: rgba(255,255,255,0.2); color: #ffffff; font-size: 0.75rem;
+  font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+  .filtro-rol { margin-bottom: 1.25rem; }
+  .filtro-rol select {
+    width: 100%; padding: 0.6rem 1rem; border: 1px solid #c0e8e8;
+    border-radius: 10px; font-size: 0.875rem; color: #0f4f4f;
+    background: #fff; cursor: pointer; outline: none; transition: border 0.15s;
+  }
+  .filtro-rol select:focus {
+    border-color: #2aa3a3; box-shadow: 0 0 0 3px rgba(42,163,163,0.1);
+  }
+
+  .usuarios-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .empty { text-align: center; color: #9ca3af; padding: 3rem; font-size: 0.95rem; }
+
+  .usuario-item {
+    display: flex; align-items: center; gap: 1rem;
+    background: #fff; border: 1px solid #e0f2f2;
+    border-radius: 12px; padding: 0.9rem 1rem;
+    cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .usuario-item:hover {
+    border-color: #2aa3a3; box-shadow: 0 4px 16px rgba(42,163,163,0.1);
+  }
+
+  .usuario-avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: #0f4f4f; color: #fff; font-size: 0.85rem;
+    font-weight: 800; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+
+  .usuario-info { flex: 1; min-width: 0; }
+  .usuario-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700; color: #0f2e2e;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .usuario-info p {
+    font-size: 0.78rem; color: #6aacac;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .telefono { font-size: 0.7rem; color: #aac8c8; font-family: monospace; }
+
+  .rol-pill {
+    font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.65rem;
+    border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .rol-1 { background: #e6f7f7; color: #0f4f4f; border: 1px solid #c0e8e8; }
+  .rol-2 { background: #fef9e7; color: #b7770d; border: 1px solid #fde68a; }
+  .rol-3 { background: #faf5ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+
+  .usuario-arrow { color: #c0e8e8; font-size: 1.2rem; flex-shrink: 0; }
+  .usuario-item:hover .usuario-arrow { color: #2aa3a3; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,40,40,0.6); backdrop-filter: blur(5px);
+    z-index: 50; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border: 1px solid #c0e8e8; border-radius: 16px;
+    width: 100%; max-width: 500px; padding: 2rem; margin: 1rem;
+    box-shadow: 0 20px 60px rgba(15,79,79,0.15); max-height: 90vh; overflow-y: auto;
+  }
+  .modal-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e6f7f7;
+  }
+  .modal-avatar {
+    width: 48px; height: 48px; border-radius: 50%; background: #0f4f4f;
+    color: #fff; font-size: 0.9rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .modal-header h2 { font-size: 1.1rem; font-weight: 800; color: #0f4f4f; flex: 1; }
+  .modal-header p { font-size: 0.75rem; color: #6aacac; }
+  .modal-close {
+    background: #f0fafa; border: none; cursor: pointer; width: 32px; height: 32px;
+    border-radius: 50%; font-size: 1rem; color: #6aacac;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .modal-close:hover { background: #e6f7f7; color: #0f4f4f; }
+
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block; font-size: 0.7rem; color: #2aa3a3;
+    font-family: 'IBM Plex Mono', monospace; margin-bottom: 0.4rem;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .form-group input, .form-group select {
+    width: 100%; background: #f8fefe; border: 1px solid #c0e8e8;
+    border-radius: 8px; padding: 0.6rem 0.8rem; font-size: 0.875rem;
+    color: #0f2e2e; outline: none; transition: border 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: #2aa3a3; box-shadow: 0 0 0 3px rgba(42,163,163,0.1);
+  }
+
+  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e6f7f7; }
+  .btn-update {
+    flex: 1; background: #0f4f4f; color: #fff; border: none;
+    border-radius: 10px; padding: 0.7rem; font-size: 0.875rem;
+    font-weight: 700; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-update:hover { background: #1f6f6f; }
+  .btn-delete {
+    flex: 1; background: #fde8e8; color: #c0392b; border: none;
+    border-radius: 10px; padding: 0.7rem; font-size: 0.875rem;
+    font-weight: 700; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-delete:hover { background: #f5c6c6; }
+</style>

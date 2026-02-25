@@ -1,0 +1,154 @@
+---
+export const prerender = false;
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+---
+
+<LayoutAdmin>
+  <div class="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#062e2e] via-[#0f4f4f] to-[#2aa3a3] flex items-center justify-center p-6">
+
+    <!-- FONDO DECORATIVO ANIMADO -->
+    <div class="absolute w-[600px] h-[600px] bg-[#2aa3a3]/30 rounded-full blur-3xl animate-pulse top-[-200px] left-[-200px]"></div>
+    <div class="absolute w-[500px] h-[500px] bg-purple-400/20 rounded-full blur-3xl animate-pulse bottom-[-150px] right-[-150px]"></div>
+
+    <div class="relative w-full max-w-6xl z-10">
+
+      <!-- HEADER -->
+      <div class="text-center text-white mb-14">
+        <h1 class="text-5xl font-black tracking-wider mb-4 drop-shadow-lg animate-fade-in">
+          WEB MASTER PANEL
+        </h1>
+        <p class="text-teal-100 text-lg opacity-90">
+          Centro de control del sistema
+        </p>
+        <div class="w-32 h-1 bg-white mx-auto mt-6 rounded-full animate-pulse"></div>
+      </div>
+
+      <!-- GRID -->
+     <div class="grid md:grid-cols-3 gap-10">
+
+  <!-- CARD 1 -->
+  <a href="/admin/editor"
+    class="group card">
+
+    <div class="icon-wrapper bg-cyan-500/20 group-hover:bg-cyan-500/30">
+      <!-- Icono Newspaper SVG -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
+        <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <h2>Administrar Noticias</h2>
+    <p>Gestiona, edita y elimina noticias del sistema.</p>
+  </a>
+
+  <!-- CARD 2 -->
+  <a href="/admin/CEO"
+    class="group card">
+
+    <div class="icon-wrapper bg-yellow-500/20 group-hover:bg-yellow-500/30">
+      <!-- Icono Users SVG -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none">
+        <circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/>
+        <circle cx="17" cy="10" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M3 19c0-3 3-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.8"/>
+      </svg>
+    </div>
+
+    <h2>Administrar Usuarios</h2>
+    <p>Control total de los usuarios y sus roles.</p>
+  </a>
+
+  <!-- CARD 3 -->
+  <a href="/admin/registroNews"
+    class="group card">
+
+    <div class="icon-wrapper bg-purple-500/20 group-hover:bg-purple-500/30">
+      <!-- Icono Upload SVG -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none">
+        <path d="M12 16V4" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M7 9l5-5 5 5" stroke="currentColor" stroke-width="1.8"/>
+        <rect x="4" y="16" width="16" height="4" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
+      </svg>
+    </div>
+
+    <h2>Subir Noticias</h2>
+    <p>Publica contenido nuevo en la plataforma.</p>
+  </a>
+
+</div>
+
+      <!-- BOTÓN SALIR -->
+      <div class="text-center mt-16">
+        <a href="/"
+          class="inline-block bg-white text-[#0f4f4f] px-8 py-3 rounded-2xl font-bold shadow-xl transition duration-300 hover:scale-110 hover:bg-gray-100">
+          ← Volver al Inicio
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fade-in 1s ease-out;
+    }
+    .card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 28px;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: white;
+  transition: all .4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 25px 60px rgba(0,0,0,.35);
+}
+
+.icon-wrapper {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1.5rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .4s ease;
+}
+
+.icon {
+  width: 34px;
+  height: 34px;
+  color: white;
+  transition: transform .4s ease;
+}
+
+.card:hover .icon {
+  transform: scale(1.2);
+}
+
+.card h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: .6rem;
+}
+
+.card p {
+  font-size: .9rem;
+  opacity: .8;
+}
+  </style>
+
+</LayoutAdmin>
