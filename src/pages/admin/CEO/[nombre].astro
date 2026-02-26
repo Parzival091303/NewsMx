@@ -6,7 +6,9 @@ import { actions } from "astro:actions";
 const { nombre } = Astro.params;
 console.log("Slug recibido:", nombre);
 
-const { data: usuario, error } = await Astro.callAction(actions.getUserBySlug, { slug: nombre! });
+const { data: usuario, error } = await Astro.callAction(actions.getUserBySlug, {
+  slug: nombre!,
+});
 console.log("Usuario encontrado:", usuario);
 console.log("Error:", error);
 
@@ -21,29 +23,46 @@ const roles = [
   { id: "3", nombre: "Web Master" },
 ];
 
-const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?? "Sin rol";
+const rolActual =
+  roles.find((r) => r.id === usuario.id_rol?.toString())?.nombre ?? "Sin rol";
 ---
 
-<LayoutAdmin> 
-  <div class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-start p-6">
+<LayoutAdmin>
+  <div
+    class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-start p-6"
+  >
     <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl p-10 my-6">
-
       <!-- HEADER -->
       <div class="text-center mb-8">
-        <a href="/admin/CEO" class="inline-block mb-4 text-sm text-[#2aa3a3] hover:underline">← Volver al listado</a>
+        <a
+          href="/admin/CEO"
+          class="inline-block mb-4 text-sm text-[#2aa3a3] hover:underline"
+          >← Volver al listado</a
+        >
 
-        <div class="w-20 h-20 rounded-full bg-[#0f4f4f] text-white text-2xl font-black flex items-center justify-center mx-auto mb-4">
-          {(usuario.nombre?.[0] ?? "?").toUpperCase()}{(usuario.apellido?.[0] ?? "").toUpperCase()}
+        <div
+          class="w-20 h-20 rounded-full bg-[#0f4f4f] text-white text-2xl font-black flex items-center justify-center mx-auto mb-4"
+        >
+          {(usuario.nombre?.[0] ?? "?").toUpperCase()}{
+            (usuario.apellido?.[0] ?? "").toUpperCase()
+          }
         </div>
 
         <h1 class="text-3xl font-bold text-[#0f4f4f] tracking-wide">
-          {usuario.nombre} {usuario.apellido}
+          {usuario.nombre}
+          {usuario.apellido}
         </h1>
         <p class="text-gray-500 mt-1">{usuario.correo}</p>
-        <span class={`inline-block mt-2 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide
-          ${usuario.id_rol == 1n ? 'bg-[#e6f7f7] text-[#0f4f4f] border border-[#c0e8e8]' :
-            usuario.id_rol == 2n ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
-            'bg-purple-50 text-purple-700 border border-purple-200'}`}>
+        <span
+          class={`inline-block mt-2 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide
+          ${
+            usuario.id_rol == 1n
+              ? "bg-[#e6f7f7] text-[#0f4f4f] border border-[#c0e8e8]"
+              : usuario.id_rol == 2n
+                ? "bg-yellow-50 text-yellow-700 border border-yellow-200"
+                : "bg-purple-50 text-purple-700 border border-purple-200"
+          }`}
+        >
           {rolActual}
         </span>
         <div class="w-20 h-1 bg-[#2aa3a3] mx-auto mt-4 rounded-full"></div>
@@ -52,10 +71,10 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
       <input type="hidden" id="usuario-id" value={usuarioId} />
 
       <div class="space-y-5">
-
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block font-semibold text-[#0f4f4f] mb-2">Nombre</label>
+            <label class="block font-semibold text-[#0f4f4f] mb-2">Nombre</label
+            >
             <input
               id="input-nombre"
               type="text"
@@ -64,7 +83,9 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
             />
           </div>
           <div>
-            <label class="block font-semibold text-[#0f4f4f] mb-2">Apellido</label>
+            <label class="block font-semibold text-[#0f4f4f] mb-2"
+              >Apellido</label
+            >
             <input
               id="input-apellido"
               type="text"
@@ -85,7 +106,8 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
         </div>
 
         <div>
-          <label class="block font-semibold text-[#0f4f4f] mb-2">Teléfono</label>
+          <label class="block font-semibold text-[#0f4f4f] mb-2">Teléfono</label
+          >
           <input
             id="input-telefono"
             type="text"
@@ -100,25 +122,34 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
             id="input-rol"
             class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
           >
-            {roles.map(r => (
-              <option value={r.id} selected={usuario.id_rol?.toString() === r.id}>
-                {r.nombre}
-              </option>
-            ))}
+            {
+              roles.map((r) => (
+                <option
+                  value={r.id}
+                  selected={usuario.id_rol?.toString() === r.id}
+                >
+                  {r.nombre}
+                </option>
+              ))
+            }
           </select>
         </div>
-<!--CONTRASEÑA -->
+        <!--CONTRASEÑA -->
 
-<div class="border-t border-gray-200 pt-5 mt-2">
-  <p class="text-sm text-gray-400 mb-3 text-center">Cambiar contraseña (opcional)</p>
-  <label class="block font-semibold text-[#0f4f4f] mb-2">Nueva Contraseña</label>
-  <input
-    id="input-password"
-    type="password"
-    placeholder="Dejar vacío para no cambiar"
-    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
-  />
-</div>
+        <div class="border-t border-gray-200 pt-5 mt-2">
+          <p class="text-sm text-gray-400 mb-3 text-center">
+            Cambiar contraseña (opcional)
+          </p>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >Nueva Contraseña</label
+          >
+          <input
+            id="input-password"
+            type="password"
+            placeholder="Dejar vacío para no cambiar"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+          />
+        </div>
         <!-- BOTONES -->
         <div class="pt-4 space-y-3">
           <button
@@ -126,17 +157,16 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
             type="button"
             class="w-full bg-[#1f6f6f] hover:bg-[#0f4f4f] text-white py-3 rounded-xl font-semibold tracking-wide shadow-md transition duration-300"
           >
-             Guardar Cambios
+            Guardar Cambios
           </button>
           <button
             id="btn-eliminar"
             type="button"
             class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-3 rounded-xl font-semibold tracking-wide shadow-sm transition duration-300"
           >
-             Eliminar Usuario
+            Eliminar Usuario
           </button>
         </div>
-
       </div>
     </div>
   </div>
@@ -146,134 +176,233 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
   import { actions } from "astro:actions";
   import Swal from "sweetalert2";
 
-  const id = Number((document.getElementById("usuario-id") as HTMLInputElement).value);
+  const id = Number(
+    (document.getElementById("usuario-id") as HTMLInputElement).value,
+  );
 
   // ACTUALIZAR
- document.getElementById("btn-actualizar")!.addEventListener("click", async () => {
-  const nombre   = (document.getElementById("input-nombre") as HTMLInputElement).value.trim();
-  const apellido = (document.getElementById("input-apellido") as HTMLInputElement).value.trim();
-  const correo   = (document.getElementById("input-correo") as HTMLInputElement).value.trim();
-  const telefono = (document.getElementById("input-telefono") as HTMLInputElement).value.trim();
-  const password = (document.getElementById("input-password") as HTMLInputElement).value.trim();
+  document
+    .getElementById("btn-actualizar")!
+    .addEventListener("click", async () => {
+      const nombre = (
+        document.getElementById("input-nombre") as HTMLInputElement
+      ).value.trim();
+      const apellido = (
+        document.getElementById("input-apellido") as HTMLInputElement
+      ).value.trim();
+      const correo = (
+        document.getElementById("input-correo") as HTMLInputElement
+      ).value.trim();
+      const telefono = (
+        document.getElementById("input-telefono") as HTMLInputElement
+      ).value.trim();
+      const password = (
+        document.getElementById("input-password") as HTMLInputElement
+      ).value.trim();
 
-  if (!nombre) {
-    Swal.fire({ icon: "warning", title: "¡Falta el nombre!", confirmButtonColor: "#0f4f4f" }); return;
-  }
-  if (!apellido) {
-    Swal.fire({ icon: "warning", title: "¡Falta el apellido!", confirmButtonColor: "#0f4f4f" }); return;
-  }
-  if (!correo) {
-    Swal.fire({ icon: "warning", title: "¡Falta el correo!", confirmButtonColor: "#0f4f4f" }); return;
-  }
-  if (!telefono) {
-    Swal.fire({ icon: "warning", title: "¡Falta el teléfono!", confirmButtonColor: "#0f4f4f" }); return;
-  }
-  if (password && password.length < 8) {
-    Swal.fire({ icon: "warning", title: "Contraseña muy corta", text: "Debe tener al menos 8 caracteres.", confirmButtonColor: "#0f4f4f" }); return;
-  }
+      if (!nombre) {
+        Swal.fire({
+          icon: "warning",
+          title: "¡Falta el nombre!",
+          confirmButtonColor: "#0f4f4f",
+        });
+        return;
+      }
+      if (!apellido) {
+        Swal.fire({
+          icon: "warning",
+          title: "¡Falta el apellido!",
+          confirmButtonColor: "#0f4f4f",
+        });
+        return;
+      }
+      if (!correo) {
+        Swal.fire({
+          icon: "warning",
+          title: "¡Falta el correo!",
+          confirmButtonColor: "#0f4f4f",
+        });
+        return;
+      }
+      if (!telefono) {
+        Swal.fire({
+          icon: "warning",
+          title: "¡Falta el teléfono!",
+          confirmButtonColor: "#0f4f4f",
+        });
+        return;
+      }
+      if (password && password.length < 8) {
+        Swal.fire({
+          icon: "warning",
+          title: "Contraseña muy corta",
+          text: "Debe tener al menos 8 caracteres.",
+          confirmButtonColor: "#0f4f4f",
+        });
+        return;
+      }
 
-  Swal.fire({
-    title: "Guardando cambios...",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: () => { Swal.showLoading(); }
-  });
+      Swal.fire({
+        title: "Guardando cambios...",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
 
-  const { error } = await actions.updateUser({
-    id_usuario: id,
-    nombre, apellido, correo, telefono,
-    id_rol: Number((document.getElementById("input-rol") as HTMLSelectElement).value),
-  });
+      const { error } = await actions.updateUser({
+        id_usuario: id,
+        nombre,
+        apellido,
+        correo,
+        telefono,
+        id_rol: Number(
+          (document.getElementById("input-rol") as HTMLSelectElement).value,
+        ),
+      });
 
-  if (error) {
-    Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" }); return;
-  }
+      if (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message,
+          confirmButtonColor: "#0f4f4f",
+        });
+        return;
+      }
 
-  // Si hay contraseña nueva, actualizarla también
-  if (password) {
-    const { error: passError } = await actions.updatePassword({ email: correo, password });
-    if (passError) {
-      Swal.fire({ icon: "error", title: "Usuario actualizado pero falló la contraseña", text: passError.message, confirmButtonColor: "#0f4f4f" }); return;
-    }
-  }
+      // Si hay contraseña nueva, actualizarla también
+      if (password) {
+        const { error: passError } = await actions.updatePassword({
+          email: correo,
+          password,
+        });
+        if (passError) {
+          Swal.fire({
+            icon: "error",
+            title: "Usuario actualizado pero falló la contraseña",
+            text: passError.message,
+            confirmButtonColor: "#0f4f4f",
+          });
+          return;
+        }
+      }
 
-  Swal.fire({ icon: "success", title: "¡Guardado!", text: password ? "Usuario y contraseña actualizados." : "Usuario actualizado correctamente.", confirmButtonColor: "#0f4f4f" })
-    .then(() => { window.location.href = "/admin/CEO"; });
-});
+      Swal.fire({
+        icon: "success",
+        title: "¡Guardado!",
+        text: password
+          ? "Usuario y contraseña actualizados."
+          : "Usuario actualizado correctamente.",
+        confirmButtonColor: "#0f4f4f",
+      }).then(() => {
+        window.location.href = "/admin/CEO";
+      });
+    });
 
   // ELIMINAR
- document.getElementById("btn-eliminar")!.addEventListener("click", async () => {
-  const { data: noticias } = await actions.getNewsByUserId({ userId: id });
+  document
+    .getElementById("btn-eliminar")!
+    .addEventListener("click", async () => {
+      const { data: noticias } = await actions.getNewsByUserId({ userId: id });
 
-  const listaNoticias = noticias && noticias.length > 0
-    ? `<br><br><b>Noticias asociadas:</b><ul style="text-align:left; margin-top:8px">${
-        noticias.map((n: any) => `<li>• ${n.titulo_noticia ?? "Sin título"}</li>`).join("")
-      }</ul>`
-    : "<br><br>Este usuario no tiene noticias asociadas.";
+      const listaNoticias =
+        noticias && noticias.length > 0
+          ? `<br><br><b>Noticias asociadas:</b><ul style="text-align:left; margin-top:8px">${noticias
+              .map((n: any) => `<li>• ${n.titulo_noticia ?? "Sin título"}</li>`)
+              .join("")}</ul>`
+          : "<br><br>Este usuario no tiene noticias asociadas.";
 
-  const opcion = await Swal.fire({
-    icon: "warning",
-    title: "¿Cómo deseas eliminar?",
-    html: `Elige una opción:${listaNoticias}`,
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: "Eliminar usuario y noticias",
-    denyButtonText: "Eliminar solo usuario",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#dc2626",
-    denyButtonColor: "#b45309",
-    cancelButtonColor: "#0f4f4f",
-  });
+      const opcion = await Swal.fire({
+        icon: "warning",
+        title: "¿Cómo deseas eliminar?",
+        html: `Elige una opción:${listaNoticias}`,
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Eliminar usuario y noticias",
+        denyButtonText: "Eliminar solo usuario",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#dc2626",
+        denyButtonColor: "#b45309",
+        cancelButtonColor: "#0f4f4f",
+      });
 
-  if (opcion.isDismissed) return;
+      if (opcion.isDismissed) return;
 
-  const confirmacion = await Swal.fire({
-    icon: "warning",
-    title: "¿Estás seguro?",
-    text: opcion.isConfirmed
-      ? "Se eliminará el usuario y todas sus noticias. Esto no se puede deshacer."
-      : "Se eliminará solo el usuario. Sus noticias quedarán sin autor.",
-    showCancelButton: true,
-    confirmButtonText: "Sí, eliminar",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#dc2626",
-    cancelButtonColor: "#0f4f4f",
-  });
+      const confirmacion = await Swal.fire({
+        icon: "warning",
+        title: "¿Estás seguro?",
+        text: opcion.isConfirmed
+          ? "Se eliminará el usuario y todas sus noticias. Esto no se puede deshacer."
+          : "Se eliminará solo el usuario. Sus noticias quedarán sin autor.",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#0f4f4f",
+      });
 
-  if (!confirmacion.isConfirmed) return;
+      if (!confirmacion.isConfirmed) return;
 
-  if (opcion.isConfirmed) {
-    Swal.fire({
-      title: "Eliminando usuario y noticias...",
-      text: "Por favor espera",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => { Swal.showLoading(); }
+      if (opcion.isConfirmed) {
+        Swal.fire({
+          title: "Eliminando usuario y noticias...",
+          text: "Por favor espera",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        const { error } = await actions.deleteUser({ id });
+        if (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message,
+            confirmButtonColor: "#0f4f4f",
+          });
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Eliminado",
+            text: "Usuario y noticias eliminados.",
+            confirmButtonColor: "#0f4f4f",
+          }).then(() => {
+            window.location.href = "/admin/CEO";
+          });
+        }
+      } else {
+        Swal.fire({
+          title: "Eliminando usuario...",
+          text: "Por favor espera",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        const { error } = await actions.deleteUserOnly({ id });
+        if (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message,
+            confirmButtonColor: "#0f4f4f",
+          });
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Eliminado",
+            text: "Usuario eliminado. Las noticias se conservaron.",
+            confirmButtonColor: "#0f4f4f",
+          }).then(() => {
+            window.location.href = "/admin/CEO";
+          });
+        }
+      }
     });
-
-    const { error } = await actions.deleteUser({ id });
-    if (error) {
-      Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
-    } else {
-      Swal.fire({ icon: "success", title: "Eliminado", text: "Usuario y noticias eliminados.", confirmButtonColor: "#0f4f4f" })
-        .then(() => { window.location.href = "/admin/CEO"; });
-    }
-  } else {
-    Swal.fire({
-      title: "Eliminando usuario...",
-      text: "Por favor espera",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => { Swal.showLoading(); }
-    });
-
-    const { error } = await actions.deleteUserOnly({ id });
-    if (error) {
-      Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
-    } else {
-      Swal.fire({ icon: "success", title: "Eliminado", text: "Usuario eliminado. Las noticias se conservaron.", confirmButtonColor: "#0f4f4f" })
-        .then(() => { window.location.href = "/admin/CEO"; });
-    }
-  }
-});
 </script>
