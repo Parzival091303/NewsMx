@@ -131,25 +131,36 @@ const categoriasJSON = JSON.stringify(categorias.map(c => ({ id: c.id_categoria.
     renderCategorias();
 
     // Agregar categoría
-    document.getElementById("btn-agregar")!.addEventListener("click", async () => {
-      const input = document.getElementById("input-categoria") as HTMLInputElement;
-      const nombre = input.value.trim();
+   document.getElementById("btn-agregar")!.addEventListener("click", async () => {
+  const input = document.getElementById("input-categoria") as HTMLInputElement;
+  const nombre = input.value.trim();
 
-      if (!nombre) {
-        Swal.fire({ icon: "warning", title: "Escribe un nombre", confirmButtonColor: "#0f4f4f" });
-        return;
-      }
+  if (!nombre) {
+    Swal.fire({ icon: "warning", title: "Escribe un nombre", confirmButtonColor: "#0f4f4f" });
+    return;
+  }
 
-      const { data, error } = await actions.addCategory({ nombre });
+  // Verificar si ya existe
+  const yaExiste = categoriasData.some(
+    c => c.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') === 
+         nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  );
 
-      if (error) {
-        Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
-      } else {
-        Swal.fire({ icon: "success", title: "¡Categoría agregada!", confirmButtonColor: "#0f4f4f" });
-        input.value = "";
-        window.location.reload();
-      }
-    });
+  if (yaExiste) {
+    Swal.fire({ icon: "warning", title: "Ya existe", text: `La categoría "${nombre}" ya está registrada.`, confirmButtonColor: "#0f4f4f" });
+    return;
+  }
+
+  const { data, error } = await actions.addCategory({ nombre });
+
+  if (error) {
+    Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
+  } else {
+    Swal.fire({ icon: "success", title: "¡Categoría agregada!", confirmButtonColor: "#0f4f4f" });
+    input.value = "";
+    window.location.reload();
+  }
+});
   </script>
 
 </LayoutAdmin>
