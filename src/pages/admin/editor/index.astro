@@ -29,189 +29,211 @@ if (userId) {
 const user = Astro.cookies.get("user")?.json();
 const esWebMaster = user?.rol === "3";
 ---
+
 <div class="fixed bottom-6 right-6 flex flex-col gap-3">
-  {esWebMaster && (
-    <a href="/admin/CEO/menu" class="bg-[#0f4f4f] hover:bg-[#1f6f6f] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 text-center">
-      MENU PRINCIPAL
-    </a>
-  )}
-  <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300">
+  {
+    esWebMaster && (
+      <a
+        href="/admin/CEO/menu"
+        class="bg-[#0f4f4f] hover:bg-[#1f6f6f] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 text-center"
+      >
+        MENU PRINCIPAL
+      </a>
+    )
+  }
+  <button
+    id="btn-logout"
+    class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300"
+  >
     CERRAR SESION
   </button>
 </div>
 <LayoutAdmin>
-  <div class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] py-8 px-4">
-  <div class="noticias-container">
-    <div class="noticias-header">
-      <div class="filtro-usuario">
-        <select id="filtro-select">
-          <option value="">— Todos los usuarios —</option>
-          {
-            (usuarios ?? []).map((u: any) => (
-              <option value={u.id} selected={userId === u.id}>
-                {u.nombre} {u.apellido} — {u.correo}
-              </option>
-            ))
-          }
-        </select>
+  <div
+    class="min-h-screen bg-gradient-to-br from-[#0f4f4f] to-[#2aa3a3] py-8 px-4"
+  >
+    <div class="noticias-container">
+      <div class="noticias-header">
+        <div class="filtro-usuario">
+          <select id="filtro-select">
+            <option value="">— Todos los usuarios —</option>
+            {
+              (usuarios ?? []).map((u: any) => (
+                <option value={u.id} selected={userId === u.id}>
+                  {u.nombre} {u.apellido} — {u.correo}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+        <h1>Noticias</h1>
+        <span class="total-badge"
+          >{userId ? news.length : (pagination?.totalItems ?? 0)} noticias</span
+        >
       </div>
-      <h1>Noticias</h1>
-      <span class="total-badge"
-        >{userId ? news.length : (pagination?.totalItems ?? 0)} noticias</span
-      >
 
-    </div>
+      <ul class="noticias-list">
+        {
+          news.length === 0 && (
+            <li class="empty">No hay noticias registradas.</li>
+          )
+        }
 
-    <ul class="noticias-list">
-      {news.length === 0 && <li class="empty">No hay noticias registradas.</li>}
-
-      {
-        news.map((n: any) => (
-          <li
-            class="noticia-item"
-            onclick={`window.location.href='/admin/noticia/${n.noticias_url ?? n.id_noticia}'`}
-          >
-            <div class="noticia-img-wrap">
-              {n.imagen ? (
-                <img
-                  src={n.imagen}
-                  alt={n.titulo_noticia ?? ""}
-                  onerror="this.src=''"
-                />
-              ) : (
-                <div class="noticia-img-placeholder">📰</div>
-              )}
-            </div>
-            <div class="noticia-info">
-              <div class="cats">
-                {(n.categorias ?? []).length === 0 ? (
-                  <span class="cat-pill sin">Sin categoría</span>
+        {
+          news.map((n: any) => (
+            <li
+              class="noticia-item"
+              onclick={`window.location.href='/admin/noticia/${n.noticias_url ?? n.id_noticia}'`}
+            >
+              <div class="noticia-img-wrap">
+                {n.imagen ? (
+                  <img
+                    src={n.imagen}
+                    alt={n.titulo_noticia ?? ""}
+                    onerror="this.src=''"
+                  />
                 ) : (
-                  (n.categorias as any[]).map((c) => (
-                    <span class="cat-pill">{c.categoria.nombre_categoria}</span>
-                  ))
+                  <div class="noticia-img-placeholder">📰</div>
                 )}
               </div>
-              <h2>{n.titulo_noticia ?? "Sin título"}</h2>
-              <p>{n.primer_parrafo ?? ""}</p>
-              <span class="fecha">
-                {n.fecha_noticia
-                  ? new Date(n.fecha_noticia).toLocaleDateString("es-MX", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })
-                  : "Sin fecha"}
-              </span>
-              <span class="autor">
-                {" "}
-                {n.usuario
-                  ? `${n.usuario.nombre ?? ""} ${n.usuario.apellido ?? ""}`.trim()
-                  : "Sin autor"}
-              </span>
-            </div>
-            <div class="noticia-arrow">›</div>
-          </li>
-        ))
+              <div class="noticia-info">
+                <div class="cats">
+                  {(n.categorias ?? []).length === 0 ? (
+                    <span class="cat-pill sin">Sin categoría</span>
+                  ) : (
+                    (n.categorias as any[]).map((c) => (
+                      <span class="cat-pill">
+                        {c.categoria.nombre_categoria}
+                      </span>
+                    ))
+                  )}
+                </div>
+                <h2>{n.titulo_noticia ?? "Sin título"}</h2>
+                <p>{n.primer_parrafo ?? ""}</p>
+                <span class="fecha">
+                  {n.fecha_noticia
+                    ? new Date(
+                        n.fecha_noticia.getTime() + 6 * 60 * 60 * 1000,
+                      ).toLocaleDateString("es-MX", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "Sin fecha"}
+                </span>
+                <span class="autor">
+                  {" "}
+                  {n.usuario
+                    ? `${n.usuario.nombre ?? ""} ${n.usuario.apellido ?? ""}`.trim()
+                    : "Sin autor"}
+                </span>
+              </div>
+              <div class="noticia-arrow">›</div>
+            </li>
+          ))
+        }
+      </ul>
+
+      {
+        pagination && (
+          <div class="paginacion">
+            <a
+              href={`?offset=${offset - LIMIT}`}
+              class={pagination.hasPrevious ? "page-btn" : "page-btn disabled"}
+            >
+              ← Anterior
+            </a>
+            <span class="page-info">
+              Página {pagination.currentPage} de {pagination.totalPages}
+            </span>
+            <a
+              href={`?offset=${offset + LIMIT}`}
+              class={pagination.hasNext ? "page-btn" : "page-btn disabled"}
+            >
+              Siguiente →
+            </a>
+          </div>
+        )
       }
-    </ul>
+    </div>
+    <script>
+      import { actions } from "astro:actions";
+      import Swal from "sweetalert2";
 
-    {
-      pagination && (
-        <div class="paginacion">
-          <a
-            href={`?offset=${offset - LIMIT}`}
-            class={pagination.hasPrevious ? "page-btn" : "page-btn disabled"}
-          >
-            ← Anterior
-          </a>
-          <span class="page-info">
-            Página {pagination.currentPage} de {pagination.totalPages}
-          </span>
-          <a
-            href={`?offset=${offset + LIMIT}`}
-            class={pagination.hasNext ? "page-btn" : "page-btn disabled"}
-          >
-            Siguiente →
-          </a>
-        </div>
-      )
-    }
-  </div>
-  <script>
-import { actions } from "astro:actions";
-import Swal from "sweetalert2";
+      const select = document.getElementById(
+        "filtro-select",
+      ) as HTMLSelectElement;
 
-    const select = document.getElementById(
-      "filtro-select",
-    ) as HTMLSelectElement;
+      select.addEventListener("change", () => {
+        const userId = select.value;
+        const url = new URL(window.location.href);
 
-select.addEventListener("change", () => {
-  const userId = select.value;
-  const url = new URL(window.location.href);
+        if (userId) {
+          url.searchParams.set("userId", userId);
+        } else {
+          url.searchParams.delete("userId");
+        }
 
-  if (userId) {
-    url.searchParams.set("userId", userId);
-  } else {
-    url.searchParams.delete("userId");
-  }
+        url.searchParams.delete("offset");
 
-  url.searchParams.delete("offset");
+        Swal.fire({
+          title: "Filtrando noticias...",
+          text: "Por favor espera",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
 
-  Swal.fire({
-    title: "Filtrando noticias...",
-    text: "Por favor espera",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: () => { Swal.showLoading(); }
-  });
+        window.location.href = url.toString();
+      });
+      document
+        .getElementById("btn-logout")!
+        .addEventListener("click", async () => {
+          const confirmed = await Swal.fire({
+            icon: "question",
+            title: "¿Cerrar sesión?",
+            text: "¿Estás seguro que deseas salir?",
+            showCancelButton: true,
+            confirmButtonText: "Sí, salir",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#0f4f4f",
+          });
 
-  window.location.href = url.toString();
-});
-    document.getElementById("btn-logout")!.addEventListener("click", async () => {
-  const confirmed = await Swal.fire({
-    icon: "question",
-    title: "¿Cerrar sesión?",
-    text: "¿Estás seguro que deseas salir?",
-    showCancelButton: true,
-    confirmButtonText: "Sí, salir",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#dc2626",
-    cancelButtonColor: "#0f4f4f",
-  });
+          if (!confirmed.isConfirmed) return;
 
-  if (!confirmed.isConfirmed) return;
-
-  await actions.logout({});
-  window.location.href = "/login";
-});
-  </script>
+          await actions.logout({});
+          window.location.href = "/login";
+        });
+    </script>
   </div>
 </LayoutAdmin>
 
 <style>
   .header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
 
-.btn-add-user {
-  background: #0f4f4f;
-  color: #fff;
-  text-decoration: none;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  transition: all 0.15s;
-  border: 1px solid #0f4f4f;
-}
+  .btn-add-user {
+    background: #0f4f4f;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: all 0.15s;
+    border: 1px solid #0f4f4f;
+  }
 
-.btn-add-user:hover {
-  background: #1f6f6f;
-  border-color: #1f6f6f;
-}
+  .btn-add-user:hover {
+    background: #1f6f6f;
+    border-color: #1f6f6f;
+  }
   .autor {
     font-size: 0.68rem;
     color: #6aacac;
@@ -244,11 +266,18 @@ select.addEventListener("change", () => {
     outline: none;
     transition: border 0.15s;
   }
-.filtro-usuario select {
-  width: 100%; padding: 0.6rem 1rem; border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 10px; font-size: 0.875rem; color: #0f4f4f;
-  background: #fff; cursor: pointer; outline: none; transition: border 0.15s;
-}
+  .filtro-usuario select {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    font-size: 0.875rem;
+    color: #0f4f4f;
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border 0.15s;
+  }
   .noticias-container {
     max-width: 860px;
     margin: 2.5rem auto;
@@ -260,15 +289,21 @@ select.addEventListener("change", () => {
     gap: 1rem;
     margin-bottom: 1.75rem;
   }
-.noticias-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem; font-weight: 700; color: #ffffff;
-}
-.total-badge {
-  background: rgba(255,255,255,0.2); color: #ffffff; font-size: 0.75rem;
-  font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.4);
-}
+  .noticias-header h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .total-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
   .noticias-list {
     list-style: none;
     display: flex;

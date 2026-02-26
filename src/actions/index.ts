@@ -46,7 +46,8 @@ export const server = {
   allUsers,
   getUserBySlug,
   deleteUserOnly,
-  logout
+  logout,
+  updatePassword
 };
 
 

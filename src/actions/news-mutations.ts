@@ -15,7 +15,7 @@ export const updateNews = defineAction({
     status:         z.string().optional(),
     categorias:     z.array(z.string()).optional(),
   }),
-  handler: async ({ id_noticia, titulo_noticia, primer_parrafo, contenido, imagen, noticias_url, categorias }) => {
+handler: async ({ id_noticia, titulo_noticia, primer_parrafo, contenido, imagen, noticias_url, categorias, fecha_noticia }) => {
     await updateNewsFromDB(Number(id_noticia), {
       titulo:        titulo_noticia ?? "",
       primerParrafo: primer_parrafo ?? "",
@@ -24,6 +24,7 @@ export const updateNews = defineAction({
       imagen:        imagen,
       idUsuario:     0,
       categorias:    categorias ?? [],
+      fecha:         fecha_noticia,
     });
     return { success: true };
   },

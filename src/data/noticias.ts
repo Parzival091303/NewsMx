@@ -8,9 +8,10 @@ export interface NewsInput {
     imagen?: string;
     idUsuario: number;
     categorias: string[];
+    fecha?: string;
 }
 
-export const getNewsBySlug = async (slug : string) => {
+export const getNewsBySlug = async (slug: string) => {
     return await prisma.noticias.findUnique({
         where: {
             noticias_url: slug
@@ -34,20 +35,20 @@ export const updateNews = async (id: number, newsData: NewsInput) => {
         where: { id_noticia: id }
     });
 
-// 2. Buscar o crear cada categoría y obtener su id
-const categoriasIds = await Promise.all(
-    newsData.categorias.map(async (nombre) => {
-        let cat = await prisma.categorias.findFirst({
-            where: { nombre_categoria: nombre }
-        });
-        if (!cat) {
-            cat = await prisma.categorias.create({
-                data: { nombre_categoria: nombre }
+    // 2. Buscar o crear cada categoría y obtener su id
+    const categoriasIds = await Promise.all(
+        newsData.categorias.map(async (nombre) => {
+            let cat = await prisma.categorias.findFirst({
+                where: { nombre_categoria: nombre }
             });
-        }
-        return cat.id_categoria;
-    })
-);
+            if (!cat) {
+                cat = await prisma.categorias.create({
+                    data: { nombre_categoria: nombre }
+                });
+            }
+            return cat.id_categoria;
+        })
+    );
 
     // 3. Crear las nuevas relaciones
     await prisma.categorias_noticias.createMany({
@@ -66,6 +67,7 @@ const categoriasIds = await Promise.all(
             contenido: newsData.contenido,
             noticias_url: slug,
             imagen: newsData.imagen,
+            fecha_noticia: newsData.fecha ? new Date(newsData.fecha + "T12:00:00") : new Date(),
         },
         include: {
             categorias: {
@@ -94,7 +96,7 @@ export const countNewsByUserId = async (userId: number) => {
     return await prisma.noticias.count({ where: { id_usuario: userId } });
 }
 
-export const countNews = async() => {
+export const countNews = async () => {
     return await prisma.noticias.count();
 }
 export const countNewsByCategory = async (category: string) => {
@@ -163,7 +165,6 @@ export const deleteNewsById = async (id: number) => {
 export async function addNews(newsData: NewsInput) {
     const slug = newsData.url.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-    // Buscar o crear cada categoría
     const categoriasIds = await Promise.all(
         newsData.categorias.map(async (nombre) => {
             let cat = await prisma.categorias.findFirst({
@@ -185,7 +186,7 @@ export async function addNews(newsData: NewsInput) {
             contenido: newsData.contenido,
             noticias_url: slug,
             imagen: newsData.imagen,
-            fecha_noticia: new Date(),
+            fecha_noticia: newsData.fecha ? new Date(newsData.fecha + "T12:00:00") : new Date(),
             usuario: {
                 connect: { id_usuario: newsData.idUsuario }
             },
@@ -196,12 +197,8 @@ export async function addNews(newsData: NewsInput) {
             }
         },
         include: {
-            categorias: {
-                include: { categoria: true }
-            },
-            usuario: {
-                include: { rol: true }
-            }
+            categorias: { include: { categoria: true } },
+            usuario: { include: { rol: true } }
         }
     });
 }

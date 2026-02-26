@@ -13,22 +13,30 @@ const esWebMaster = user?.rol === "3";
 ---
 
 <LayoutAdmin>
-
   <!-- BOTONES FLOTANTES -->
   <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
-    {esWebMaster && (
-      <a href="/admin/CEO/menu" class="bg-[#0f4f4f] hover:bg-[#1f6f6f] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 text-center">
-        MENU PRINCIPAL
-      </a>
-    )}
-    <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300">
+    {
+      esWebMaster && (
+        <a
+          href="/admin/CEO/menu"
+          class="bg-[#0f4f4f] hover:bg-[#1f6f6f] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300 text-center"
+        >
+          MENU PRINCIPAL
+        </a>
+      )
+    }
+    <button
+      id="btn-logout"
+      class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-300"
+    >
       CERRAR SESION
     </button>
   </div>
 
-  <div class="min-h-screen bg-linear-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-center p-6">
+  <div
+    class="min-h-screen bg-linear-to-br from-[#0f4f4f] to-[#2aa3a3] flex justify-center items-center p-6"
+  >
     <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-10">
-
       <!-- HEADER -->
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-[#0f4f4f] tracking-wide">
@@ -41,7 +49,6 @@ const esWebMaster = user?.rol === "3";
       </div>
 
       <form class="space-y-6" method="POST" id="news-form">
-
         <!-- TÍTULO -->
         <div>
           <label class="block font-semibold text-[#0f4f4f] mb-2">TITULO</label>
@@ -64,29 +71,33 @@ const esWebMaster = user?.rol === "3";
 
         <!-- PRIMER PÁRRAFO -->
         <div>
-          <label class="block font-semibold text-[#0f4f4f] mb-2">Primer Parrafo *</label>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >Primer Parrafo *</label
+          >
           <textarea
             name="primer_parrafo"
             rows="3"
             class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
-            placeholder="Resumen breve"
-          ></textarea>
+            placeholder="Resumen breve"></textarea>
         </div>
 
         <!-- CONTENIDO -->
         <div>
-          <label class="block font-semibold text-[#0f4f4f] mb-2">Contenido *</label>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >Contenido *</label
+          >
           <textarea
             name="contenido"
             rows="6"
             class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
-            placeholder="Contenido completo"
-          ></textarea>
+            placeholder="Contenido completo"></textarea>
         </div>
 
         <!-- IMAGEN -->
         <div>
-          <label class="block font-semibold text-[#0f4f4f] mb-2">URL Imagen *</label>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >URL Imagen *</label
+          >
           <input
             type="file"
             accept="image/*"
@@ -95,13 +106,28 @@ const esWebMaster = user?.rol === "3";
           />
         </div>
 
+        <!-- FECHA -->
+        <div>
+          <label class="block font-semibold text-[#0f4f4f] mb-2"
+            >Fecha de publicación</label
+          >
+          <input
+            name="fecha_noticia"
+            type="date"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] focus:border-[#2aa3a3] transition"
+          />
+        </div>
         <!-- CATEGORÍAS -->
         <div>
-          <label class="block font-semibold text-[#0f4f4f] mb-3">Categorias *</label>
+          <label class="block font-semibold text-[#0f4f4f] mb-3"
+            >Categorias *</label
+          >
           <div
             class="border border-gray-200 rounded-xl p-4 h-44 overflow-y-auto bg-[#f4fafa]"
             id="categorias-container"
-            data-categorias={JSON.stringify(categorias.map(c => c.nombre_categoria))}
+            data-categorias={JSON.stringify(
+              categorias.map((c) => c.nombre_categoria),
+            )}
           >
           </div>
         </div>
@@ -127,20 +153,21 @@ const esWebMaster = user?.rol === "3";
           />
         </div>
 
-        {mensaje && (
-          <p class="text-center mt-4 font-medium text-[#0f4f4f]">{mensaje}</p>
-        )}
-
+        {
+          mensaje && (
+            <p class="text-center mt-4 font-medium text-[#0f4f4f]">{mensaje}</p>
+          )
+        }
       </form>
     </div>
   </div>
 
-  <script>
+<script>
     import { actions } from "astro:actions";
     import Swal from "sweetalert2";
 
-    const form = document.getElementById('news-form') as HTMLFormElement;
-    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const form = document.getElementById("news-form") as HTMLFormElement;
+    const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 
     // Renderizar categorías desde data-attribute
     const container = document.getElementById("categorias-container")!;
@@ -163,8 +190,8 @@ const esWebMaster = user?.rol === "3";
 
     async function comprimirImagen(file: File): Promise<File> {
       return new Promise((resolve) => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d")!;
         const img = new Image();
         const url = URL.createObjectURL(file);
         img.onload = () => {
@@ -178,21 +205,22 @@ const esWebMaster = user?.rol === "3";
           ctx.drawImage(img, 0, 0, w, h);
           canvas.toBlob((blob) => {
             URL.revokeObjectURL(url);
-            resolve(new File([blob!], file.name, { type: 'image/jpeg' }));
-          }, 'image/jpeg', 0.8);
+            resolve(new File([blob!], file.name, { type: "image/jpeg" }));
+          }, "image/jpeg", 0.8);
         };
         img.src = url;
       });
     }
 
-    form?.addEventListener('submit', async (e) => {
+    form?.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const titulo = (document.querySelector('input[name="titulo"]') as HTMLInputElement).value.trim();
       const slug = (document.querySelector('input[name="slug"]') as HTMLInputElement).value.trim();
       const primerParrafo = (document.querySelector('textarea[name="primer_parrafo"]') as HTMLTextAreaElement).value.trim();
       const contenido = (document.querySelector('textarea[name="contenido"]') as HTMLTextAreaElement).value.trim();
-      const imagenInput = (document.querySelector('input[name="imagen"]') as HTMLInputElement);
+      const fecha = (document.querySelector('input[name="fecha_noticia"]') as HTMLInputElement).value;
+      const imagenInput = document.querySelector('input[name="imagen"]') as HTMLInputElement;
       const imagen = imagenInput.files;
       const categorias = document.querySelectorAll('input[name="categorias"]:checked');
 
@@ -216,6 +244,10 @@ const esWebMaster = user?.rol === "3";
         Swal.fire({ icon: "warning", title: "¡Falta seleccionar una imagen!", confirmButtonColor: "#0f4f4f" });
         return;
       }
+      if (!fecha) {
+        Swal.fire({ icon: "warning", title: "¡Falta seleccionar la fecha!", confirmButtonColor: "#0f4f4f" });
+        return;
+      }
       if (categorias.length === 0) {
         Swal.fire({ icon: "warning", title: "¡Falta seleccionar una categoría!", confirmButtonColor: "#0f4f4f" });
         return;
@@ -228,19 +260,37 @@ const esWebMaster = user?.rol === "3";
         text: "Por favor espera",
         allowOutsideClick: false,
         allowEscapeKey: false,
-        didOpen: () => { Swal.showLoading(); }
+        didOpen: () => { Swal.showLoading(); },
       });
 
       try {
         const imagenComprimida = await comprimirImagen(imagen[0]);
         const formData = new FormData(form);
-        formData.set('imagen', imagenComprimida, imagenComprimida.name);
+        formData.set("imagen", imagenComprimida, imagenComprimida.name);
         const { data: response, error } = await actions.addNews(formData);
         if (error) {
           Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
         } else {
           Swal.fire({ icon: "success", title: "¡Noticia registrada!", text: "La noticia fue publicada con éxito.", confirmButtonColor: "#0f4f4f" })
-            .then(() => { form.reset(); container.innerHTML = ""; categoriasData.forEach((nombre: string) => { const label = document.createElement("label"); label.className = "flex items-center mb-2 cursor-pointer hover:bg-[#e6f7f7] p-2 rounded-lg transition"; const input = document.createElement("input"); input.type = "checkbox"; input.name = "categorias"; input.value = nombre; input.className = "mr-3 accent-[#2aa3a3] w-4 h-4"; const span = document.createElement("span"); span.className = "text-gray-700"; span.textContent = nombre; label.appendChild(input); label.appendChild(span); container.appendChild(label); }); });
+            .then(() => {
+              form.reset();
+              container.innerHTML = "";
+              categoriasData.forEach((nombre: string) => {
+                const label = document.createElement("label");
+                label.className = "flex items-center mb-2 cursor-pointer hover:bg-[#e6f7f7] p-2 rounded-lg transition";
+                const input = document.createElement("input");
+                input.type = "checkbox";
+                input.name = "categorias";
+                input.value = nombre;
+                input.className = "mr-3 accent-[#2aa3a3] w-4 h-4";
+                const span = document.createElement("span");
+                span.className = "text-gray-700";
+                span.textContent = nombre;
+                label.appendChild(input);
+                label.appendChild(span);
+                container.appendChild(label);
+              });
+            });
         }
       } catch (error) {
         Swal.fire({ icon: "error", title: "Error inesperado", text: "Ocurrió un error al registrar la noticia.", confirmButtonColor: "#0f4f4f" });
@@ -265,5 +315,4 @@ const esWebMaster = user?.rol === "3";
       window.location.href = "/login";
     });
   </script>
-
 </LayoutAdmin>

@@ -107,7 +107,18 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
             ))}
           </select>
         </div>
+<!--CONTRASEÑA -->
 
+<div class="border-t border-gray-200 pt-5 mt-2">
+  <p class="text-sm text-gray-400 mb-3 text-center">Cambiar contraseña (opcional)</p>
+  <label class="block font-semibold text-[#0f4f4f] mb-2">Nueva Contraseña</label>
+  <input
+    id="input-password"
+    type="password"
+    placeholder="Dejar vacío para no cambiar"
+    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#2aa3a3] transition"
+  />
+</div>
         <!-- BOTONES -->
         <div class="pt-4 space-y-3">
           <button
@@ -143,39 +154,51 @@ const rolActual = roles.find(r => r.id === usuario.id_rol?.toString())?.nombre ?
   const apellido = (document.getElementById("input-apellido") as HTMLInputElement).value.trim();
   const correo   = (document.getElementById("input-correo") as HTMLInputElement).value.trim();
   const telefono = (document.getElementById("input-telefono") as HTMLInputElement).value.trim();
+  const password = (document.getElementById("input-password") as HTMLInputElement).value.trim();
 
   if (!nombre) {
-    Swal.fire({ icon: "warning", title: "¡Falta el nombre!", confirmButtonColor: "#0f4f4f" });
-    return;
+    Swal.fire({ icon: "warning", title: "¡Falta el nombre!", confirmButtonColor: "#0f4f4f" }); return;
   }
   if (!apellido) {
-    Swal.fire({ icon: "warning", title: "¡Falta el apellido!", confirmButtonColor: "#0f4f4f" });
-    return;
+    Swal.fire({ icon: "warning", title: "¡Falta el apellido!", confirmButtonColor: "#0f4f4f" }); return;
   }
   if (!correo) {
-    Swal.fire({ icon: "warning", title: "¡Falta el correo!", confirmButtonColor: "#0f4f4f" });
-    return;
+    Swal.fire({ icon: "warning", title: "¡Falta el correo!", confirmButtonColor: "#0f4f4f" }); return;
   }
   if (!telefono) {
-    Swal.fire({ icon: "warning", title: "¡Falta el teléfono!", confirmButtonColor: "#0f4f4f" });
-    return;
+    Swal.fire({ icon: "warning", title: "¡Falta el teléfono!", confirmButtonColor: "#0f4f4f" }); return;
   }
+  if (password && password.length < 8) {
+    Swal.fire({ icon: "warning", title: "Contraseña muy corta", text: "Debe tener al menos 8 caracteres.", confirmButtonColor: "#0f4f4f" }); return;
+  }
+
+  Swal.fire({
+    title: "Guardando cambios...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
 
   const { error } = await actions.updateUser({
     id_usuario: id,
-    nombre,
-    apellido,
-    correo,
-    telefono,
+    nombre, apellido, correo, telefono,
     id_rol: Number((document.getElementById("input-rol") as HTMLSelectElement).value),
   });
 
   if (error) {
-    Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" });
-  } else {
-    Swal.fire({ icon: "success", title: "¡Actualizado!", text: "El usuario fue actualizado.", confirmButtonColor: "#0f4f4f" })
-      .then(() => { window.location.href = "/admin/CEO"; });
+    Swal.fire({ icon: "error", title: "Error", text: error.message, confirmButtonColor: "#0f4f4f" }); return;
   }
+
+  // Si hay contraseña nueva, actualizarla también
+  if (password) {
+    const { error: passError } = await actions.updatePassword({ email: correo, password });
+    if (passError) {
+      Swal.fire({ icon: "error", title: "Usuario actualizado pero falló la contraseña", text: passError.message, confirmButtonColor: "#0f4f4f" }); return;
+    }
+  }
+
+  Swal.fire({ icon: "success", title: "¡Guardado!", text: password ? "Usuario y contraseña actualizados." : "Usuario actualizado correctamente.", confirmButtonColor: "#0f4f4f" })
+    .then(() => { window.location.href = "/admin/CEO"; });
 });
 
   // ELIMINAR

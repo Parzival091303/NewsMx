@@ -3,7 +3,6 @@ import { z } from "astro/zod";
 import { defineAction } from "astro:actions";
 import { addNews as addNewsToDB } from "@/data";
 
-
 export const addNews = defineAction({
     accept: "form",
     input: z.object({
@@ -17,6 +16,7 @@ export const addNews = defineAction({
         }),
         categorias: z.array(z.string()),
         slug: z.string(),
+        fecha_noticia: z.string().optional(),
     }),
     handler: async (input, { cookies }) => {
         const arrayBuffer = await input.imagen.arrayBuffer();
@@ -24,13 +24,12 @@ export const addNews = defineAction({
         const base64Image = Buffer.from(unit8Array).toString('base64');
         const dataURI = `data:${input.imagen.type};base64,${base64Image}`;
         try {
-            const userCookie  = cookies.get("user");
-           const user = userCookie ? JSON.parse(userCookie.value) : null;
+            const userCookie = cookies.get("user");
+            const user = userCookie ? JSON.parse(userCookie.value) : null;
             if (!user) {
                 throw new Error("Usuario no autenticado");
             }
-            
-            
+
             const imageUrl = await uploadImage(dataURI);
             const newsData = {
                 titulo: input.titulo,
@@ -40,6 +39,7 @@ export const addNews = defineAction({
                 categorias: input.categorias,
                 idUsuario: user.id,
                 url: input.slug,
+                fecha: input.fecha_noticia,
             };
             const result = await addNewsToDB(newsData);
             return result;
@@ -48,6 +48,5 @@ export const addNews = defineAction({
             console.error("Error al subir la imagen:", error);
             throw new Error("Error al subir la imagen");
         }
-
     }
 });
