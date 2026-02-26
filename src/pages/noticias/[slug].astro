@@ -1,19 +1,323 @@
 ---
-import "@/styles/global.css";
-import NewsCard from "@/componentes/NewsCard.astro";
-import { actions } from "astro:actions";
+export const prerender = false;
 import LayoutBase from "@/layouts/LayoutBase.astro";
+import { actions } from "astro:actions";
+import { prisma } from "@/db";
 
-const slug  = Astro.params.slug!;
+const { slug } = Astro.params;
 
-const { data : noticia, error } = await Astro.callAction(actions.getNewsBySlug, { slug });
-
+const { data: noticia, error } = await Astro.callAction(actions.getNewsBySlug, { slug: slug! });
 
 if (!noticia || error) {
-  throw new Error("Noticia no encontrada" + (error ? `: ${error.message}` : ""));
+  return Astro.redirect("/");
 }
+
+// Categorías disponibles para el sidebar
+const todasCategorias = await prisma.categorias.findMany({
+  orderBy: { nombre_categoria: "asc" }
+});
+
+// Noticias recientes para el sidebar
+const noticiasRecientes = await prisma.noticias.findMany({
+  take: 5,
+  orderBy: { fecha_noticia: "desc" },
+  include: { categorias: { include: { categoria: true } } }
+});
+
+function formatFecha(fecha: Date | null) {
+  if (!fecha) return "";
+  return new Date(fecha.getTime() + 6 * 60 * 60 * 1000).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatFechaCorta(fecha: Date | null) {
+  if (!fecha) return "";
+  return new Date(fecha.getTime() + 6 * 60 * 60 * 1000).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+const categoriaNoticia = noticia.categorias?.[0]?.categoria?.nombre_categoria ?? "";
+const autorNombre = noticia.usuario ? `${noticia.usuario.nombre ?? ""} ${noticia.usuario.apellido ?? ""}`.trim() : "";
 ---
 
 <LayoutBase>
-  <NewsCard noticia={noticia} />
+  <div class="noticia-page">
+    <div class="noticia-layout">
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <main class="noticia-main">
+
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb">
+          <a href="/noticias/categoria/noticiasPrincipal">◄ All Posts</a>
+        </div>
+
+        <!-- META -->
+        <div class="noticia-meta">
+          {formatFecha(noticia.fecha_noticia)}
+          {categoriaNoticia && <span> | {categoriaNoticia}</span>}
+        </div>
+
+        <!-- TÍTULO -->
+        <h1 class="noticia-titulo">{noticia.titulo_noticia}</h1>
+
+        <!-- AUTOR -->
+        {autorNombre && <p class="noticia-autor">Por {autorNombre}</p>}
+
+        <!-- IMAGEN -->
+        {noticia.imagen && (
+          <figure class="noticia-figura">
+            <img src={noticia.imagen} alt={noticia.titulo_noticia ?? ""} />
+            <figcaption>{noticia.primer_parrafo}</figcaption>
+          </figure>
+        )}
+
+        <!-- CONTENIDO -->
+        <div class="noticia-contenido">
+          {noticia.contenido?.split("\n").filter(p => p.trim()).map(parrafo => (
+            <p>{parrafo}</p>
+          ))}
+        </div>
+
+        <!-- SHARE -->
+        <div class="share-section">
+          <span>Share this post:</span>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`} target="_blank" class="share-btn facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(noticia.titulo_noticia ?? "")}`} target="_blank" class="share-btn twitter">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+
+      </main>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+
+        <!-- CATEGORÍAS -->
+        <div class="sidebar-widget">
+          <h3>Categories</h3>
+          <ul>
+            <li><a href="/noticias/categoria/noticiasPrincipal">All Posts</a></li>
+            {todasCategorias.map(c => (
+              <li>
+                <a
+                  href={`/noticias/categoria/${c.nombre_categoria.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-")}`}
+                  class={c.nombre_categoria === categoriaNoticia ? "active" : ""}
+                >
+                  {c.nombre_categoria}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- NOTICIAS RECIENTES -->
+        <div class="sidebar-widget">
+          <h3>Recent Posts</h3>
+          <ul class="recent-posts">
+            {noticiasRecientes.map(n => (
+              <li>
+                <a href={`/noticias/${n.noticias_url}`} class="recent-post">
+                  {n.imagen && <img src={n.imagen} alt={n.titulo_noticia ?? ""} />}
+                  <div>
+                    <p class="recent-titulo">{n.titulo_noticia}</p>
+                    <span class="recent-fecha">{formatFechaCorta(n.fecha_noticia)}</span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
 </LayoutBase>
+
+<style>
+  .noticia-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .noticia-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 50px;
+    align-items: start;
+  }
+
+  /* MAIN */
+  .breadcrumb {
+    margin-bottom: 16px;
+  }
+  .breadcrumb a {
+    font-size: 0.85rem;
+    color: #008489;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .noticia-meta {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 12px;
+  }
+
+  .noticia-titulo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #008489;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .noticia-autor {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .noticia-figura {
+    margin: 20px 0;
+  }
+
+  .noticia-figura img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .noticia-figura figcaption {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .noticia-contenido {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #333;
+  }
+
+  .noticia-contenido p {
+    margin-bottom: 1.2rem;
+  }
+
+  .share-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.85rem;
+    color: #555;
+  }
+
+  .share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #111;
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .share-btn:hover { opacity: 0.75; }
+
+  /* SIDEBAR */
+  .sidebar-widget {
+    margin-bottom: 36px;
+  }
+
+  .sidebar-widget h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+
+  .sidebar-widget ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-widget ul li {
+    margin-bottom: 10px;
+  }
+
+  .sidebar-widget ul li a {
+    font-size: 0.9rem;
+    color: #444;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .sidebar-widget ul li a:hover,
+  .sidebar-widget ul li a.active {
+    color: #008489;
+    font-weight: 600;
+  }
+
+  /* RECENT POSTS */
+  .recent-posts li { margin-bottom: 14px; }
+
+  .recent-post {
+    display: flex;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    align-items: flex-start;
+  }
+
+  .recent-post img {
+    width: 60px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .recent-titulo {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #222;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+
+  .recent-post:hover .recent-titulo { color: #008489; }
+
+  .recent-fecha {
+    font-size: 0.75rem;
+    color: #999;
+  }
+
+  @media (max-width: 768px) {
+    .noticia-layout {
+      grid-template-columns: 1fr;
+    }
+    .noticia-titulo { font-size: 1.4rem; }
+  }
+</style>
