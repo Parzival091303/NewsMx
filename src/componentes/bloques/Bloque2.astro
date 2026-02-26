@@ -67,7 +67,17 @@ const carrusel = [...categoriasConImagen, ...categoriasConImagen];
 </div>
 
 )}
-
+<script>
+  const track = document.querySelector('.carousel-track') as HTMLElement;
+  if (track) {
+    track.addEventListener('mouseenter', () => {
+      track.style.animationPlayState = 'paused';
+    });
+    track.addEventListener('mouseleave', () => {
+      track.style.animationPlayState = 'running';
+    });
+  }
+</script>
 <style>
 
 .bloque2-container {
@@ -103,8 +113,11 @@ const carrusel = [...categoriasConImagen, ...categoriasConImagen];
 .carousel-track {
   display: flex;
   gap: 25px;
+  width: max-content;
   animation: scroll 30s linear infinite;
 }
+
+
 
 .card {
   min-width: 300px;
@@ -154,8 +167,8 @@ const carrusel = [...categoriasConImagen, ...categoriasConImagen];
 }
 
 @keyframes scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 @media (max-width: 768px) {
