@@ -1,0 +1,672 @@
+---
+// RevistaViewer.astro - Componente para visualizar revista digital de NewsMx Tv
+// Versión optimizada para Astro sin modificar el diseño original
+---
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style is:global>
+    :root {
+        --primary-color: #007373;
+        --secondary-color: #00a3a3;
+        --accent-color: #f0b82e;
+        --light-bg: #f5f9fc;
+        --dark-text: #1a3c3c;
+        --light-text: #ffffff;
+        --shadow: 0 5px 15px rgba(0, 115, 115, 0.15);
+    }
+    
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(135deg, #f5f9fc 0%, #e8f4f4 100%);
+        color: var(--dark-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 10px;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* Nuevo título estilo imagen - con el color exacto de las letras de la imagen */
+    .magazine-title {
+        text-align: center;
+        font-family: 'Georgia', 'Times New Roman', serif;
+        font-size: 2.8rem;
+        font-weight: bold;
+        color: #00b1b8;
+        text-shadow: 2px 2px 0 #1a1a1a, 3px 3px 0 rgba(0,0,0,0.2);
+        letter-spacing: 2px;
+        margin: 20px 0 10px;
+        text-transform: uppercase;
+        word-break: break-word;
+    }
+    
+    @media (max-width: 768px) {
+        .magazine-title {
+            font-size: 2rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .magazine-title {
+            font-size: 1.6rem;
+        }
+    }
+    
+    /* Header mejorado */
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 20px 15px 15px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        color: var(--light-text);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        z-index: 0;
+    }
+    
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .header h1 {
+        font-size: 2.4rem;
+        margin: 0 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .logo-icon {
+        color: var(--accent-color);
+        font-size: 1.8rem;
+    }
+    
+    .badge {
+        background: var(--accent-color);
+        color: var(--dark-text);
+        padding: 6px 18px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+        margin: 5px 0 0;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+    
+    .edition-info {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .edition-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 6px 15px;
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+    }
+    
+    .edition-item i {
+        color: var(--accent-color);
+    }
+    
+    /* Controles mejorados */
+    .magazine-wrapper {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+    
+    .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: #f0f7f7;
+        border-bottom: 1px solid #d1e6e6;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .control-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid var(--primary-color);
+        background: #fff;
+        color: var(--primary-color);
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .control-btn:hover {
+        background: var(--primary-color);
+        color: #fff;
+        transform: scale(1.05);
+    }
+    
+    .zoom-level {
+        font-weight: 700;
+        color: var(--primary-color);
+        min-width: 60px;
+        text-align: center;
+        font-size: 1.1rem;
+    }
+    
+    .reset-btn {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .reset-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 115, 115, 0.25);
+    }
+    
+    /* Nuevo botón para revistas anteriores */
+    .previous-btn {
+        background: linear-gradient(135deg, #8a6d3b, #d4a017);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .previous-btn:hover {
+        background: linear-gradient(135deg, #a47c3d, #e4b228);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(138, 109, 59, 0.25);
+    }
+    
+    /* Contenedor de revista optimizado - SIN ESPACIO BLANCO */
+    .magazine-container {
+        position: relative;
+        width: 100%;
+        height: 75vh; /* Altura optimizada para pantalla completa */
+        min-height: 600px;
+        max-height: 800px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+    
+    #revistaFrame {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Navegación de páginas */
+    .page-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+        padding: 15px;
+    }
+    
+    .page-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .page-btn:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+    
+    .page-indicator {
+        font-weight: 600;
+        color: var(--primary-color);
+        background: #f0f7f7;
+        padding: 8px 15px;
+        border-radius: 20px;
+    }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 20px;
+        color: #666;
+        font-size: 0.9rem;
+        border-top: 1px solid #e1e8f0;
+    }
+    
+    .footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .footer a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 1.8rem;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .controls {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .control-group {
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .magazine-container {
+            height: 65vh;
+            min-height: 450px;
+        }
+        
+        .badge {
+            font-size: 1rem;
+            padding: 5px 15px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .header {
+            padding: 15px 10px;
+        }
+        
+        .header h1 {
+            font-size: 1.6rem;
+        }
+        
+        .magazine-container {
+            height: 55vh;
+            min-height: 400px;
+        }
+        
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+        }
+        
+        .reset-btn, .page-btn, .previous-btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Efectos de carga */
+    .loading-indicator {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+    }
+    
+    .spinner {
+        border: 4px solid rgba(0, 115, 115, 0.2);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="container">
+    <!-- Nuevo título agregado con el color exacto de las letras de la imagen (gris oscuro) -->
+    <div class="magazine-title">INSIDE NEWSMX diciembre 2026/1</div>
+    
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <i class="fas fa-tv logo-icon"></i>
+                <h1>Inside NewsMx <span class="badge">7° Edición</span></h1>
+            </div>
+            <p class="subtitle">Revista digital oficial de <strong>NewsMx Tv ®</strong></p>
+            
+            <div class="edition-info">
+                <div class="edition-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Edición especial</span>
+                </div>
+                <div class="edition-item">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Contenido exclusivo</span>
+                </div>
+                <div class="edition-item">
+                    <i class="fas fa-globe-americas"></i>
+                    <span>Medio de comunicación</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="magazine-wrapper">
+        <div class="controls">
+            <div class="control-group">
+                <button class="control-btn" id="zoomOut" title="Alejar">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <span class="zoom-level" id="zoomLevel">100%</span>
+                <button class="control-btn" id="zoomIn" title="Acercar">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="reset-btn" id="resetZoom">
+                    <i class="fas fa-sync-alt"></i> Tamaño original
+                </button>
+            </div>
+            
+            <div class="control-group">
+                <button class="previous-btn" id="previousMagazines">
+                    <i class="fas fa-archive"></i> Revistas Anteriores
+                </button>
+                <button class="control-btn" id="fullscreenBtn" title="Pantalla completa">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="reset-btn" id="downloadBtn">
+                    <i class="fas fa-download"></i> Descargar
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Contenedor optimizado sin espacio blanco -->
+        <div class="magazine-container">
+            <div class="loading-indicator" id="loading">
+                <div class="spinner"></div>
+                <p>Cargando revista digital...</p>
+            </div>
+            
+            <iframe
+                id="revistaFrame"
+                src="https://www.canva.com/design/DAG-nlImZOQ/2zoOtTMRLt2VjVx3vmBbWQ/view?embed"
+                loading="eager"
+                allowfullscreen
+                allow="fullscreen">
+            </iframe>
+        </div>
+        
+        <div class="page-nav">
+            <button class="page-btn" id="prevPage">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <span class="page-indicator">Revista completa</span>
+            <button class="page-btn" id="nextPage">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2023 NewsMx Tv ® - Todos los derechos reservados. <a href="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAG8QlePdzo&#x2F;y02RXJyaxIFr0-JVVVtQ_A&#x2F;view?utm_content=DAG8QlePdzo&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener">Abrir revista en Canva</a></p>
+        <p style="margin-top: 5px; font-size: 0.85rem;">Medio de comunicación registrado | ISSN: 0000-0000</p>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Esperar a que el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            let zoom = 1;
+            const step = 0.05;
+            const min = 0.6;
+            const max = 1.5;
+            
+            const frame = document.getElementById('revistaFrame');
+            const zoomLevel = document.getElementById('zoomLevel');
+            const loading = document.getElementById('loading');
+            
+            // Mostrar indicador de carga
+            if (loading) loading.style.display = 'block';
+            
+            // Ocultar indicador cuando el iframe cargue
+            if (frame) {
+                frame.addEventListener('load', function() {
+                    if (loading) loading.style.display = 'none';
+                });
+            }
+            
+            // Si el iframe tarda en cargar, ocultar después de 3 segundos
+            setTimeout(() => {
+                if (loading) loading.style.display = 'none';
+            }, 3000);
+            
+            function applyZoom() {
+                if (frame) {
+                    frame.style.transform = `scale(${zoom})`;
+                    frame.style.transformOrigin = "center center";
+                }
+                if (zoomLevel) zoomLevel.textContent = Math.round(zoom * 100) + "%";
+            }
+            
+            // Controles de zoom
+            const zoomInBtn = document.getElementById('zoomIn');
+            if (zoomInBtn) {
+                zoomInBtn.onclick = () => {
+                    zoom = Math.min(max, zoom + step);
+                    applyZoom();
+                };
+            }
+            
+            const zoomOutBtn = document.getElementById('zoomOut');
+            if (zoomOutBtn) {
+                zoomOutBtn.onclick = () => {
+                    zoom = Math.max(min, zoom - step);
+                    applyZoom();
+                };
+            }
+            
+            const resetZoomBtn = document.getElementById('resetZoom');
+            if (resetZoomBtn) {
+                resetZoomBtn.onclick = () => {
+                    zoom = 1;
+                    applyZoom();
+                };
+            }
+            
+            // Navegación de páginas (simulada para Canva)
+            const prevPageBtn = document.getElementById('prevPage');
+            if (prevPageBtn) {
+                prevPageBtn.onclick = () => {
+                    alert("En Canva, use las flechas en la esquina inferior derecha para navegar entre páginas.");
+                };
+            }
+            
+            const nextPageBtn = document.getElementById('nextPage');
+            if (nextPageBtn) {
+                nextPageBtn.onclick = () => {
+                    alert("En Canva, use las flechas en la esquina inferior derecha para navegar entre páginas.");
+                };
+            }
+            
+            // Botón de revistas anteriores - abre nueva pestaña
+            const prevMagazinesBtn = document.getElementById('previousMagazines');
+            if (prevMagazinesBtn) {
+                prevMagazinesBtn.onclick = () => {
+                    window.open('https://newsmxtv.com.mx/revista', '_blank');
+                };
+            }
+            
+            // Botón de pantalla completa
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            if (fullscreenBtn) {
+                fullscreenBtn.onclick = () => {
+                    const container = document.querySelector('.magazine-container') as any;
+                    
+                    if (!document.fullscreenElement && container) {
+                        if (container.requestFullscreen) {
+                            container.requestFullscreen();
+                        } else if (container.webkitRequestFullscreen) {
+                            container.webkitRequestFullscreen();
+                        } else if (container.msRequestFullscreen) {
+                            container.msRequestFullscreen();
+                        }
+                        fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                        fullscreenBtn.title = "Salir de pantalla completa";
+                    } else {
+                        const doc = document as any;
+                        if (doc.exitFullscreen) {
+                            doc.exitFullscreen();
+                        } else if (doc.webkitExitFullscreen) {
+                            doc.webkitExitFullscreen();
+                        } else if (doc.msExitFullscreen) {
+                            doc.msExitFullscreen();
+                        }
+                        fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                        fullscreenBtn.title = "Pantalla completa";
+                    }
+                };
+            }
+            
+            // Botón de descarga (enlace a Canva)
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn) {
+                downloadBtn.onclick = () => {
+                    window.open('https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAG8QlePdzo&#x2F;y02RXJyaxIFr0-JVVVtQ_A&#x2F;view?utm_content=DAG8QlePdzo&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link', '_blank');
+                };
+            }
+            
+            // Teclas de acceso rápido
+            document.addEventListener('keydown', (e) => {
+                // Ctrl + para zoom in
+                if ((e.ctrlKey || e.metaKey) && e.key === '=') {
+                    e.preventDefault();
+                    const btn = document.getElementById('zoomIn');
+                    if (btn) btn.click();
+                }
+                
+                // Ctrl - para zoom out
+                if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+                    e.preventDefault();
+                    const btn = document.getElementById('zoomOut');
+                    if (btn) btn.click();
+                }
+                
+                // Ctrl 0 para reset
+                if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+                    e.preventDefault();
+                    const btn = document.getElementById('resetZoom');
+                    if (btn) btn.click();
+                }
+                
+                // Flechas para navegación simulada
+                if (e.key === 'ArrowLeft') {
+                    const btn = document.getElementById('prevPage');
+                    if (btn) btn.click();
+                }
+                
+                if (e.key === 'ArrowRight') {
+                    const btn = document.getElementById('nextPage');
+                    if (btn) btn.click();
+                }
+            });
+            
+            // Aplicar zoom inicial
+            applyZoom();
+        });
+    })();
+</script>

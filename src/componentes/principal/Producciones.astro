@@ -1,0 +1,175 @@
+---
+const producciones = [
+  {
+    href: "https://www.youtube.com/watch?v=s5tXjq5Bszo&list=PLxwTp-NSxTQs_XljjSYcPJdLsVL_xBX4w",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Somos%20Tu%20Voz.png",
+    titulo: "SOMOS TU VOZ",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=CG_yyOzDZOc&list=PLxwTp-NSxTQvpzetUbHYJKVQ1_gr15boy",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Historias%20Que%20Contar.png/:/rs=w:370,cg:true",
+    titulo: "HISTORIAS QUE CONTAR",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=tXEzViO-YKY&list=PLxwTp-NSxTQvB8CUCueM05efhTEMIt9M9",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Ruta%20Financiera.png/:/rs=w:370,cg:true",
+    titulo: "RUTA FINANCIERA",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=f-d_RhsLhxQ&list=PLxwTp-NSxTQvHMaLLc1fsMjzHrCzdrZ_7",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Somos%20EDOMEX.png/:/rs=w:370,cg:true",
+    titulo: "SOMOS EDOMEX",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=f-d_RhsLhxQ&list=PLxwTp-NSxTQvHMaLLc1fsMjzHrCzdrZ_7",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Somos%20M%C3%A9xico.png/:/rs=w:370,cg:true",
+    titulo: "SOMOS MÉXICO",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=M3qUReB7SHA&list=PLxwTp-NSxTQtNCllRaHEjWkI6FvEg9YS5",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Retorica.png/:/rs=w:370,cg:true",
+    titulo: "RETÓRICA",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=rRWR_iUq8Ik&list=PLxwTp-NSxTQv4fq8aOIgMIixIZQR5lT2i",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Oficio%20y%20Beneficio.png/:/rs=w:370,cg:true",
+    titulo: "OFICIO Y BENEFICIO",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=XecsoJJkymU&list=PLxwTp-NSxTQuPjbl_qGwBuX8_v10FVb2m",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Juventudes%20Exitosas.png/:/rs=w:370,cg:true",
+    titulo: "JUVENTUDES EXITOSAS",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=q6LfFLKvEGU&list=PLxwTp-NSxTQu9SLcirapayEjJFnAtX627",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Inclusi%C3%B3n%20Sin%20Barreras.png/:/rs=w:370,cg:true",
+    titulo: "INCLUSIÓN SIN BARRERAS",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=tr0hZIDVgIY&list=PLxwTp-NSxTQsBwGNnKtJHgiYFfD0ip0gm",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Odisea%20Deportiva.png/:/rs=w:370,cg:true",
+    titulo: "ODISEA DEPORTIVA",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=NIodrctt4VQ&list=PLxwTp-NSxTQsEz_ipGp6jiOOQDlxVxUn7",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/En%20Contastre.png/:/rs=w:370,cg:true",
+    titulo: "EN CONTRASTE",
+  },
+  {
+    href: "https://www.youtube.com/watch?v=ZTUMMf0P6kg&list=PLxwTp-NSxTQsUKBqonANmW_gu_mDNyfpn",
+    img: "https://img1.wsimg.com/isteam/ip/e681ba2d-4d08-41f0-92f8-cdeecf02c797/Abrir%20Los%20Ojos.png/:/rs=w:370,cg:true",
+    titulo: "ABRIR LOS OJOS AL AMOR",
+  },
+];
+---
+
+<div class="producciones">
+
+  <div class="prod-header">
+    <h2>Producciones de NewsMX TV</h2>
+    <hr />
+  </div>
+
+  <div class="prod-grid">
+    {producciones.map((p) => (
+      <a href={p.href} target="_blank" class="prod-card">
+        <img src={p.img} alt={p.titulo} loading="lazy" />
+        <div class="prod-overlay">
+          <h3>{p.titulo}</h3>
+          <span>NEWSMX TV</span>
+        </div>
+      </a>
+    ))}
+  </div>
+
+</div>
+
+<style>
+  .producciones {
+    background: white;
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .prod-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .prod-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #008b8b;
+    font-weight: 600;
+  }
+
+  .prod-header hr {
+    width: 60px;
+    height: 2px;
+    background: #008b8b;
+    border: none;
+    margin: 8px auto 0;
+  }
+
+  .prod-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .prod-card {
+    position: relative;
+    overflow: hidden;
+    height: 130px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .prod-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    display: block;
+  }
+
+  .prod-card:hover img {
+    transform: scale(1.05);
+    filter: brightness(75%);
+  }
+
+  .prod-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 8px 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+    color: white;
+  }
+
+  .prod-overlay h3 {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .prod-overlay span {
+    font-size: 0.65rem;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 900px) {
+    .prod-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .prod-grid { grid-template-columns: 1fr; }
+    .prod-card { height: 160px; }
+  }
+</style>

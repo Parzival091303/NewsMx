@@ -1,0 +1,215 @@
+---
+import { prisma } from "@/db";
+
+interface Props {
+  titulo?: string;
+  categorias?: {
+    nombre: string;
+    slug: string;
+  }[];
+}
+
+const {
+  titulo = "NOTICIAS MÁS VISITADAS",
+  categorias = [
+    { nombre: "Internacional", slug: "internacional" },
+    { nombre: "Deportes", slug: "deportes" },
+    { nombre: "Economía", slug: "economia" },
+    { nombre: "Nacional", slug: "nacional" },
+    { nombre: "Tecnología", slug: "tecnologia" },
+  ]
+} = Astro.props;
+
+const categoriasConImagen = await Promise.all(
+  categorias.map(async (cat) => {
+    const noticia = await prisma.noticias.findFirst({
+      where: {
+        categorias: {
+          some: {
+            categoria: { nombre_categoria: cat.nombre }
+          }
+        }
+      },
+      orderBy: { fecha_noticia: "desc" }
+    });
+
+    return {
+      ...cat,
+      imagen: noticia?.imagen ?? "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80"
+    };
+  })
+);
+---
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@600;800&display=swap" rel="stylesheet" />
+
+<section class="mv-section">
+
+  <div class="mv-header">
+    <h2>{titulo}</h2>
+    <div class="mv-line"></div>
+  </div>
+
+  <div class="mv-bar" id="mv-bar">
+    {categoriasConImagen.map((cat, i) => (
+      <a
+        href={`/noticias/categoria/${cat.slug}`}
+        class={`mv-panel ${i === 0 ? "mv-active" : ""}`}
+        style={`background-image: url('${cat.imagen}')`}
+      >
+        <div class="mv-overlay"></div>
+        <span class="mv-label">{cat.nombre.toUpperCase()}</span>
+      </a>
+    ))}
+  </div>
+
+</section>
+
+<style>
+  .mv-section {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 0 20px;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .mv-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .mv-header h2 {
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: #008080;
+    margin: 0 0 10px;
+    letter-spacing: 2px;
+  }
+
+  .mv-line {
+    width: 70px;
+    height: 4px;
+    background: linear-gradient(135deg, #008080, #0b3f44);
+    border-radius: 2px;
+    margin: 0 auto;
+  }
+
+  .mv-bar {
+    display: flex;
+    height: 300px;
+    gap: 6px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+  }
+
+  .mv-panel {
+    flex: 1;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    text-decoration: none;
+    overflow: hidden;
+    transition: flex 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+  }
+
+  .mv-panel.mv-active {
+    flex: 4;
+  }
+
+  .mv-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    transition: background 0.3s ease;
+  }
+
+  .mv-panel:not(.mv-active) .mv-overlay {
+    background: rgba(0,0,0,0.52);
+  }
+
+  .mv-panel:hover .mv-overlay {
+    background: linear-gradient(to top, rgba(0,100,100,0.75) 0%, rgba(0,0,0,0.35) 60%, transparent 100%);
+  }
+
+  /* LABEL BASE (panel activo - horizontal abajo) */
+  .mv-label {
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: 1px 2px 8px rgba(0,0,0,0.7);
+    z-index: 2;
+    white-space: nowrap;
+    transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Posición activa: abajo horizontal */
+    bottom: 18px;
+    left: 16px;
+    right: 16px;
+    top: auto;
+    font-size: 2rem;
+    transform: none;
+  }
+
+  /* LABEL contraído: vertical centrado */
+  .mv-panel:not(.mv-active) .mv-label {
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    top: 50%;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    width: max-content;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .mv-bar {
+      flex-direction: column;
+      height: auto;
+    }
+
+    .mv-panel {
+      height: 60px;
+      flex: 1 !important;
+      border-radius: 8px;
+    }
+
+    .mv-panel.mv-active {
+      height: 220px;
+    }
+
+    .mv-label {
+      font-size: 1.3rem !important;
+      bottom: 12px !important;
+      left: 14px !important;
+      top: auto !important;
+      transform: none !important;
+      letter-spacing: 2px !important;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.getElementById("mv-bar");
+  if (bar) {
+    const panels = bar.querySelectorAll<HTMLElement>(".mv-panel");
+
+    panels.forEach((panel) => {
+      panel.addEventListener("mouseenter", () => {
+        panels.forEach(p => p.classList.remove("mv-active"));
+        panel.classList.add("mv-active");
+      });
+    });
+
+    bar.addEventListener("mouseleave", () => {
+      panels.forEach(p => p.classList.remove("mv-active"));
+      panels[0]?.classList.add("mv-active");
+    });
+  }
+</script>

@@ -1,0 +1,202 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="chatbot-container">
+  <div class="chat-header">
+    <div class="header-content">
+      <div class="logo-circle">N</div>
+      <div class="header-text">
+        <h1>NEWSMX TV</h1>
+        <p><span class="online-dot"></span> Asistente</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" id="sound-btn">
+        <i class="fas fa-volume-up"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="chat-body" id="chat-body">
+    <div class="message bot">
+      <div class="message-content">
+        <strong>🎬 Bienvenido a NewsMX TV</strong><br />
+        Haz clic en iniciar para comenzar.
+        <br /><br />
+        <button class="start-btn" id="start-assistant-btn">
+          Iniciar Asistente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <div class="input-container">
+      <input type="text" id="user-input" placeholder="Escribe aquí..." />
+      <button class="send-btn" id="send-btn">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+.chatbot-container{
+  width:100%;
+  max-width:420px;
+  height:600px;
+  background:white;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  font-family:Poppins, sans-serif;
+}
+.chat-header{
+  background:#4A919C;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+}
+.logo-circle{
+  width:40px;height:40px;
+  border-radius:50%;
+  background:white;
+  color:#4A919C;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:bold;
+}
+.chat-body{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
+  background:#f8f9fa;
+}
+.message{
+  margin-bottom:10px;
+}
+.message.bot .message-content{
+  background:white;
+  padding:12px;
+  border-radius:12px;
+}
+.message.user{
+  text-align:right;
+}
+.message.user .message-content{
+  background:#4A919C;
+  color:white;
+  padding:12px;
+  border-radius:12px;
+}
+.chat-footer{
+  padding:10px;
+  border-top:1px solid #eee;
+}
+.input-container{
+  display:flex;
+  gap:10px;
+}
+#user-input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:1px solid #ccc;
+}
+.send-btn,.start-btn{
+  background:#4A919C;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:20px;
+  cursor:pointer;
+}
+</style>
+
+<script is:inline>
+const CATEGORIAS = [
+  { nombre:"INTERNACIONAL", url:"https://newsmxtv.com.mx/internacional" },
+  { nombre:"TECNOLOGÍA", url:"https://newsmxtv.com.mx/tecnologia" },
+  { nombre:"ECONOMÍA", url:"https://newsmxtv.com.mx/economia" }
+];
+
+let assistantStarted = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const chatBody = document.getElementById("chat-body");
+  const sendBtn = document.getElementById("send-btn");
+  const input = document.getElementById("user-input");
+  const startBtn = document.getElementById("start-assistant-btn");
+
+  function addMessage(content, sender){
+    const wrapper = document.createElement("div");
+    wrapper.className = "message " + sender;
+
+    wrapper.innerHTML = `
+      <div class="message-content">${content}</div>
+    `;
+
+    chatBody.appendChild(wrapper);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function showMainMenu(){
+    addMessage(`
+      ¿Qué deseas ver?<br><br>
+      ${CATEGORIAS.map(cat => 
+        `<button onclick="window.open('${cat.url}','_blank')" 
+        style="margin:5px;padding:8px 12px;border-radius:12px;border:1px solid #ccc;cursor:pointer;">
+        ${cat.nombre}
+        </button>`
+      ).join("")}
+    `,"bot");
+  }
+
+  function processMessage(text){
+    const lower = text.toLowerCase();
+
+    if(lower.includes("hola")){
+      addMessage("¡Hola! 👋 ¿Qué categoría deseas explorar?","bot");
+      showMainMenu();
+    }
+    else if(lower.includes("categor")){
+      showMainMenu();
+    }
+    else{
+      addMessage("Puedes decir 'hola' o pedir una categoría.","bot");
+    }
+  }
+
+  function handleSend(){
+    const text = input.value.trim();
+    if(!text) return;
+
+    if(!assistantStarted){
+      assistantStarted = true;
+      chatBody.innerHTML = "";
+    }
+
+    addMessage(text,"user");
+    processMessage(text);
+    input.value="";
+  }
+
+  sendBtn.addEventListener("click",handleSend);
+
+  input.addEventListener("keypress", e=>{
+    if(e.key==="Enter"){
+      handleSend();
+    }
+  });
+
+  startBtn?.addEventListener("click",()=>{
+    assistantStarted=true;
+    chatBody.innerHTML="";
+    addMessage("Asistente iniciado correctamente.","bot");
+    showMainMenu();
+  });
+
+});
+</script>
