@@ -1,0 +1,361 @@
+---
+import { prisma } from "@/db";
+
+interface Props {
+  categoria?: string;
+  titulo?: string;
+  subtitulo?: string;
+  linkMas?: string;
+}
+
+const {
+  categoria = "Nacional",
+  titulo = "LOCAL",
+  subtitulo = "EDOMEX / CDMX / NACIONAL",
+  linkMas = "/noticias/categoria/noticiasPrincipal"
+} = Astro.props;
+
+const noticias = await prisma.noticias.findMany({
+  where: {
+    categorias: {
+      some: {
+        categoria: { nombre_categoria: categoria }
+      }
+    }
+  },
+  include: {
+    usuario: true,
+    categorias: { include: { categoria: true } }
+  },
+  orderBy: { fecha_noticia: "desc" },
+  take: 3
+});
+
+const pequenas = noticias.slice(0, 2);
+const grande = noticias[2] ?? null;
+
+function formatFecha(fecha: Date | null) {
+  if (!fecha) return "";
+  return new Date(fecha.getTime() + 6 * 60 * 60 * 1000).toLocaleDateString("es-MX", {
+    day: "numeric", month: "long", year: "numeric"
+  });
+}
+---
+
+{noticias.length > 0 && (
+<div class="bloque7">
+
+  <div class="bloque7-header">
+    <h2>{titulo}</h2>
+    <p>{subtitulo}</p>
+  </div>
+
+  <div class="grid-noticias">
+
+    <!-- COLUMNA IZQUIERDA: 2 pequeñas -->
+    <div class="columna-izquierda">
+      {pequenas.map((n) => (
+        <a href={`/noticias/${n.noticias_url}`} class="enlace-noticia">
+          <div class="tarjeta-pequena">
+            <div class="contenido-texto">
+              <span class="cat-fecha">
+               {formatFecha(n.fecha_noticia)} | {categoria}
+              </span>
+              <h3>{n.titulo_noticia}</h3>
+              <p>{n.primer_parrafo}</p>
+              {n.usuario && (
+                <span class="autor">Por: {n.usuario.nombre} {n.usuario.apellido}</span>
+              )}
+            </div>
+            <div class="contenido-imagen">
+              {n.imagen
+                ? <img src={n.imagen} alt={n.titulo_noticia ?? ""} loading="lazy" />
+                : <div class="img-placeholder"></div>
+              }
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- COLUMNA DERECHA: 1 grande -->
+    {grande && (
+      <div class="columna-derecha">
+        <a href={`/noticias/${grande.noticias_url}`} class="enlace-noticia">
+          <div class="tarjeta-grande">
+            {grande.imagen
+              ? <img src={grande.imagen} alt={grande.titulo_noticia ?? ""} loading="lazy" />
+              : <div class="img-placeholder-grande"></div>
+            }
+            <div class="overlay">
+              <span class="cat-fecha-grande">
+                {formatFecha(grande.fecha_noticia)} | {categoria}
+              </span>
+              <h3>{grande.titulo_noticia}</h3>
+              <p>{grande.primer_parrafo}</p>
+              {grande.usuario && (
+                <span class="autor-grande">Por: {grande.usuario.nombre} {grande.usuario.apellido}</span>
+              )}
+            </div>
+          </div>
+        </a>
+      </div>
+    )}
+
+  </div>
+
+  <div class="ver-mas-wrapper">
+    <a href={linkMas} class="ver-mas">Mostrar Más Noticias de {categoria}</a>
+  </div>
+
+</div>
+)}
+
+<style>
+  .bloque7 {
+    background: #fafafa;
+    padding: 40px 20px 30px;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .bloque7-header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .bloque7-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #008080;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .bloque7-header p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  /* GRID */
+  .grid-noticias {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .columna-izquierda {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  /* ENLACE */
+  .enlace-noticia {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  /* TARJETA PEQUEÑA */
+  .tarjeta-pequena {
+    display: flex;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    height: 200px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .enlace-noticia:hover .tarjeta-pequena {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  }
+
+  .contenido-texto {
+    padding: 16px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contenido-imagen {
+    width: 40%;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .contenido-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .enlace-noticia:hover .contenido-imagen img {
+    transform: scale(1.05);
+  }
+
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+  }
+
+  .cat-fecha {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #008080;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .tarjeta-pequena h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s;
+  }
+
+  .enlace-noticia:hover .tarjeta-pequena h3 { color: #008080; }
+
+  .tarjeta-pequena p {
+    font-size: 0.78rem;
+    color: #555;
+    line-height: 1.45;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .autor {
+    font-size: 0.72rem;
+    color: #888;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+
+  /* TARJETA GRANDE */
+  .tarjeta-grande {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    height: 430px;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .enlace-noticia:hover .tarjeta-grande {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  }
+
+  .tarjeta-grande img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .enlace-noticia:hover .tarjeta-grande img {
+    transform: scale(1.04);
+  }
+
+  .img-placeholder-grande {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+  }
+
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 28px;
+    color: white;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.4), transparent);
+  }
+
+  .cat-fecha-grande {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #00d1b2;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .tarjeta-grande h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .tarjeta-grande p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    opacity: 0.9;
+  }
+
+  .autor-grande {
+    font-size: 0.78rem;
+    color: #ddd;
+    font-weight: 500;
+  }
+
+  /* VER MÁS */
+  .ver-mas-wrapper {
+    text-align: center;
+    padding: 30px 0 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ver-mas {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #008080;
+    text-decoration: none;
+    padding: 10px 24px;
+    border: 2px solid #008080;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .ver-mas:hover {
+    background: #008080;
+    color: white;
+  }
+
+  @media (max-width: 992px) {
+    .grid-noticias { grid-template-columns: 1fr; }
+    .tarjeta-pequena { height: auto; flex-direction: column; }
+    .contenido-texto, .contenido-imagen { width: 100%; }
+    .contenido-imagen { height: 160px; }
+    .tarjeta-grande { height: 320px; }
+  }
+</style>

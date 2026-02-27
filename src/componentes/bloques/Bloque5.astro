@@ -1,0 +1,306 @@
+---
+import { prisma } from "@/db";
+
+interface Props {
+  categoria: string;
+  titulo?: string;
+  subtitulo?: string;
+}
+
+const { categoria, titulo = "Reportajes Especiales", subtitulo = "Exclusivo de NewsMX TV" } = Astro.props;
+
+const noticias = await prisma.noticias.findMany({
+  where: {
+    categorias: {
+      some: {
+        categoria: { nombre_categoria: categoria }
+      }
+    }
+  },
+  include: {
+    usuario: true,
+    categorias: { include: { categoria: true } }
+  },
+  orderBy: { fecha_noticia: "desc" },
+  take: 10
+});
+
+function formatFecha(fecha: Date | null) {
+  if (!fecha) return "—";
+  return new Date(fecha.getTime() + 6 * 60 * 60 * 1000).toLocaleDateString("es-MX", {
+    day: "numeric", month: "short", year: "numeric"
+  });
+}
+
+function getInitials(nombre?: string | null, apellido?: string | null) {
+  return `${(nombre?.[0] ?? "").toUpperCase()}${(apellido?.[0] ?? "").toUpperCase()}`;
+}
+
+const categoriaNombre = noticias[0]?.categorias?.[0]?.categoria?.nombre_categoria ?? categoria;
+---
+
+{noticias.length > 0 && (
+<div class="bloque5">
+
+  <header class="bloque5-header">
+    <span class="bloque5-sub">{subtitulo}</span>
+    <h2 class="bloque5-titulo">{titulo}</h2>
+    <div class="bloque5-line"></div>
+  </header>
+
+  <div class="carrusel-wrapper">
+    <div class="carrusel-track" id="carrusel-track">
+      {noticias.map((n) => (
+        <a href={`/noticias/${n.noticias_url}`} class="card-link">
+          <div class="tarjeta">
+            <div class="tarjeta-img">
+              <span class="cat-tag">{categoriaNombre}</span>
+              {n.imagen
+                ? <img src={n.imagen} alt={n.titulo_noticia ?? ""} loading="lazy" />
+                : <div class="img-placeholder"></div>
+              }
+            </div>
+            <div class="tarjeta-body">
+              <h3>{n.titulo_noticia}</h3>
+              <p>{n.primer_parrafo}</p>
+              <div class="tarjeta-footer">
+                <div class="autor">
+                  <div class="avatar">{getInitials(n.usuario?.nombre, n.usuario?.apellido)}</div>
+                  <span class="autor-nombre">{n.usuario ? `${n.usuario.nombre} ${n.usuario.apellido}` : "Redacción"}</span>
+                </div>
+                <span class="fecha">{formatFecha(n.fecha_noticia)}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+</div>
+)}
+
+<style>
+  .bloque5 {
+    width: 100%;
+    overflow: hidden;
+    padding: 60px 0 80px;
+    background: #f1f5f9;
+    background-image:
+      radial-gradient(circle at top right, rgba(191,255,0,0.05) 0%, transparent 40%),
+      radial-gradient(circle at bottom left, rgba(0,168,181,0.05) 0%, transparent 40%);
+    font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
+  }
+
+  /* HEADER */
+  .bloque5-header {
+    text-align: center;
+    padding: 0 20px 40px;
+  }
+
+  .bloque5-sub {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #8dbd00;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 10px;
+  }
+
+  .bloque5-titulo {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, #00A8B5 0%, #008a94 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+
+  .bloque5-line {
+    width: 80px;
+    height: 4px;
+    background: #00A8B5;
+    border-radius: 2px;
+    margin: 0 auto;
+  }
+
+  /* CARRUSEL */
+  .carrusel-wrapper {
+    overflow: hidden;
+    width: 100%;
+    padding: 10px 0 20px;
+  }
+
+  .carrusel-track {
+    display: flex;
+    gap: 30px;
+    width: max-content;
+    animation: scroll-infinito 40s linear infinite;
+    padding: 10px 20px;
+  }
+
+  .carrusel-wrapper:hover .carrusel-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes scroll-infinito {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* TARJETA */
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+    flex: 0 0 360px;
+    display: block;
+  }
+
+  .tarjeta {
+    background: white;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.07);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .tarjeta:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 25px 50px -15px rgba(0,0,0,0.12);
+    border-color: #BFFF00;
+  }
+
+  .tarjeta-img {
+    position: relative;
+    height: 220px;
+    margin: 10px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #e2e8f0;
+  }
+
+  .tarjeta-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .tarjeta:hover .tarjeta-img img {
+    transform: scale(1.12);
+  }
+
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+  }
+
+  .cat-tag {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    background: #BFFF00;
+    color: #1C373C;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  /* BODY */
+  .tarjeta-body {
+    padding: 14px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .tarjeta-body h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1C373C;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+    transition: color 0.2s;
+  }
+
+  .tarjeta:hover h3 { color: #00A8B5; }
+
+  .tarjeta-body p {
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* FOOTER */
+  .tarjeta-footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .autor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #00A8B5, #3FE0D0);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .autor-nombre {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #1C373C;
+  }
+
+  .fecha {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #94a3b8;
+  }
+
+  @media (max-width: 768px) {
+    .card-link { flex: 0 0 280px; }
+    .tarjeta-img { height: 170px; }
+  }
+</style>
+
+<script>
+  // Duplicar items para carrusel infinito
+  const track = document.getElementById("carrusel-track");
+  if (track) {
+    track.innerHTML += track.innerHTML;
+  }
+</script>

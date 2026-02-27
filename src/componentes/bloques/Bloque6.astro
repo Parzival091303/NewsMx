@@ -1,0 +1,271 @@
+---
+import { prisma } from "@/db";
+
+interface Props {
+  categorias?: string[];
+  titulo?: string;
+}
+
+const {
+  categorias = ["Seguridad", "Clima y Medio Ambiente", "Politica"],
+  titulo = "LO MÁS DESTACADO"
+} = Astro.props;
+
+// Traer 4 noticias más recientes de cada categoría
+const todasNoticias = (await Promise.all(
+  categorias.map(async (cat) => {
+    const noticias = await prisma.noticias.findMany({
+      where: {
+        categorias: {
+          some: {
+            categoria: { nombre_categoria: cat }
+          }
+        }
+      },
+      include: {
+        usuario: true,
+        categorias: { include: { categoria: true } }
+      },
+      orderBy: { fecha_noticia: "desc" },
+      take: 4
+    });
+    return noticias.map(n => ({ ...n, _catNombre: cat }));
+  })
+)).flat();
+
+function formatFecha(fecha: Date | null) {
+  if (!fecha) return "—";
+  return new Date(fecha.getTime() + 6 * 60 * 60 * 1000).toLocaleDateString("es-MX", {
+    day: "numeric", month: "short", year: "numeric"
+  });
+}
+---
+
+{todasNoticias.length > 0 && (
+<div class="bloque6">
+
+  <div class="bloque6-titulo">{titulo}</div>
+
+  <div class="carrusel-wrapper">
+    <div class="carrusel-track" id="bloque6-track">
+      {todasNoticias.map((n) => (
+        <a href={`/noticias/${n.noticias_url}`} class="card-link">
+          <div class="tarjeta">
+            <div class="tarjeta-img">
+              {n.imagen
+                ? <img src={n.imagen} alt={n.titulo_noticia ?? ""} loading="lazy" />
+                : <div class="img-placeholder"></div>
+              }
+            </div>
+            <div class="tarjeta-body">
+              <h3>{n.titulo_noticia}</h3>
+              <p>{n.primer_parrafo}</p>
+              <div class="metadata">
+                {n.usuario && (
+                  <span class="autor">Por: {n.usuario.nombre} {n.usuario.apellido}</span>
+                )}
+                <span class="fecha">{formatFecha(n.fecha_noticia)}</span>
+                <span class="cat-badge">{n._catNombre}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="ver-mas-wrapper">
+    <a href="/noticias/categoria/noticiasPrincipal" class="ver-mas">VER TODAS LAS NOTICIAS</a>
+  </div>
+
+</div>
+)}
+
+<style>
+  .bloque6 {
+    background: #f8fafc;
+    padding: 50px 0 40px;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+  }
+
+  .bloque6-titulo {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #008080;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(0,128,128,0.15);
+    margin: 0 auto 30px;
+    max-width: 1200px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* CARRUSEL */
+  .carrusel-wrapper {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .carrusel-track {
+    display: flex;
+    width: max-content;
+    gap: 20px;
+    padding: 10px 20px;
+    animation: scroll6 45s linear infinite;
+  }
+
+  .carrusel-wrapper:hover .carrusel-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes scroll6 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* TARJETA */
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+    flex: 0 0 300px;
+    display: block;
+  }
+
+  .tarjeta {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fdfdfd;
+    height: 100%;
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  .tarjeta:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    transform: translateY(-3px);
+  }
+
+  .tarjeta-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #e2e8f0;
+    flex-shrink: 0;
+  }
+
+  .tarjeta-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .tarjeta:hover .tarjeta-img img {
+    transform: scale(1.05);
+  }
+
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+  }
+
+  .tarjeta-body {
+    padding: 15px 18px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tarjeta-body h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 8px;
+    line-height: 1.35;
+    transition: color 0.2s;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .tarjeta:hover h3 { color: #008080; }
+
+  .tarjeta-body p {
+    font-size: 0.8rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    text-align: justify;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.7rem;
+    color: #666;
+    margin-top: auto;
+  }
+
+  .metadata span {
+    background: rgba(0,128,128,0.08);
+    border-radius: 5px;
+    padding: 3px 7px;
+  }
+
+  .autor {
+    font-weight: 600;
+    color: #008080 !important;
+  }
+
+  .cat-badge {
+    background: rgba(0,128,128,0.15) !important;
+    font-weight: 700;
+    color: #005050 !important;
+  }
+
+  /* VER MÁS */
+  .ver-mas-wrapper {
+    text-align: center;
+    padding: 30px 0 10px;
+  }
+
+  .ver-mas {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #008080;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-bottom: 3px solid #008080;
+    transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .ver-mas:hover {
+    color: #005050;
+    border-color: #005050;
+  }
+
+  @media (max-width: 768px) {
+    .card-link { flex: 0 0 260px; }
+    .tarjeta-img { height: 160px; }
+  }
+</style>
+
+<script>
+  const track = document.getElementById("bloque6-track");
+  if (track) {
+    track.innerHTML += track.innerHTML;
+  }
+</script>
