@@ -1,207 +1,514 @@
-<!-- Contenedor centrado -->
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f2f5; margin: 0; padding: 16px; box-sizing: border-box;">
+---
+// NewsMXChat.astro
+// No necesitas importar nada externo, ya que usas CDNs para fuentes e iconos.
+---
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<div class="chatbot-container">
-  <div class="chat-header">
-    <div class="header-content">
-      <div class="logo-circle">N</div>
-      <div class="header-text">
-        <h1>NEWSMX TV</h1>
-        <p><span class="online-dot"></span> Asistente</p>
-      </div>
+<div class="chatbot-wrapper">
+    <div class="chatbot-container">
+        <div class="chat-header">
+            <div class="header-content">
+                <div class="logo-circle">N</div>
+                <div class="header-text">
+                    <h1>NEWSMX TV</h1>
+                    <p><span class="online-dot"></span> Asistente con Voz</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" id="sound-btn" title="Sonido">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="header-btn" id="theme-btn" title="Tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="chat-body" id="chat-body">
+            <div class="message bot">
+                <div class="message-content">
+                    <div style="background: white; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 4px solid var(--primary);">
+                        <h3 style="color: var(--primary); margin-bottom: 12px;">🎬 ¡Bienvenido a NewsMX TV!</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Tu asistente con 30 años de experiencia en periodismo digital.</p>
+                        <p style="font-size: 14px; color: #888;">Haz clic en el botón "Iniciar Asistente" para comenzar.</p>
+                        
+                        <button class="start-btn" id="start-assistant-btn">
+                            <i class="fas fa-play-circle"></i> Iniciar Asistente
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-footer">
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Escribe o habla...">
+                <button class="voice-btn" id="voice-btn" title="Hablar con el asistente">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="send-btn" id="send-btn">
+                    <i class="fas fa-paper-plane"></i> Enviar
+                </button>
+            </div>
+            
+            <div class="quick-actions">
+                <button class="quick-btn" data-action="destacadas">
+                    <i class="fas fa-fire"></i> Destacadas
+                </button>
+                <button class="quick-btn" data-action="categorias">
+                    <i class="fas fa-th-large"></i> Categorías
+                </button>
+                <button class="quick-btn" data-action="contacto">
+                    <i class="fas fa-headset"></i> Contacto
+                </button>
+                <button class="quick-btn" data-action="limpiar">
+                    <i class="fas fa-broom"></i> Limpiar
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="header-actions">
-      <button class="header-btn" id="sound-btn">
-        <i class="fas fa-volume-up"></i>
-      </button>
-    </div>
-  </div>
-
-  <div class="chat-body" id="chat-body">
-    <div class="message bot">
-      <div class="message-content">
-        <strong>🎬 Bienvenido a NewsMX TV</strong><br />
-        Haz clic en iniciar para comenzar.
-        <br /><br />
-        <button class="start-btn" id="start-assistant-btn">
-          Iniciar Asistente
+    
+    <div class="voice-indicator" id="voice-indicator">
+        <div class="voice-animation">
+            <i class="fas fa-microphone"></i>
+        </div>
+        <p id="voice-text">Escuchando... habla ahora</p>
+        <button id="stop-voice" style="background: #ff4757; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">
+            <i class="fas fa-stop"></i> Detener
         </button>
-      </div>
     </div>
-  </div>
-
-  <div class="chat-footer">
-    <div class="input-container">
-      <input type="text" id="user-input" placeholder="Escribe aquí..." />
-      <button class="send-btn" id="send-btn">
-        <i class="fas fa-paper-plane"></i>
-      </button>
-    </div>
-  </div>
 </div>
 
 <style>
-.chatbot-container{
-  width:100%;
-  max-width:420px;
-  height:600px;
-  background:white;
-  border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  font-family:Poppins, sans-serif;
-}
-.chat-header{
-  background:#4A919C;
-  color:white;
-  padding:15px;
-  display:flex;
-  justify-content:space-between;
-}
-.logo-circle{
-  width:40px;height:40px;
-  border-radius:50%;
-  background:white;
-  color:#4A919C;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:bold;
-}
-.chat-body{
-  flex:1;
-  padding:15px;
-  overflow-y:auto;
-  background:#f8f9fa;
-}
-.message{
-  margin-bottom:10px;
-}
-.message.bot .message-content{
-  background:white;
-  padding:12px;
-  border-radius:12px;
-}
-.message.user{
-  text-align:right;
-}
-.message.user .message-content{
-  background:#4A919C;
-  color:white;
-  padding:12px;
-  border-radius:12px;
-}
-.chat-footer{
-  padding:10px;
-  border-top:1px solid #eee;
-}
-.input-container{
-  display:flex;
-  gap:10px;
-}
-#user-input{
-  flex:1;
-  padding:10px;
-  border-radius:20px;
-  border:1px solid #ccc;
-}
-.send-btn,.start-btn{
-  background:#4A919C;
-  color:white;
-  border:none;
-  padding:10px 15px;
-  border-radius:20px;
-  cursor:pointer;
-}
+    /* Importación de fuentes */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap');
+    /* Importación de FontAwesome (opcional si ya lo tienes en el Layout principal) */
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+    .chatbot-wrapper {
+        --primary: #4A919C;
+        --primary-light: #7AB9C7;
+        --primary-dark: #2A6C77;
+        --secondary: #E67E22;
+        --accent: #2ECC71;
+        --light: #F8F9FA;
+        --dark: #2C3E50;
+        --gray: #95A5A6;
+        --shadow: 0 10px 30px rgba(74, 145, 156, 0.15);
+        --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+        
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .chatbot-container {
+        width: 100%;
+        max-width: 450px;
+        height: 700px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .chat-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .header-content { display: flex; align-items: center; gap: 15px; }
+    
+    .logo-circle {
+        width: 50px; height: 50px; background: white; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px; font-weight: 700; color: var(--primary);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .header-text h1 { font-size: 18px; font-weight: 700; margin-bottom: 3px; font-family: 'Montserrat', sans-serif; }
+    .header-text p { font-size: 12px; opacity: 0.9; display: flex; align-items: center; gap: 5px; }
+    
+    .online-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+    
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    
+    .header-btn {
+        width: 36px; height: 36px; border-radius: 50%; border: none;
+        background: rgba(255,255,255,0.2); color: white; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+    }
+    
+    .chat-body { flex: 1; padding: 20px; overflow-y: auto; background: var(--light); display: flex; flex-direction: column; gap: 15px; }
+    
+    .message { display: flex; max-width: 85%; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .message.bot { align-self: flex-start; }
+    .message.user { align-self: flex-end; }
+    
+    .message-content { padding: 14px 18px; border-radius: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); line-height: 1.5; position: relative; }
+    .message.bot .message-content { background: white; color: var(--dark); border-left: 4px solid var(--accent); }
+    .message.user .message-content { background: var(--gradient-primary); color: white; }
+    
+    /* Estilos globales internos para elementos inyectados por JS */
+    :global(.replay-btn) {
+        position: absolute; right: 8px; top: 8px; background: var(--primary-light);
+        border: none; border-radius: 50%; width: 25px; height: 25px; color: white;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        font-size: 10px; opacity: 0.7; transition: all 0.3s;
+    }
+    :global(.replay-btn:hover) { opacity: 1; transform: scale(1.1); background: var(--primary); }
+
+    .chat-footer { padding: 18px; background: white; border-top: 1px solid #e0e0e0; display: flex; flex-direction: column; gap: 15px; }
+    .input-container { display: flex; gap: 10px; align-items: center; }
+    
+    #user-input { flex: 1; padding: 14px 18px; border: 2px solid #e0e0e0; border-radius: 30px; outline: none; transition: all 0.3s; }
+    #user-input:focus { border-color: var(--primary); }
+    
+    .voice-btn {
+        width: 50px; height: 50px; border-radius: 50%; border: none;
+        background: linear-gradient(135deg, var(--accent), #34E280);
+        color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        font-size: 20px; transition: all 0.3s;
+    }
+    
+    :global(.voice-btn.listening) { animation: pulse-microphone 1.5s infinite; background: linear-gradient(135deg, #ff4757, #ff3838) !important; }
+    @keyframes pulse-microphone { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    
+    .send-btn { padding: 14px 24px; background: var(--gradient-primary); color: white; border: none; border-radius: 30px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    
+    .quick-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .quick-btn { padding: 10px 18px; background: white; border: 2px solid #e0e0e0; border-radius: 25px; cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+    
+    .start-btn { padding: 14px 24px; background: linear-gradient(135deg, var(--secondary), #FF9F43); color: white; border: none; border-radius: 30px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; margin: 10px auto; width: 80%; justify-content: center; }
+    
+    :global(.categories-grid) { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 15px 0; }
+    :global(.category-btn) { background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 14px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 12px; }
+    :global(.category-btn i) { font-size: 20px; margin-bottom: 8px; color: #4A919C; }
+    
+    :global(.news-card) { background: white; border-radius: 12px; padding: 16px; margin: 10px 0; box-shadow: 0 3px 10px rgba(0,0,0,0.08); border-left: 4px solid var(--secondary); cursor: pointer; }
+    :global(.news-category) { display: inline-block; background: #F8F9FA; color: #4A919C; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 10px; }
+    :global(.news-title) { font-weight: 600; color: #2C3E50; margin-bottom: 8px; font-size: 15px; }
+
+    .voice-indicator {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.8); color: white; padding: 30px 40px; border-radius: 20px;
+        display: none; flex-direction: column; align-items: center; gap: 20px; z-index: 1000; backdrop-filter: blur(10px);
+    }
+    .voice-animation { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #34E280); display: flex; align-items: center; justify-content: center; font-size: 30px; animation: voice-wave 1.5s infinite; }
+    @keyframes voice-wave { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+    @media (max-width: 480px) {
+        .chatbot-container { height: 90vh; max-width: 100%; }
+        :global(.categories-grid) { grid-template-columns: repeat(2, 1fr); }
+    }
 </style>
 
 <script is:inline>
-const CATEGORIAS = [
-  { nombre:"INTERNACIONAL", url:"https://newsmxtv.com.mx/internacional" },
-  { nombre:"TECNOLOGÍA", url:"https://newsmxtv.com.mx/tecnologia" },
-  { nombre:"ECONOMÍA", url:"https://newsmxtv.com.mx/economia" }
-];
+    // Variables de configuración y estado (se mantienen igual al original)
+    const CATEGORIAS = [
+        { nombre: 'INTERNACIONAL', icon: 'fas fa-globe-americas', url: 'https://newsmxtv.com.mx/internacional' },
+        { nombre: 'REPORTES', icon: 'fas fa-clipboard-list', url: 'https://newsmxtv.com.mx/reportajes' },
+        { nombre: 'ECONOMÍA', icon: 'fas fa-chart-line', url: 'https://newsmxtv.com.mx/economia' },
+        { nombre: 'NACIONAL', icon: 'fas fa-flag', url: 'https://newsmxtv.com.mx/nacional' },
+        { nombre: 'TECNOLOGÍA', icon: 'fas fa-laptop-code', url: 'https://newsmxtv.com.mx/tecnologia' },
+        { nombre: 'POLÍTICA', icon: 'fas fa-landmark', url: 'https://newsmxtv.com.mx/politica' },
+        { nombre: 'DEPORTES', icon: 'fas fa-futbol', url: 'https://newsmxtv.com.mx/deportes' },
+        { nombre: 'CULTURA', icon: 'fas fa-theater-masks', url: 'https://newsmxtv.com.mx/cultura' },
+        { nombre: 'SALUD', icon: 'fas fa-heartbeat', url: 'https://newsmxtv.com.mx/salud' },
+        { nombre: 'DENUNCIA', icon: 'fas fa-exclamation-triangle', url: 'https://newsmxtv.com.mx/denuncia' }
+    ];
+    
+    const NOTICIAS_DESTACADAS = [
+        { titulo: 'México fortalece relaciones comerciales', categoria: 'INTERNACIONAL', url: 'https://newsmxtv.com.mx/internacional' },
+        { titulo: 'Reporte especial: Innovación tecnológica', categoria: 'TECNOLOGÍA', url: 'https://newsmxtv.com.mx/tecnologia' },
+        { titulo: 'Análisis económico: Perspectivas trimestre', categoria: 'ECONOMÍA', url: 'https://newsmxtv.com.mx/economia' }
+    ];
+    
+    let currentMenu = 'main';
+    let soundEnabled = true;
+    let darkMode = false;
+    let isListening = false;
+    let recognition = null;
+    let synthesis = null;
+    let currentVoice = null;
+    let assistantStarted = false;
+    let firstTimeSpeaking = true;
 
-let assistantStarted = false;
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const chatBody = document.getElementById("chat-body");
-  const sendBtn = document.getElementById("send-btn");
-  const input = document.getElementById("user-input");
-  const startBtn = document.getElementById("start-assistant-btn");
-
-  function addMessage(content, sender){
-    const wrapper = document.createElement("div");
-    wrapper.className = "message " + sender;
-
-    wrapper.innerHTML = `
-      <div class="message-content">${content}</div>
-    `;
-
-    chatBody.appendChild(wrapper);
-    chatBody.scrollTop = chatBody.scrollHeight;
-  }
-
-  function showMainMenu(){
-    addMessage(`
-      ¿Qué deseas ver?<br><br>
-      ${CATEGORIAS.map(cat => 
-        `<button onclick="window.open('${cat.url}','_blank')" 
-        style="margin:5px;padding:8px 12px;border-radius:12px;border:1px solid #ccc;cursor:pointer;">
-        ${cat.nombre}
-        </button>`
-      ).join("")}
-    `,"bot");
-  }
-
-  function processMessage(text){
-    const lower = text.toLowerCase();
-
-    if(lower.includes("hola")){
-      addMessage("¡Hola! 👋 ¿Qué categoría deseas explorar?","bot");
-      showMainMenu();
-    }
-    else if(lower.includes("categor")){
-      showMainMenu();
-    }
-    else{
-      addMessage("Puedes decir 'hola' o pedir una categoría.","bot");
-    }
-  }
-
-  function handleSend(){
-    const text = input.value.trim();
-    if(!text) return;
-
-    if(!assistantStarted){
-      assistantStarted = true;
-      chatBody.innerHTML = "";
+    // Inicialización
+    function init() {
+        initChat();
+        initSpeech();
     }
 
-    addMessage(text,"user");
-    processMessage(text);
-    input.value="";
-  }
-
-  sendBtn.addEventListener("click",handleSend);
-
-  input.addEventListener("keypress", e=>{
-    if(e.key==="Enter"){
-      handleSend();
+    function initChat() {
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const startAssistantBtn = document.getElementById('start-assistant-btn');
+        
+        if(startAssistantBtn) startAssistantBtn.addEventListener('click', startAssistant);
+        
+        sendBtn.addEventListener('click', handleSendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (isListening) stopVoiceRecognition();
+                handleSendMessage();
+            }
+        });
+        
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                handleQuickAction(this.dataset.action);
+            });
+        });
+        
+        document.getElementById('sound-btn').addEventListener('click', toggleSound);
+        document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+        document.getElementById('voice-btn').addEventListener('click', toggleVoice);
+        document.getElementById('stop-voice').addEventListener('click', stopVoiceRecognition);
     }
-  });
 
-  startBtn?.addEventListener("click",()=>{
-    assistantStarted=true;
-    chatBody.innerHTML="";
-    addMessage("Asistente iniciado correctamente.","bot");
-    showMainMenu();
-  });
+    function startAssistant() {
+        if (assistantStarted) return;
+        assistantStarted = true;
+        document.getElementById('start-assistant-btn').style.display = 'none';
+        showWelcome();
+    }
 
-});
+    function initSpeech() {
+        if ('speechSynthesis' in window) {
+            synthesis = window.speechSynthesis;
+            const loadVoices = () => {
+                const voices = synthesis.getVoices();
+                currentVoice = voices.find(v => v.lang.includes('es')) || voices[0];
+            };
+            loadVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = loadVoices;
+            }
+        }
+
+        // Reconocimiento de voz
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'es-MX';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('user-input').value = transcript;
+                stopVoiceRecognition();
+                handleSendMessage();
+            };
+
+            recognition.onend = () => stopVoiceRecognition();
+        }
+    }
+
+    function speakText(text, callback) {
+        if (!soundEnabled || !synthesis) return;
+        synthesis.cancel(); // Detener cualquier habla previa
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'es-ES';
+        if (currentVoice) utterance.voice = currentVoice;
+        utterance.onend = () => callback && callback();
+        synthesis.speak(utterance);
+    }
+
+    function addMessage(content, sender, messageId = null) {
+        const chatBody = document.getElementById('chat-body');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        if (sender === 'bot') {
+            if (!messageId) messageId = 'msg-' + Date.now();
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            const textToSpeak = tempDiv.innerText;
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${content}
+                    <button class="replay-btn" onclick="window.replayMessage('${messageId}')" title="Volver a escuchar">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <div id="${messageId}" style="display: none;">${textToSpeak}</div>
+                </div>
+            `;
+        } else {
+            messageDiv.innerHTML = `<div class="message-content">${content}</div>`;
+        }
+        
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Funciones globales para que los onclick de los botones funcionen
+    window.handleMenuOption = function(option) {
+        if (!assistantStarted) { startAssistant(); return; }
+        switch(option) {
+            case 'categorias': showCategories(); break;
+            case 'destacadas': showFeaturedNews(); break;
+            case 'contacto': showContact(); break;
+            case 'limpiar': clearChat(); break;
+        }
+    };
+
+    window.showCategoryNews = function(categoryName) {
+        const cat = CATEGORIAS.find(c => c.nombre === categoryName);
+        let html = `<p><strong><i class="${cat.icon}"></i> ${cat.nombre}</strong></p>`;
+        const news = NOTICIAS_DESTACADAS.filter(n => n.categoria === categoryName);
+        
+        if (news.length > 0) {
+            news.forEach(n => {
+                html += `<div class="news-card" onclick="window.open('${n.url}', '_blank')">
+                    <div class="news-category">${n.categoria}</div>
+                    <div class="news-title">${n.titulo}</div>
+                </div>`;
+            });
+        } else {
+            html += `<div class="news-card" onclick="window.open('${cat.url}', '_blank')">
+                <div class="news-category">${cat.nombre}</div>
+                <div class="news-title">Ver todas las noticias de ${cat.nombre.toLowerCase()}</div>
+            </div>`;
+        }
+        html += `<button onclick="window.showCategories()" style="cursor:pointer; padding:5px 10px; border-radius:15px; border:1px solid #ccc;">Volver</button>`;
+        addMessage(html, 'bot');
+        speakText(`Estas son las noticias de ${categoryName.toLowerCase()}`);
+    };
+
+    window.showCategories = function() {
+        let html = '<p><strong>📊 CATEGORÍAS</strong></p><div class="categories-grid">';
+        CATEGORIAS.forEach(cat => {
+            html += `<button class="category-btn" onclick="window.showCategoryNews('${cat.nombre}')">
+                <i class="${cat.icon}"></i><span>${cat.nombre}</span>
+            </button>`;
+        });
+        html += '</div>';
+        addMessage(html, 'bot');
+        speakText("Elige una categoría para explorar.");
+    };
+
+    window.replayMessage = function(id) {
+        const el = document.getElementById(id);
+        if(el) speakText(el.innerText);
+    };
+
+    function showWelcome() {
+        const chatBody = document.getElementById('chat-body');
+        chatBody.innerHTML = '';
+        const welcomeHTML = `
+            <div style="text-align: center;">
+                <h3 style="color: var(--primary);">🎬 NewsMX TV</h3>
+                <p>Tu asistente digital con experiencia periodística.</p>
+            </div>
+        `;
+        addMessage(welcomeHTML, 'bot');
+        speakText("¡Bienvenido a NewsMX TV! Soy tu asistente virtual. ¿En qué puedo ayudarte?", () => {
+            showMainMenu();
+        });
+    }
+
+    function showMainMenu() {
+        const menuHTML = `
+            <p><strong>Menú Principal:</strong></p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+                <button onclick="window.handleMenuOption('categorias')" style="padding:10px; cursor:pointer;">Categorías</button>
+                <button onclick="window.handleMenuOption('destacadas')" style="padding:10px; cursor:pointer;">Destacadas</button>
+            </div>
+        `;
+        addMessage(menuHTML, 'bot');
+    }
+
+    function handleSendMessage() {
+        const input = document.getElementById('user-input');
+        const text = input.value.trim();
+        if (!text) return;
+        
+        addMessage(text, 'user');
+        input.value = '';
+        
+        // Lógica de respuesta simple
+        setTimeout(() => {
+            if (text.toLowerCase().includes('hola')) {
+                speakText("Hola, ¿cómo estás? ¿Buscas alguna noticia en especial?");
+                addMessage("Hola, ¿cómo estás? ¿Buscas alguna noticia en especial?", "bot");
+            } else {
+                addMessage("Entendido. ¿Te gustaría ver las categorías o las noticias destacadas?", "bot");
+                speakText("Entendido. ¿Te gustaría ver las categorías o las noticias destacadas?");
+            }
+        }, 600);
+    }
+
+    function handleQuickAction(action) {
+        if (!assistantStarted) { startAssistant(); return; }
+        if (action === 'limpiar') { clearChat(); return; }
+        window.handleMenuOption(action);
+    }
+
+    function toggleVoice() {
+        if (!recognition) return alert("Tu navegador no soporta reconocimiento de voz.");
+        if (isListening) { stopVoiceRecognition(); } 
+        else { startVoiceRecognition(); }
+    }
+
+    function startVoiceRecognition() {
+        isListening = true;
+        document.getElementById('voice-btn').classList.add('listening');
+        document.getElementById('voice-indicator').style.display = 'flex';
+        recognition.start();
+    }
+
+    function stopVoiceRecognition() {
+        isListening = false;
+        document.getElementById('voice-btn').classList.remove('listening');
+        document.getElementById('voice-indicator').style.display = 'none';
+        if(recognition) recognition.stop();
+    }
+
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const icon = document.querySelector('#sound-btn i');
+        icon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+    }
+
+    function toggleTheme() {
+        darkMode = !darkMode;
+        const container = document.querySelector('.chatbot-container');
+        container.style.filter = darkMode ? 'invert(0.9) hue-rotate(180deg)' : 'none';
+    }
+
+    function clearChat() {
+        document.getElementById('chat-body').innerHTML = '';
+        showMainMenu();
+    }
+
+    function showFeaturedNews() {
+        let html = '<p><strong>🔥 NOTICIAS DESTACADAS</strong></p>';
+        NOTICIAS_DESTACADAS.forEach(n => {
+            html += `<div class="news-card" onclick="window.open('${n.url}', '_blank')">
+                <div class="news-category">${n.categoria}</div>
+                <div class="news-title">${n.titulo}</div>
+            </div>`;
+        });
+        addMessage(html, 'bot');
+        speakText("Aquí tienes las noticias más destacadas del momento.");
+    }
+
+    function showContact() {
+        addMessage("<p>📍 <strong>Contacto:</strong><br>Email: info@newsmxtv.com.mx<br>Web: newsmxtv.com.mx</p>", "bot");
+        speakText("Puedes contactarnos a través de nuestro correo o sitio web.");
+    }
+
+    // Iniciar al cargar
+    init();
 </script>
-
-</div> <!-- Cierre del contenedor centrado -->
