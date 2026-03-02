@@ -1,45 +1,81 @@
 import { defineMiddleware } from "astro/middleware";
 
-export const onRequest = defineMiddleware((context, next) => {
+const ACCESS_SECRET = "nmtv-privacidad-2026";
+
+export const onRequest = defineMiddleware(async (context, next) => {
   const path = context.url.pathname;
+  const method = context.request.method;
 
-  //  Rutas públicas
-  if (path === "/login" || path === "/acceso-denegado") {
+  // ── Siempre públicas
+  if (path === "/acceso-denegado") {
     return next();
   }
 
-  const user = context.cookies.get("user")?.json();
-
-  //  Si intenta entrar a /admin sin sesión → login
-  if (path.startsWith("/admin") && !user) {
-    return context.redirect("/login");
+  // ── /privacidad → genera token en cookie
+  if (path === "/privacidad") {
+    const res = await next();
+    res.headers.append(
+      "Set-Cookie",
+      `login_access=${ACCESS_SECRET}; Path=/; HttpOnly; SameSite=Strict; Max-Age=300`
+    );
+    return res;
   }
 
-  const rol = String(user?.rol ?? "");
+  // ── /login GET → solo si tiene token válido
+  // ── /login POST → siempre permitir (es el submit del formulario)
+  if (path === "/login") {
+    if (method === "POST") {
+      // El formulario siempre puede hacer POST
+      return next();
+    }
 
-  //  WebMaster (3) → acceso total
-  if (rol === "3") {
+    // GET: verificar token
+    const token = context.cookies.get("login_access")?.value;
+    if (token !== ACCESS_SECRET) {
+      return context.redirect("/");
+    }
+
+    // Token válido → dejar pasar y borrarlo
+    const res = await next();
+    res.headers.append(
+      "Set-Cookie",
+      `login_access=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0`
+    );
+    return res;
+  }
+
+  // ── /admin → requiere cookie user activa
+  if (path.startsWith("/admin")) {
+    const user = context.cookies.get("user")?.json();
+
+    if (!user) {
+      return context.redirect("/");
+    }
+
+    const rol = String(user?.rol ?? "");
+
+    // WebMaster (3) → acceso total
+    if (rol === "3") {
+      return next();
+    }
+
+    // Administrador (2)
+    if (rol === "2") {
+      const permitido = ["/admin/editor", "/admin/noticia"];
+      if (!permitido.some((r) => path.startsWith(r))) {
+        return context.redirect("/acceso-denegado");
+      }
+    }
+
+    // Editor (1)
+    if (rol === "1") {
+      const permitido = ["/admin/registroNews", "/admin/registroCategoria"];
+      if (!permitido.some((r) => path.startsWith(r))) {
+        return context.redirect("/acceso-denegado");
+      }
+    }
+
     return next();
-  }
-
-  //  Administrador (2)
-  if (rol === "2") {
-    const permitido = ["/admin/editor", "/admin/noticia"];
-    const tieneAcceso = permitido.some((r) => path.startsWith(r));
-
-    if (path.startsWith("/admin") && !tieneAcceso) {
-      return context.redirect("/acceso-denegado");
-    }
-  }
-
-  //  Editor (1)
-  if (rol === "1") {
-    const permitido = ["/admin/registroNews", "/admin/registroCategoria"];
-    const tieneAcceso = permitido.some((r) => path.startsWith(r));
-
-    if (path.startsWith("/admin") && !tieneAcceso) {
-      return context.redirect("/acceso-denegado");
-    }
   }
 
   return next();
