@@ -53,7 +53,7 @@ const carrusel = [...categoriasConImagen, ...categoriasConImagen];
   <div class="carousel-wrapper">
     <div class="carousel-track">
       {carrusel.map((cat) => (
-        <a href={`/noticias/categoria/${cat.nombre}`} class="card">
+        <a href={`/noticias/categoria/${cat.nombre.toLowerCase().replace(/\s+/g, '-')}`} class="card">
           <img src={cat.imagen} alt={cat.nombre} />
           <div class="overlay">
             <h3>{cat.nombre.toUpperCase()}</h3>
